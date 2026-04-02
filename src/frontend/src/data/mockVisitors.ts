@@ -1,0 +1,142 @@
+export type Visitor = {
+  id: string;
+  name: string;
+  mobile: string;
+  purpose: "Meeting" | "Delivery" | "Parent" | "Official" | "Other";
+  meetingWith: string;
+  inTime: string;
+  outTime?: string;
+  date: string;
+  status: "In Campus" | "Checked Out";
+  idProof: string;
+  photo?: string;
+  gatePassNo: string;
+};
+
+export const mockVisitors: Visitor[] = [
+  {
+    id: "v1",
+    name: "Ramesh Kumar",
+    mobile: "9876543210",
+    purpose: "Meeting",
+    meetingWith: "Mr. Suresh Sharma (Principal)",
+    inTime: "09:15",
+    date: "2026-04-01",
+    status: "In Campus",
+    idProof: "Aadhar: 4321-XXXX-1234",
+    gatePassNo: "GP20260401-001",
+  },
+  {
+    id: "v2",
+    name: "Priya Nair",
+    mobile: "9823456710",
+    purpose: "Parent",
+    meetingWith: "Mrs. Anita Desai (Class Teacher)",
+    inTime: "10:00",
+    date: "2026-04-01",
+    status: "In Campus",
+    idProof: "PAN: ABCPN1234Z",
+    gatePassNo: "GP20260401-002",
+  },
+  {
+    id: "v3",
+    name: "Sanjay Verma",
+    mobile: "9811223344",
+    purpose: "Official",
+    meetingWith: "Mr. Rakesh Gupta (Admin Officer)",
+    inTime: "10:30",
+    date: "2026-04-01",
+    status: "In Campus",
+    idProof: "Passport: P1234567",
+    gatePassNo: "GP20260401-003",
+  },
+  {
+    id: "v4",
+    name: "Kavita Singh",
+    mobile: "9844556677",
+    purpose: "Delivery",
+    meetingWith: "Ms. Pooja Mehta (Store Incharge)",
+    inTime: "11:15",
+    date: "2026-04-01",
+    status: "In Campus",
+    idProof: "Driving License: DL04-1234567",
+    gatePassNo: "GP20260401-004",
+  },
+  {
+    id: "v5",
+    name: "Arjun Patel",
+    mobile: "9900112233",
+    purpose: "Other",
+    meetingWith: "Mr. Vijay Kumar (Accounts)",
+    inTime: "12:00",
+    date: "2026-04-01",
+    status: "In Campus",
+    idProof: "Aadhar: 5678-XXXX-8765",
+    gatePassNo: "GP20260401-005",
+  },
+  {
+    id: "v6",
+    name: "Deepak Sharma",
+    mobile: "9712345678",
+    purpose: "Meeting",
+    meetingWith: "Mr. Suresh Sharma (Principal)",
+    inTime: "08:30",
+    outTime: "09:45",
+    date: "2026-04-01",
+    status: "Checked Out",
+    idProof: "Aadhar: 1111-XXXX-2222",
+    gatePassNo: "GP20260401-006",
+  },
+  {
+    id: "v7",
+    name: "Meena Iyer",
+    mobile: "9633445566",
+    purpose: "Parent",
+    meetingWith: "Mrs. Savita Joshi (Vice Principal)",
+    inTime: "09:00",
+    outTime: "10:15",
+    date: "2026-04-01",
+    status: "Checked Out",
+    idProof: "PAN: AYZPI9876B",
+    gatePassNo: "GP20260401-007",
+  },
+  {
+    id: "v8",
+    name: "Sunil Tiwari",
+    mobile: "9555667788",
+    purpose: "Official",
+    meetingWith: "Mr. Rakesh Gupta (Admin Officer)",
+    inTime: "09:30",
+    outTime: "11:00",
+    date: "2026-04-01",
+    status: "Checked Out",
+    idProof: "Driving License: DL07-9876543",
+    gatePassNo: "GP20260401-008",
+  },
+  {
+    id: "v9",
+    name: "Ananya Roy",
+    mobile: "9477889900",
+    purpose: "Delivery",
+    meetingWith: "Ms. Pooja Mehta (Store Incharge)",
+    inTime: "10:00",
+    outTime: "10:30",
+    date: "2026-04-01",
+    status: "Checked Out",
+    idProof: "Aadhar: 9999-XXXX-0000",
+    gatePassNo: "GP20260401-009",
+  },
+  {
+    id: "v10",
+    name: "Rohit Bansal",
+    mobile: "9399887766",
+    purpose: "Meeting",
+    meetingWith: "Mrs. Anita Desai (Class Teacher)",
+    inTime: "11:00",
+    outTime: "12:30",
+    date: "2026-04-01",
+    status: "Checked Out",
+    idProof: "Passport: P7654321",
+    gatePassNo: "GP20260401-010",
+  },
+];

@@ -1,0 +1,130 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.75rem;
+    --background: 0.975 0.005 240;
+    --foreground: 0.18 0.02 255;
+    --card: 1 0 0;
+    --card-foreground: 0.18 0.02 255;
+    --popover: 1 0 0;
+    --popover-foreground: 0.18 0.02 255;
+    --primary: 0.52 0.18 255;
+    --primary-foreground: 0.99 0 0;
+    --secondary: 0.94 0.02 240;
+    --secondary-foreground: 0.25 0.03 255;
+    --muted: 0.94 0.02 240;
+    --muted-foreground: 0.52 0.02 255;
+    --accent: 0.94 0.02 240;
+    --accent-foreground: 0.25 0.03 255;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 0.985 0 0;
+    --border: 0.89 0.01 255;
+    --input: 0.89 0.01 255;
+    --ring: 0.52 0.18 255;
+    --chart-1: 0.52 0.18 255;
+    --chart-2: 0.6 0.16 145;
+    --chart-3: 0.65 0.18 30;
+    --chart-4: 0.7 0.15 330;
+    --chart-5: 0.75 0.18 65;
+    --sidebar: 0.22 0.04 255;
+    --sidebar-foreground: 0.92 0.02 255;
+    --sidebar-primary: 0.65 0.2 255;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.3 0.05 255;
+    --sidebar-accent-foreground: 0.92 0.02 255;
+    --sidebar-border: 0.3 0.04 255;
+    --sidebar-ring: 0.52 0.18 255;
+  }
+
+  .dark {
+    --background: 0.145 0 0;
+    --foreground: 0.985 0 0;
+    --card: 0.205 0 0;
+    --card-foreground: 0.985 0 0;
+    --popover: 0.269 0 0;
+    --popover-foreground: 0.985 0 0;
+    --primary: 0.65 0.2 255;
+    --primary-foreground: 0.985 0 0;
+    --secondary: 0.269 0 0;
+    --secondary-foreground: 0.985 0 0;
+    --muted: 0.269 0 0;
+    --muted-foreground: 0.708 0 0;
+    --accent: 0.371 0 0;
+    --accent-foreground: 0.985 0 0;
+    --destructive: 0.704 0.191 22.216;
+    --destructive-foreground: 0.205 0 0;
+    --border: 1 0 0 / 10%;
+    --input: 1 0 0 / 15%;
+    --ring: 0.556 0 0;
+    --chart-1: 0.65 0.2 255;
+    --chart-2: 0.6 0.16 145;
+    --chart-3: 0.65 0.18 30;
+    --chart-4: 0.7 0.15 330;
+    --chart-5: 0.75 0.18 65;
+    --sidebar: 0.18 0.03 255;
+    --sidebar-foreground: 0.92 0.02 255;
+    --sidebar-primary: 0.65 0.2 255;
+    --sidebar-primary-foreground: 0.99 0 0;
+    --sidebar-accent: 0.25 0.04 255;
+    --sidebar-accent-foreground: 0.92 0.02 255;
+    --sidebar-border: 0.28 0.04 255;
+    --sidebar-ring: 0.52 0.18 255;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", "DM Sans", system-ui, sans-serif;
+  }
+}
+
+/* ============================================================
+   Print styles — hide chrome, make content full-width
+   ============================================================ */
+@media print {
+  /* Hide layout chrome */
+  nav,
+  aside,
+  header,
+  [data-sidebar],
+  .sidebar,
+  [data-ocid="export.print_button"],
+  [data-ocid="export.pdf_button"],
+  [data-ocid="export.excel_button"] {
+    display: none !important;
+  }
+
+  /* Make content area full-width */
+  main,
+  .main-content,
+  [data-main-content] {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 16px !important;
+  }
+
+  /* Expand any flex/grid wrappers that clip content */
+  body > * {
+    overflow: visible !important;
+  }
+
+  /* Ensure white background for print */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Hide dialogs, toasts, and other overlays */
+  [role="dialog"],
+  [data-sonner-toaster],
+  .fixed {
+    display: none !important;
+  }
+}

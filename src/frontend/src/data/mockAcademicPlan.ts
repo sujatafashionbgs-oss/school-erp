@@ -1,0 +1,197 @@
+export type EventType = "Exam" | "Holiday" | "Event" | "PTM" | "Activity";
+
+export type AcademicEvent = {
+  id: string;
+  title: string;
+  type: EventType;
+  date: string;
+  endDate?: string;
+  forClass?: string;
+  description: string;
+  color: string;
+};
+
+export const mockAcademicEvents: AcademicEvent[] = [
+  {
+    id: "ae1",
+    title: "School Reopens",
+    type: "Event",
+    date: "2026-04-01",
+    description: "New academic year begins for all classes",
+    color: "#3b82f6",
+  },
+  {
+    id: "ae2",
+    title: "Unit Test 1",
+    type: "Exam",
+    date: "2026-04-21",
+    endDate: "2026-04-25",
+    forClass: "All",
+    description: "First unit test for all classes",
+    color: "#ef4444",
+  },
+  {
+    id: "ae3",
+    title: "World Earth Day",
+    type: "Activity",
+    date: "2026-04-22",
+    description: "Environmental awareness activities and plantation drive",
+    color: "#f97316",
+  },
+  {
+    id: "ae4",
+    title: "PTM – Term 1",
+    type: "PTM",
+    date: "2026-05-10",
+    description: "Parent-Teacher Meeting for Term 1 progress review",
+    color: "#8b5cf6",
+  },
+  {
+    id: "ae5",
+    title: "Summer Vacation Begins",
+    type: "Holiday",
+    date: "2026-05-20",
+    endDate: "2026-06-14",
+    description: "Summer break for all students and staff",
+    color: "#22c55e",
+  },
+  {
+    id: "ae6",
+    title: "Independence Day",
+    type: "Holiday",
+    date: "2026-08-15",
+    description: "National holiday — Independence Day celebration at school",
+    color: "#22c55e",
+  },
+  {
+    id: "ae7",
+    title: "Mid-Term Exams",
+    type: "Exam",
+    date: "2026-09-01",
+    endDate: "2026-09-10",
+    forClass: "All",
+    description: "Mid-term examinations for all classes",
+    color: "#ef4444",
+  },
+  {
+    id: "ae8",
+    title: "Teacher's Day",
+    type: "Event",
+    date: "2026-09-05",
+    description: "Celebration of Teacher's Day with cultural programmes",
+    color: "#3b82f6",
+  },
+  {
+    id: "ae9",
+    title: "PTM – Mid-Term",
+    type: "PTM",
+    date: "2026-09-20",
+    description: "Mid-term results sharing with parents",
+    color: "#8b5cf6",
+  },
+  {
+    id: "ae10",
+    title: "Gandhi Jayanti",
+    type: "Holiday",
+    date: "2026-10-02",
+    description: "National holiday — Gandhi Jayanti",
+    color: "#22c55e",
+  },
+  {
+    id: "ae11",
+    title: "Dussehra",
+    type: "Holiday",
+    date: "2026-10-02",
+    endDate: "2026-10-04",
+    description: "Festival holiday — Dussehra celebration",
+    color: "#22c55e",
+  },
+  {
+    id: "ae12",
+    title: "Annual Sports Day",
+    type: "Activity",
+    date: "2026-10-18",
+    description:
+      "Annual sports day with inter-house competitions and prize distribution",
+    color: "#f97316",
+  },
+  {
+    id: "ae13",
+    title: "Diwali Break",
+    type: "Holiday",
+    date: "2026-10-28",
+    endDate: "2026-11-03",
+    description: "Diwali holiday for all students and staff",
+    color: "#22c55e",
+  },
+  {
+    id: "ae14",
+    title: "Science Fair",
+    type: "Activity",
+    date: "2026-11-15",
+    description: "Annual inter-school science exhibition and competition",
+    color: "#f97316",
+  },
+  {
+    id: "ae15",
+    title: "Term 2 Exams",
+    type: "Exam",
+    date: "2026-11-24",
+    endDate: "2026-12-05",
+    forClass: "All",
+    description: "Second term examinations for all classes",
+    color: "#ef4444",
+  },
+  {
+    id: "ae16",
+    title: "Christmas Break",
+    type: "Holiday",
+    date: "2026-12-25",
+    endDate: "2027-01-01",
+    description: "Christmas and New Year holiday break",
+    color: "#22c55e",
+  },
+  {
+    id: "ae17",
+    title: "Annual Day",
+    type: "Event",
+    date: "2027-01-15",
+    description:
+      "School Annual Day celebration with cultural performances and prize distribution",
+    color: "#3b82f6",
+  },
+  {
+    id: "ae18",
+    title: "Republic Day",
+    type: "Holiday",
+    date: "2027-01-26",
+    description: "National holiday — Republic Day flag hoisting at school",
+    color: "#22c55e",
+  },
+  {
+    id: "ae19",
+    title: "Final Exams",
+    type: "Exam",
+    date: "2027-02-16",
+    endDate: "2027-03-05",
+    forClass: "All",
+    description: "Annual final examinations for all classes",
+    color: "#ef4444",
+  },
+  {
+    id: "ae20",
+    title: "PTM – Annual",
+    type: "PTM",
+    date: "2027-03-15",
+    description: "Annual result sharing parent-teacher meeting",
+    color: "#8b5cf6",
+  },
+  {
+    id: "ae21",
+    title: "Farewell Ceremony",
+    type: "Event",
+    date: "2027-03-25",
+    description: "Farewell for Class X and XII graduating students",
+    color: "#3b82f6",
+  },
+];
