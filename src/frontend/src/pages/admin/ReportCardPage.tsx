@@ -31,6 +31,167 @@ function getStudentMarks(studentId: string) {
   }));
 }
 
+function getGrade(percentage: number): string {
+  if (percentage >= 90) return "A+";
+  if (percentage >= 80) return "A";
+  if (percentage >= 70) return "B";
+  if (percentage >= 60) return "C";
+  return "D";
+}
+
+function buildReportCardHtml(
+  students: typeof mockStudents,
+  options: { showQR?: boolean } = {},
+): string {
+  const cards = students.map((student, idx) => {
+    const marks = getStudentMarks(student.id);
+    const total = marks.reduce((a, s) => a + s.obtained, 0);
+    const maxTotal = marks.reduce((a, s) => a + s.max, 0);
+    const percentage = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+    const grade = getGrade(percentage);
+    const verifyCode = makeVerifyCode(student.admissionNo);
+    const isLast = idx === students.length - 1;
+
+    const subjectRows = marks
+      .map(
+        (m) => `
+      <tr>
+        <td style="padding:6px 8px;border:1px solid #ddd;">${m.subject}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">${m.max}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-weight:600;">${m.obtained}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">${Math.round((m.obtained / m.max) * 100)}%</td>
+      </tr>`,
+      )
+      .join("");
+
+    const qrSection = options.showQR
+      ? `<div style="margin-top:16px;padding:12px;background:#f5f5f5;border:1px solid #ddd;border-radius:6px;display:flex;align-items:center;gap:16px;">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(`RC-VERIFY:${verifyCode}`)}" width="100" height="100" style="border:1px solid #ccc;border-radius:4px;" />
+        <div>
+          <p style="margin:0;font-size:12px;font-weight:600;color:#333;">Document Verification QR Code</p>
+          <p style="margin:4px 0 0;font-size:11px;color:#666;">Scan to verify authenticity online.</p>
+          <p style="margin:4px 0 0;font-size:11px;color:#888;font-family:monospace;">Code: ${verifyCode}</p>
+        </div>
+      </div>`
+      : "";
+
+    const pageBreak = !isLast
+      ? `style="page-break-after:always; margin-bottom:0;"`
+      : `style="margin-bottom:0;"`;
+
+    return `
+    <div ${pageBreak}>
+      <div style="font-family:Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px;color:#000;border:1px solid #ccc;">
+        <!-- Header -->
+        <div style="text-align:center;padding-bottom:16px;border-bottom:2px solid #333;margin-bottom:16px;">
+          <h1 style="margin:0;font-size:22px;font-weight:bold;color:#1a1a1a;">SmartSkale Public School</h1>
+          <p style="margin:4px 0 0;font-size:13px;color:#555;">Academic Year 2026-27 | Report Card</p>
+        </div>
+
+        <!-- Student Info -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+          <tr>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Student Name:</span> <strong>${student.name}</strong></td>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Admission No:</span> <strong>${student.admissionNo}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Class-Section:</span> <strong>${student.className}-${student.section}</strong></td>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Roll No:</span> <strong>${student.rollNo}</strong></td>
+          </tr>
+        </table>
+
+        <!-- Marks Table -->
+        <h3 style="margin:0 0 8px;font-size:14px;color:#333;">Subject-wise Performance</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px;">
+          <thead>
+            <tr style="background:#f0f0f0;">
+              <th style="padding:8px;border:1px solid #ddd;text-align:left;">Subject</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Max Marks</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Obtained</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subjectRows}
+            <!-- Totals row -->
+            <tr style="background:#f9f9f9;font-weight:bold;">
+              <td style="padding:8px;border:1px solid #ddd;">TOTAL</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${maxTotal}</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${total}</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${percentage}%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Summary Row -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px;">
+          <tr style="background:#f0f0f0;">
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Overall %</th>
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Grade</th>
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Result</th>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;font-size:16px;">${percentage}%</td>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;font-size:20px;color:#1a6bbf;">${grade}</td>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;color:${percentage >= 33 ? "#2e7d32" : "#c62828"};">${percentage >= 33 ? "PASS" : "FAIL"}</td>
+          </tr>
+        </table>
+
+        ${qrSection}
+
+        <!-- Footer -->
+        <div style="margin-top:20px;padding-top:12px;border-top:1px solid #ccc;text-align:center;font-size:11px;color:#888;">
+          Generated by SmartSkale ERP &nbsp;|&nbsp; Verified: ${verifyCode}
+        </div>
+      </div>
+    </div>`;
+  });
+
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Report Card – SmartSkale</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px; background: #fff; }
+    @media print {
+      body { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  ${cards.join("\n")}
+</body>
+</html>`;
+}
+
+function printReportCards(
+  students: typeof mockStudents,
+  options: { showQR?: boolean } = {},
+) {
+  if (students.length === 0) {
+    toast.error("No students selected to print.");
+    return;
+  }
+  const win = window.open("", "_blank", "width=900,height=1100");
+  if (!win) {
+    toast.error(
+      "Popup blocked. Please allow popups for this site and try again.",
+    );
+    return;
+  }
+  const html = buildReportCardHtml(students, options);
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  // Give images a moment to load before printing
+  setTimeout(() => {
+    win.print();
+    win.close();
+  }, 500);
+}
+
 export function ReportCardPage() {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState(mockStudents[0]);
@@ -53,24 +214,18 @@ export function ReportCardPage() {
   const total = subjectMarks.reduce((a, s) => a + s.obtained, 0);
   const maxTotal = subjectMarks.reduce((a, s) => a + s.max, 0);
   const percentage = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
-  const grade =
-    percentage >= 90
-      ? "A+"
-      : percentage >= 80
-        ? "A"
-        : percentage >= 70
-          ? "B"
-          : percentage >= 60
-            ? "C"
-            : "D";
+  const grade = getGrade(percentage);
 
   const verifyCode = selected ? makeVerifyCode(selected.admissionNo) : "";
   const verifyUrl = `${window.location.origin}${window.location.pathname}#/verify?code=${verifyCode}&name=${encodeURIComponent(selected?.name || "")}&class=${encodeURIComponent(`${selected?.className || ""}-${selected?.section || ""}`)}&pct=${percentage}&grade=${grade}`;
   const qrSrc = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(verifyUrl)}`;
 
   function handleDownload() {
-    toast.info("Preparing download... Use your browser's print/save dialog.");
-    window.print();
+    if (!selected) {
+      toast.error("Please select a student first.");
+      return;
+    }
+    printReportCards([selected], { showQR });
   }
 
   return (
@@ -331,10 +486,13 @@ export function ReportCardPage() {
             <Button
               size="sm"
               onClick={() => {
-                toast.info(
-                  `Printing report cards for ${selectedIds.length} student(s)...`,
+                const students = mockStudents.filter((s) =>
+                  selectedIds.includes(s.id),
                 );
-                window.print();
+                toast.info(
+                  `Opening print dialog for ${students.length} report card(s)...`,
+                );
+                printReportCards(students, { showQR: false });
               }}
               data-ocid="report_card.bulk_print.button"
             >
@@ -344,9 +502,13 @@ export function ReportCardPage() {
               size="sm"
               variant="outline"
               onClick={() => {
-                toast.info(
-                  `Generating PDF for ${selectedIds.length} student(s)...`,
+                const students = mockStudents.filter((s) =>
+                  selectedIds.includes(s.id),
                 );
+                toast.info(
+                  `Generating PDF for ${students.length} report card(s)...`,
+                );
+                printReportCards(students, { showQR: false });
               }}
               data-ocid="report_card.bulk_export_pdf.button"
             >

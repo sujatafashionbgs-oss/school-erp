@@ -8,6 +8,158 @@ import { FileDown, Printer, Users } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
+function getStudentMarks(studentId: string) {
+  const subjects = [
+    "Mathematics",
+    "Science",
+    "Hindi",
+    "English",
+    "Social Studies",
+  ];
+  const seed = studentId.split("").reduce((acc, c) => acc + c.charCodeAt(0), 0);
+  return subjects.map((subject, i) => ({
+    subject,
+    max: 100,
+    obtained: 50 + ((seed * (i + 7)) % 45),
+  }));
+}
+
+function getGrade(percentage: number): string {
+  if (percentage >= 90) return "A+";
+  if (percentage >= 80) return "A";
+  if (percentage >= 70) return "B";
+  if (percentage >= 60) return "C";
+  return "D";
+}
+
+function printBulkReportCards(students: typeof mockStudents) {
+  if (students.length === 0) {
+    toast.error("No students selected to print.");
+    return;
+  }
+
+  const win = window.open("", "_blank", "width=900,height=1100");
+  if (!win) {
+    toast.error(
+      "Popup blocked. Please allow popups for this site and try again.",
+    );
+    return;
+  }
+
+  const cards = students.map((student, idx) => {
+    const marks = getStudentMarks(student.id);
+    const total = marks.reduce((a, s) => a + s.obtained, 0);
+    const maxTotal = marks.reduce((a, s) => a + s.max, 0);
+    const percentage = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+    const grade = getGrade(percentage);
+    const isLast = idx === students.length - 1;
+
+    const subjectRows = marks
+      .map(
+        (m) => `
+      <tr>
+        <td style="padding:6px 8px;border:1px solid #ddd;">${m.subject}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">${m.max}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;font-weight:600;">${m.obtained}</td>
+        <td style="padding:6px 8px;border:1px solid #ddd;text-align:center;">${Math.round((m.obtained / m.max) * 100)}%</td>
+      </tr>`,
+      )
+      .join("");
+
+    const pageBreak = !isLast ? `style="page-break-after:always;"` : "";
+
+    return `
+    <div ${pageBreak}>
+      <div style="font-family:Arial,sans-serif;max-width:720px;margin:0 auto;padding:24px;color:#000;border:1px solid #ccc;">
+        <!-- Header -->
+        <div style="text-align:center;padding-bottom:16px;border-bottom:2px solid #333;margin-bottom:16px;">
+          <h1 style="margin:0;font-size:22px;font-weight:bold;color:#1a1a1a;">SmartSkale Public School</h1>
+          <p style="margin:4px 0 0;font-size:13px;color:#555;">Academic Year 2026-27 | Report Card</p>
+        </div>
+
+        <!-- Student Info -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;">
+          <tr>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Student Name:</span> <strong>${student.name}</strong></td>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Admission No:</span> <strong>${student.admissionNo}</strong></td>
+          </tr>
+          <tr>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Class-Section:</span> <strong>${student.className}-${student.section}</strong></td>
+            <td style="padding:6px 0;font-size:13px;"><span style="color:#666;">Roll No:</span> <strong>${student.rollNo}</strong></td>
+          </tr>
+        </table>
+
+        <!-- Marks Table -->
+        <h3 style="margin:0 0 8px;font-size:14px;color:#333;">Subject-wise Performance</h3>
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px;">
+          <thead>
+            <tr style="background:#f0f0f0;">
+              <th style="padding:8px;border:1px solid #ddd;text-align:left;">Subject</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Max Marks</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Obtained</th>
+              <th style="padding:8px;border:1px solid #ddd;text-align:center;">Percentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${subjectRows}
+            <tr style="background:#f9f9f9;font-weight:bold;">
+              <td style="padding:8px;border:1px solid #ddd;">TOTAL</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${maxTotal}</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${total}</td>
+              <td style="padding:8px;border:1px solid #ddd;text-align:center;">${percentage}%</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <!-- Summary Row -->
+        <table style="width:100%;border-collapse:collapse;margin-bottom:16px;font-size:13px;">
+          <tr style="background:#f0f0f0;">
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Overall %</th>
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Grade</th>
+            <th style="padding:8px;border:1px solid #ddd;text-align:center;">Result</th>
+          </tr>
+          <tr>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;font-size:16px;">${percentage}%</td>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;font-size:20px;color:#1a6bbf;">${grade}</td>
+            <td style="padding:10px;border:1px solid #ddd;text-align:center;font-weight:bold;color:${percentage >= 33 ? "#2e7d32" : "#c62828"};">${percentage >= 33 ? "PASS" : "FAIL"}</td>
+          </tr>
+        </table>
+
+        <!-- Footer -->
+        <div style="margin-top:20px;padding-top:12px;border-top:1px solid #ccc;text-align:center;font-size:11px;color:#888;">
+          Generated by SmartSkale ERP &nbsp;|&nbsp; SmartSkale Public School, Academic Year 2026-27
+        </div>
+      </div>
+    </div>`;
+  });
+
+  const html = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Bulk Report Cards – SmartSkale</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; padding: 16px; background: #fff; }
+    @media print {
+      body { padding: 0; }
+    }
+  </style>
+</head>
+<body>
+  ${cards.join("\n")}
+</body>
+</html>`;
+
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+  setTimeout(() => {
+    win.print();
+    win.close();
+  }, 400);
+}
+
 export function BulkReportCardPage() {
   const { getActiveSections } = useClassConfig();
   const [selectedClasses, setSelectedClasses] = useState<string[]>([]);
@@ -56,17 +208,34 @@ export function BulkReportCardPage() {
   });
 
   const handlePrint = () => {
-    window.print();
+    if (previewStudents.length === 0) {
+      toast.error(
+        "No students match the selected classes/sections. Please adjust your selection.",
+      );
+      return;
+    }
+    toast.info(
+      `Opening print dialog for ${previewStudents.length} report card(s)...`,
+    );
+    printBulkReportCards(previewStudents);
   };
 
   const handleExportMerged = () => {
+    if (previewStudents.length === 0) {
+      toast.error("No students selected.");
+      return;
+    }
     toast.success(
       `Generating merged PDF for ${previewStudents.length} report cards...`,
     );
-    setTimeout(() => window.print(), 300);
+    printBulkReportCards(previewStudents);
   };
 
   const handleExportIndividual = () => {
+    if (previewStudents.length === 0) {
+      toast.error("No students selected.");
+      return;
+    }
     toast.success(
       `Generating ${previewStudents.length} individual PDFs... This may take a moment.`,
     );
@@ -267,7 +436,8 @@ export function BulkReportCardPage() {
               </div>
             ) : (
               <div className="py-12 text-center text-muted-foreground">
-                Select classes on the left and click "Preview Students"
+                Select classes on the left and click &quot;Preview
+                Students&quot;
               </div>
             )}
           </div>
@@ -283,7 +453,7 @@ export function BulkReportCardPage() {
                   SmartSkale Public School
                 </p>
                 <p className="text-muted-foreground text-xs">
-                  Academic Year 2025-26 | Report Card
+                  Academic Year 2026-27 | Report Card
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-2 text-xs">
