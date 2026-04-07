@@ -1,3 +1,4 @@
+import { PaymentGateway } from "@/components/PaymentGateway";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -79,6 +80,8 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
   const [collectedItems, setCollectedItems] = useState<FeeItem[]>([]);
   const [showDuplicateWarning, setShowDuplicateWarning] = useState(false);
   const [previousReceipts, setPreviousReceipts] = useState<string[]>([]);
+  const [showPaymentGateway, setShowPaymentGateway] = useState(false);
+  const [gatewayTxnId, setGatewayTxnId] = useState("");
 
   const handleSearch = async () => {
     if (!query.trim()) return;
@@ -103,6 +106,7 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
     setSearching(false);
     setCollected(false);
     setReceiptNo("");
+    setGatewayTxnId("");
     if (found) {
       setFeeItems(
         FEE_CATEGORIES.map((fc) => ({
@@ -122,20 +126,17 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
     0,
   );
 
-  const proceedWithCollection = () => {
-    const newReceiptNo = `RCP-${Date.now().toString().slice(-6)}`;
+  const proceedWithCollection = (txnId?: string) => {
+    const newReceiptNo = `RCP-${String(Date.now() % 1000000).padStart(6, "0")}`;
     if (!newReceiptNo.trim()) {
       toast.error("Receipt number cannot be empty");
-      return;
-    }
-    if (!/^RCP-\d{6}$/.test(newReceiptNo.trim())) {
-      toast.error("Receipt number must follow format: RCP-XXXXXX");
       return;
     }
     setReceiptNo(newReceiptNo);
     setCollectedItems([...feeItems]);
     setCollected(true);
     setShowDuplicateWarning(false);
+    if (txnId) setGatewayTxnId(txnId);
     toast.success(`Fee of ₹${totalCollecting} collected from ${student?.name}`);
   };
 
@@ -144,6 +145,19 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
       toast.error("Please enter a valid payment amount");
       return;
     }
+    if (paymentMode === "online") {
+      const duplicateFeeHeads = feeItems.filter(
+        (item) => Number.parseFloat(item.partialPayment) > 0 && item.paid > 0,
+      );
+      if (duplicateFeeHeads.length > 0) {
+        setPreviousReceipts(duplicateFeeHeads.map((f) => f.name));
+        setShowDuplicateWarning(true);
+        return;
+      }
+      setShowPaymentGateway(true);
+      return;
+    }
+    // For cash/cheque/dd
     const duplicateFeeHeads = feeItems.filter(
       (item) => Number.parseFloat(item.partialPayment) > 0 && item.paid > 0,
     );
@@ -279,7 +293,9 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
             <div className="ml-auto text-right">
               <p className="text-xs text-muted-foreground">Outstanding</p>
               <p
-                className={`text-xl font-bold ${totalOutstanding > 0 ? "text-destructive" : "text-green-600"}`}
+                className={`text-xl font-bold ${
+                  totalOutstanding > 0 ? "text-destructive" : "text-green-600"
+                }`}
               >
                 ₹{totalOutstanding}
               </p>
@@ -328,6 +344,17 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
                     {paymentMode}
                   </span>
                 </div>
+                {gatewayTxnId && (
+                  <div
+                    className="flex justify-between"
+                    data-ocid="fee_collect.receipt.txn_id"
+                  >
+                    <span>Transaction ID</span>
+                    <span className="text-foreground font-medium font-mono">
+                      {gatewayTxnId}
+                    </span>
+                  </div>
+                )}
               </div>
               {/* Itemized breakdown */}
               <div className="border-t border-border pt-3 space-y-1 text-xs">
@@ -504,6 +531,18 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
         </div>
       )}
 
+      {/* Payment Gateway Dialog */}
+      <PaymentGateway
+        open={showPaymentGateway}
+        onClose={() => setShowPaymentGateway(false)}
+        amount={totalCollecting}
+        studentName={student?.name ?? ""}
+        onSuccess={({ txnId, paymentMethod: _pm }) => {
+          setShowPaymentGateway(false);
+          proceedWithCollection(txnId);
+        }}
+      />
+
       <AlertDialog
         open={showDuplicateWarning}
         onOpenChange={setShowDuplicateWarning}
@@ -519,7 +558,16 @@ export function FeeCollect({ navigate }: { navigate?: (p: string) => void }) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={proceedWithCollection}>
+            <AlertDialogAction
+              onClick={() => {
+                setShowDuplicateWarning(false);
+                if (paymentMode === "online") {
+                  setShowPaymentGateway(true);
+                } else {
+                  proceedWithCollection();
+                }
+              }}
+            >
               Proceed Anyway
             </AlertDialogAction>
           </AlertDialogFooter>
