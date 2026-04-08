@@ -41,6 +41,7 @@ import {
   Pill,
   Settings,
   Settings2,
+  Shield,
   ShieldCheck,
   ShoppingCart,
   Star,
@@ -325,6 +326,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               path: "/admin/users",
             },
             {
+              label: "Audit Log",
+              icon: <Shield size={16} />,
+              path: "/admin/audit-log",
+            },
+            {
               label: "Class Configuration",
               icon: <Settings2 size={16} />,
               path: "/admin/class-config",
@@ -338,6 +344,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               label: "Settings",
               icon: <Settings size={16} />,
               path: "/admin/settings",
+            },
+            {
+              label: "Online Users",
+              icon: <Users size={16} />,
+              path: "/admin/online-users",
             },
             {
               label: "Change Password",

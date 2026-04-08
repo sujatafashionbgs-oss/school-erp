@@ -89,10 +89,342 @@ export class ExternalBlob {
         return this;
     }
 }
-export interface backendInterface {
+export interface AuditRecord {
+    id: string;
+    status: string;
+    action: string;
+    resourceId: string;
+    actorId: string;
+    resourceType: string;
+    afterValue: string;
+    timestamp: bigint;
+    beforeValue: string;
 }
+export type UserId = string;
+export type Timestamp = bigint;
+export type Result_2 = {
+    __kind__: "ok";
+    ok: string;
+} | {
+    __kind__: "err";
+    err: string;
+};
+export interface UserSession {
+    userId: string;
+    lastActivity: bigint;
+    role: string;
+    isOnline: boolean;
+}
+export type Result = {
+    __kind__: "ok";
+    ok: UserRecord;
+} | {
+    __kind__: "err";
+    err: string;
+};
+export interface Stats {
+    totalWithPermissions: bigint;
+    totalUsers: bigint;
+}
+export type Result_1 = {
+    __kind__: "ok";
+    ok: boolean;
+} | {
+    __kind__: "err";
+    err: string;
+};
+export interface UserRecord {
+    id: UserId;
+    status: string;
+    permissions: Array<string>;
+    name: string;
+    createdAt: Timestamp;
+    role: string;
+    email: string;
+    updatedAt: Timestamp;
+    phone: string;
+}
+export interface backendInterface {
+    clearAuditRecords(): Promise<Result_2>;
+    clearSession(userId: string): Promise<void>;
+    deletePermissions(userId: string): Promise<Result_1>;
+    deleteUser(id: string): Promise<Result_1>;
+    getStats(): Promise<Stats>;
+    loadAllUsers(): Promise<Array<UserRecord>>;
+    loadAuditRecords(): Promise<Array<AuditRecord>>;
+    loadOnlineSessions(thresholdSeconds: bigint): Promise<Array<UserSession>>;
+    loadPermissions(userId: string): Promise<Array<string>>;
+    loadUserById(id: string): Promise<Result>;
+    saveAuditRecord(record: AuditRecord): Promise<Result_2>;
+    savePermissions(userId: string, permissions: Array<string>): Promise<Result_1>;
+    saveUser(user: UserRecord): Promise<Result>;
+    updateSession(userId: string, role: string): Promise<void>;
+}
+import type { Result as _Result, Result_1 as _Result_1, Result_2 as _Result_2, UserRecord as _UserRecord } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
     constructor(private actor: ActorSubclass<_SERVICE>, private _uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, private _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, private processError?: (error: unknown) => never){}
+    async clearAuditRecords(): Promise<Result_2> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.clearAuditRecords();
+                return from_candid_Result_2_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.clearAuditRecords();
+            return from_candid_Result_2_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async clearSession(arg0: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.clearSession(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.clearSession(arg0);
+            return result;
+        }
+    }
+    async deletePermissions(arg0: string): Promise<Result_1> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deletePermissions(arg0);
+                return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deletePermissions(arg0);
+            return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async deleteUser(arg0: string): Promise<Result_1> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.deleteUser(arg0);
+                return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.deleteUser(arg0);
+            return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async getStats(): Promise<Stats> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.getStats();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.getStats();
+            return result;
+        }
+    }
+    async loadAllUsers(): Promise<Array<UserRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.loadAllUsers();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.loadAllUsers();
+            return result;
+        }
+    }
+    async loadAuditRecords(): Promise<Array<AuditRecord>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.loadAuditRecords();
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.loadAuditRecords();
+            return result;
+        }
+    }
+    async loadOnlineSessions(arg0: bigint): Promise<Array<UserSession>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.loadOnlineSessions(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.loadOnlineSessions(arg0);
+            return result;
+        }
+    }
+    async loadPermissions(arg0: string): Promise<Array<string>> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.loadPermissions(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.loadPermissions(arg0);
+            return result;
+        }
+    }
+    async loadUserById(arg0: string): Promise<Result> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.loadUserById(arg0);
+                return from_candid_Result_n5(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.loadUserById(arg0);
+            return from_candid_Result_n5(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async saveAuditRecord(arg0: AuditRecord): Promise<Result_2> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveAuditRecord(arg0);
+                return from_candid_Result_2_n1(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveAuditRecord(arg0);
+            return from_candid_Result_2_n1(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async savePermissions(arg0: string, arg1: Array<string>): Promise<Result_1> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.savePermissions(arg0, arg1);
+                return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.savePermissions(arg0, arg1);
+            return from_candid_Result_1_n3(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async saveUser(arg0: UserRecord): Promise<Result> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.saveUser(arg0);
+                return from_candid_Result_n5(this._uploadFile, this._downloadFile, result);
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.saveUser(arg0);
+            return from_candid_Result_n5(this._uploadFile, this._downloadFile, result);
+        }
+    }
+    async updateSession(arg0: string, arg1: string): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.updateSession(arg0, arg1);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.updateSession(arg0, arg1);
+            return result;
+        }
+    }
+}
+function from_candid_Result_1_n3(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Result_1): Result_1 {
+    return from_candid_variant_n4(_uploadFile, _downloadFile, value);
+}
+function from_candid_Result_2_n1(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Result_2): Result_2 {
+    return from_candid_variant_n2(_uploadFile, _downloadFile, value);
+}
+function from_candid_Result_n5(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: _Result): Result {
+    return from_candid_variant_n6(_uploadFile, _downloadFile, value);
+}
+function from_candid_variant_n2(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: string;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: string;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: value.ok
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
+}
+function from_candid_variant_n4(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: boolean;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: boolean;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: value.ok
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
+}
+function from_candid_variant_n6(_uploadFile: (file: ExternalBlob) => Promise<Uint8Array>, _downloadFile: (file: Uint8Array) => Promise<ExternalBlob>, value: {
+    ok: _UserRecord;
+} | {
+    err: string;
+}): {
+    __kind__: "ok";
+    ok: UserRecord;
+} | {
+    __kind__: "err";
+    err: string;
+} {
+    return "ok" in value ? {
+        __kind__: "ok",
+        ok: value.ok
+    } : "err" in value ? {
+        __kind__: "err",
+        err: value.err
+    } : value;
 }
 export interface CreateActorOptions {
     agent?: Agent;

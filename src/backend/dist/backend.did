@@ -1,0 +1,69 @@
+type UserSession = 
+ record {
+   isOnline: bool;
+   lastActivity: int;
+   role: text;
+   userId: text;
+ };
+type UserRecord = 
+ record {
+   createdAt: Timestamp;
+   email: text;
+   id: UserId;
+   name: text;
+   permissions: vec text;
+   phone: text;
+   role: text;
+   status: text;
+   updatedAt: Timestamp;
+ };
+type UserId = text;
+type Timestamp = int;
+type Stats = 
+ record {
+   totalUsers: nat;
+   totalWithPermissions: nat;
+ };
+type Result_2 = 
+ variant {
+   err: text;
+   ok: text;
+ };
+type Result_1 = 
+ variant {
+   err: text;
+   ok: bool;
+ };
+type Result = 
+ variant {
+   err: text;
+   ok: UserRecord;
+ };
+type AuditRecord = 
+ record {
+   action: text;
+   actorId: text;
+   afterValue: text;
+   beforeValue: text;
+   id: text;
+   resourceId: text;
+   resourceType: text;
+   status: text;
+   timestamp: int;
+ };
+service : {
+  clearAuditRecords: () -> (Result_2);
+  clearSession: (userId: text) -> ();
+  deletePermissions: (userId: text) -> (Result_1);
+  deleteUser: (id: text) -> (Result_1);
+  getStats: () -> (Stats) query;
+  loadAllUsers: () -> (vec UserRecord) query;
+  loadAuditRecords: () -> (vec AuditRecord) query;
+  loadOnlineSessions: (thresholdSeconds: int) -> (vec UserSession) query;
+  loadPermissions: (userId: text) -> (vec text) query;
+  loadUserById: (id: text) -> (Result) query;
+  saveAuditRecord: ("record": AuditRecord) -> (Result_2);
+  savePermissions: (userId: text, permissions: vec text) -> (Result_1);
+  saveUser: (user: UserRecord) -> (Result);
+  updateSession: (userId: text, role: text) -> ();
+}

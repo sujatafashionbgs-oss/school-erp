@@ -279,14 +279,26 @@ function SalarySlipDialog({
     win.close();
   };
 
-  const schoolName =
-    (typeof localStorage !== "undefined" &&
-      localStorage.getItem("erp_settings_schoolName")) ||
-    "SmartSkale Public School";
-  const schoolAddress =
-    (typeof localStorage !== "undefined" &&
-      localStorage.getItem("erp_settings_address")) ||
-    "Gandhi Nagar, Patna, Bihar - 800001";
+  const schoolName = (() => {
+    try {
+      return (
+        localStorage.getItem("erp_settings_schoolName") ||
+        "SmartSkale Public School"
+      );
+    } catch {
+      return "SmartSkale Public School";
+    }
+  })();
+  const schoolAddress = (() => {
+    try {
+      return (
+        localStorage.getItem("erp_settings_address") ||
+        "Gandhi Nagar, Patna, Bihar - 800001"
+      );
+    } catch {
+      return "Gandhi Nagar, Patna, Bihar - 800001";
+    }
+  })();
 
   return (
     <Dialog open={open} onOpenChange={onClose}>

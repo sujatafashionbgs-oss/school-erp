@@ -16,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import {
   Table,
@@ -25,23 +26,36 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useAuth } from "@/context/AuthContext";
+import { useActor } from "@caffeineai/core-infrastructure";
 import {
+  AlertCircle,
+  CheckCircle2,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   ChevronUp,
+  Clock,
+  Download,
   Edit,
   Eye,
   EyeOff,
   KeyRound,
+  Loader2,
   Plus,
+  RefreshCw,
   Search,
   Shield,
   Trash2,
+  Upload,
+  WifiOff,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { createActor } from "../../backend";
+import type { AuditRecord, UserRecord } from "../../backend.d.ts";
 
 // ─── Full Module / Sub-module / Page permission tree ───────────────────────
-// Each entry is a flat permission key. Groups are used only for UI rendering.
 export interface PermissionGroup {
   group: string;
   permissions: { key: string; label: string; sub?: string }[];
@@ -474,7 +488,6 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
   },
 ];
 
-// All flat permission keys
 export const ALL_PERMISSIONS = PERMISSION_GROUPS.flatMap((g) =>
   g.permissions.map((p) => p.key),
 );
@@ -731,10 +744,16 @@ function PermissionsPanel({
   draft,
   role,
   onChange,
+  syncStatus,
+  lastSynced,
+  onSaveToBackend,
 }: {
   draft: string[];
   role: string;
   onChange: (perms: string[]) => void;
+  syncStatus?: "idle" | "syncing" | "saved" | "local";
+  lastSynced?: string | null;
+  onSaveToBackend?: () => void;
 }) {
   const [openGroups, setOpenGroups] = useState<Set<string>>(
     () => new Set(["Dashboard"]),
@@ -758,8 +777,7 @@ function PermissionsPanel({
   const toggleGroupAll = (group: PermissionGroup, checked: boolean) => {
     const keys = group.permissions.map((p) => p.key);
     if (checked) {
-      const merged = Array.from(new Set([...draft, ...keys]));
-      onChange(merged);
+      onChange(Array.from(new Set([...draft, ...keys])));
     } else {
       onChange(draft.filter((k) => !keys.includes(k)));
     }
@@ -843,7 +861,6 @@ function PermissionsPanel({
               key={group.group}
               className="border border-border rounded-lg overflow-hidden"
             >
-              {/* Group header */}
               <button
                 type="button"
                 className="w-full flex items-center gap-2 px-3 py-2 bg-secondary/30 hover:bg-secondary/50 transition-colors text-sm font-semibold"
@@ -869,15 +886,12 @@ function PermissionsPanel({
                 {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
               </button>
 
-              {/* Permission items */}
               {isOpen && (
                 <div className="p-2 grid grid-cols-1 gap-0.5">
                   {group.permissions.map((perm) => (
                     <label
                       key={perm.key}
-                      className={`flex items-center gap-2 text-xs cursor-pointer px-2 py-1 rounded hover:bg-secondary/40 transition-colors ${
-                        perm.sub ? "pl-6 text-muted-foreground" : "font-medium"
-                      }`}
+                      className={`flex items-center gap-2 text-xs cursor-pointer px-2 py-1 rounded hover:bg-secondary/40 transition-colors ${perm.sub ? "pl-6 text-muted-foreground" : "font-medium"}`}
                     >
                       <input
                         type="checkbox"
@@ -902,33 +916,671 @@ function PermissionsPanel({
           );
         })}
       </div>
+
+      {/* Save + sync status footer */}
+      {onSaveToBackend && (
+        <div className="flex items-center justify-between pt-2 border-t border-border">
+          <Button
+            type="button"
+            size="sm"
+            onClick={onSaveToBackend}
+            disabled={syncStatus === "syncing"}
+            data-ocid="users.permissions.save_button"
+          >
+            {syncStatus === "syncing" ? (
+              <>
+                <Loader2 size={13} className="mr-1.5 animate-spin" /> Syncing…
+              </>
+            ) : (
+              "Save Permissions"
+            )}
+          </Button>
+          <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+            {syncStatus === "saved" && (
+              <>
+                <CheckCircle2 size={12} className="text-green-500" /> Saved to
+                server
+              </>
+            )}
+            {syncStatus === "local" && (
+              <>
+                <WifiOff size={12} className="text-yellow-500" /> Saved locally
+              </>
+            )}
+            {syncStatus === "idle" && lastSynced && (
+              <>
+                <Clock size={12} /> Last synced: {lastSynced}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
+  );
+}
+
+// ─── CSV Import Types ────────────────────────────────────────────────────────
+const VALID_ROLES = [
+  "admin",
+  "super-admin",
+  "teacher",
+  "student",
+  "parent",
+  "accountant",
+  "librarian",
+  "lab-incharge",
+  "transport-manager",
+  "vendor",
+] as const;
+
+type CsvRow = Record<string, string>;
+
+interface MappedRow {
+  name: string;
+  email: string;
+  phone: string;
+  role: string;
+  department: string;
+  status: string;
+  errors: string[];
+  _original: CsvRow;
+}
+
+const APP_FIELDS = [
+  { key: "name", label: "Name" },
+  { key: "email", label: "Email / Mobile" },
+  { key: "phone", label: "Phone" },
+  { key: "role", label: "Role" },
+  { key: "department", label: "Department (optional)" },
+  { key: "status", label: "Status (optional)" },
+  { key: "__skip__", label: "— Skip this column —" },
+] as const;
+
+function parseCSV(text: string): { headers: string[]; rows: CsvRow[] } {
+  const lines = text.trim().split(/\r?\n/);
+  if (lines.length < 1) return { headers: [], rows: [] };
+  const headers = lines[0]
+    .split(",")
+    .map((h) => h.trim().replace(/^"|"$/g, ""));
+  const rows: CsvRow[] = [];
+  for (let i = 1; i < lines.length; i++) {
+    const vals = lines[i].split(",").map((v) => v.trim().replace(/^"|"$/g, ""));
+    const row: CsvRow = {};
+    headers.forEach((h, idx) => {
+      row[h] = vals[idx] ?? "";
+    });
+    rows.push(row);
+  }
+  return { headers, rows };
+}
+
+function autoDetectMapping(headers: string[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  const normalize = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  for (const h of headers) {
+    const n = normalize(h);
+    if (n === "name" || n === "fullname") map[h] = "name";
+    else if (n === "email" || n === "mobile" || n === "phone")
+      map[h] = n === "email" ? "email" : "phone";
+    else if (n === "role") map[h] = "role";
+    else if (n === "department" || n === "dept") map[h] = "department";
+    else if (n === "status") map[h] = "status";
+    else map[h] = "__skip__";
+  }
+  return map;
+}
+
+function buildMappedRow(
+  row: CsvRow,
+  columnMap: Record<string, string>,
+): MappedRow {
+  const result: MappedRow = {
+    name: "",
+    email: "",
+    phone: "",
+    role: "",
+    department: "",
+    status: "Active",
+    errors: [],
+    _original: row,
+  };
+  for (const [col, field] of Object.entries(columnMap)) {
+    if (field === "__skip__") continue;
+    const val = row[col] ?? "";
+    if (field === "name") result.name = val;
+    else if (field === "email") result.email = val;
+    else if (field === "phone") result.phone = val;
+    else if (field === "role") result.role = val;
+    else if (field === "department") result.department = val;
+    else if (field === "status") result.status = val || "Active";
+  }
+  // Validate
+  if (!result.name.trim()) result.errors.push("Name is required");
+  if (result.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(result.email))
+    result.errors.push("Invalid email format");
+  if (result.phone && !/^\+?[\d\s\-()]{7,15}$/.test(result.phone))
+    result.errors.push("Invalid phone format");
+  if (!result.role.trim()) result.errors.push("Role is required");
+  else if (
+    !(VALID_ROLES as readonly string[]).includes(
+      result.role.trim().toLowerCase(),
+    )
+  ) {
+    result.errors.push(`Invalid role "${result.role}"`);
+  } else {
+    result.role = result.role.trim().toLowerCase();
+  }
+  return result;
+}
+
+// ─── CSV Import Dialog ────────────────────────────────────────────────────────
+function ImportUsersDialog({
+  open,
+  onOpenChange,
+  onImport,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  onImport: (rows: MappedRow[]) => Promise<void>;
+}) {
+  const [step, setStep] = useState(1);
+  const [file, setFile] = useState<File | null>(null);
+  const [csvHeaders, setCsvHeaders] = useState<string[]>([]);
+  const [csvRows, setCsvRows] = useState<CsvRow[]>([]);
+  const [columnMap, setColumnMap] = useState<Record<string, string>>({});
+  const [mappedRows, setMappedRows] = useState<MappedRow[]>([]);
+  const [isImporting, setIsImporting] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const reset = () => {
+    setStep(1);
+    setFile(null);
+    setCsvHeaders([]);
+    setCsvRows([]);
+    setColumnMap({});
+    setMappedRows([]);
+    setIsImporting(false);
+  };
+
+  const handleClose = () => {
+    reset();
+    onOpenChange(false);
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    if (!f) return;
+    if (!f.name.endsWith(".csv")) {
+      toast.error("Only .csv files are accepted");
+      return;
+    }
+    if (f.size > 5 * 1024 * 1024) {
+      toast.error("File size must be under 5MB");
+      return;
+    }
+    setFile(f);
+    const text = await f.text();
+    const { headers, rows } = parseCSV(text);
+    setCsvHeaders(headers);
+    setCsvRows(rows);
+    setColumnMap(autoDetectMapping(headers));
+  };
+
+  const handleDownloadSample = () => {
+    const csv =
+      "name,email,phone,role,department,status\nRavi Sharma,ravi@school.com,9876543210,teacher,Science,Active\nPriya Mehta,priya@school.com,9876543211,accountant,Finance,Active";
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "sample_users.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  const goToStep2 = () => {
+    if (!file || csvHeaders.length === 0) {
+      toast.error("Please select a valid CSV file");
+      return;
+    }
+    setStep(2);
+  };
+
+  const goToStep3 = () => {
+    const built = csvRows.map((row) => buildMappedRow(row, columnMap));
+    setMappedRows(built);
+    setStep(3);
+  };
+
+  const validRows = mappedRows.filter((r) => r.errors.length === 0);
+  const invalidRows = mappedRows.filter((r) => r.errors.length > 0);
+
+  const handleImport = async () => {
+    if (validRows.length === 0) {
+      toast.error("No valid rows to import");
+      return;
+    }
+    setIsImporting(true);
+    try {
+      await onImport(validRows);
+      handleClose();
+    } finally {
+      setIsImporting(false);
+    }
+  };
+
+  const stepLabels = [
+    "Upload File",
+    "Map Columns",
+    "Preview & Validate",
+    "Import",
+  ];
+
+  return (
+    <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
+      <DialogContent
+        className="max-w-3xl max-h-[95vh] overflow-y-auto"
+        data-ocid="import.dialog"
+      >
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2">
+            <Upload size={18} className="text-primary" />
+            Import Users from CSV
+          </DialogTitle>
+        </DialogHeader>
+
+        {/* Step indicator */}
+        <div className="flex items-center gap-0 mb-4">
+          {stepLabels.map((label, i) => {
+            const num = i + 1;
+            const active = step === num;
+            const done = step > num;
+            return (
+              <div key={label} className="flex items-center flex-1">
+                <div
+                  className={`flex items-center gap-1.5 ${active ? "text-primary font-semibold" : done ? "text-green-600" : "text-muted-foreground"}`}
+                >
+                  <div
+                    className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold border-2 flex-shrink-0 ${active ? "border-primary bg-primary text-primary-foreground" : done ? "border-green-500 bg-green-500 text-white" : "border-muted-foreground/30"}`}
+                  >
+                    {done ? <CheckCircle2 size={12} /> : num}
+                  </div>
+                  <span className="text-xs hidden sm:block">{label}</span>
+                </div>
+                {i < stepLabels.length - 1 && (
+                  <div
+                    className={`flex-1 h-0.5 mx-2 ${done ? "bg-green-500" : "bg-muted-foreground/20"}`}
+                  />
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Step 1: File Upload */}
+        {step === 1 && (
+          <div className="space-y-4">
+            <button
+              type="button"
+              className="w-full border-2 border-dashed border-border rounded-xl p-8 text-center cursor-pointer hover:border-primary/60 hover:bg-primary/5 transition-colors"
+              onClick={() => fileInputRef.current?.click()}
+              data-ocid="import.file_dropzone"
+            >
+              <Upload
+                size={36}
+                className="mx-auto mb-3 text-muted-foreground"
+              />
+              <p className="font-medium">Click to select a CSV file</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                Only .csv files · Max 5MB
+              </p>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".csv"
+                className="hidden"
+                onChange={handleFileChange}
+                data-ocid="import.file_input"
+              />
+            </button>
+            {file && (
+              <div className="flex items-center gap-3 p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                <CheckCircle2
+                  size={16}
+                  className="text-green-500 flex-shrink-0"
+                />
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{file.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {(file.size / 1024).toFixed(1)} KB · {csvRows.length} data
+                    rows · {csvHeaders.length} columns
+                  </p>
+                </div>
+              </div>
+            )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>Need a template?</span>
+              <button
+                type="button"
+                onClick={handleDownloadSample}
+                className="flex items-center gap-1 text-primary hover:underline font-medium"
+              >
+                <Download size={13} /> Download sample CSV
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Step 2: Column Mapping */}
+        {step === 2 && (
+          <div className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Map your CSV columns to the app fields. Preview of first 3 rows
+              shown below.
+            </p>
+            <div className="space-y-2">
+              {csvHeaders.map((header) => (
+                <div key={header} className="flex items-center gap-3">
+                  <span
+                    className="text-sm font-medium w-40 flex-shrink-0 truncate"
+                    title={header}
+                  >
+                    {header}
+                  </span>
+                  <ChevronRight
+                    size={14}
+                    className="text-muted-foreground flex-shrink-0"
+                  />
+                  <Select
+                    value={columnMap[header] ?? "__skip__"}
+                    onValueChange={(val) =>
+                      setColumnMap((prev) => ({ ...prev, [header]: val }))
+                    }
+                  >
+                    <SelectTrigger className="flex-1 h-8 text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {APP_FIELDS.map((f) => (
+                        <SelectItem
+                          key={f.key}
+                          value={f.key}
+                          className="text-xs"
+                        >
+                          {f.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+            {csvRows.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs font-semibold text-muted-foreground mb-1">
+                  Preview (first 3 rows)
+                </p>
+                <div className="overflow-x-auto border rounded-lg">
+                  <table className="text-xs w-full">
+                    <thead className="bg-muted/40">
+                      <tr>
+                        {csvHeaders.map((h) => (
+                          <th
+                            key={h}
+                            className="px-2 py-1.5 text-left font-medium border-r last:border-r-0 whitespace-nowrap"
+                          >
+                            {h}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {csvRows.slice(0, 3).map((row, i) => (
+                        <tr
+                          key={`preview-${csvHeaders[0]}-${i}`}
+                          className="border-t"
+                        >
+                          {csvHeaders.map((h) => (
+                            <td
+                              key={h}
+                              className="px-2 py-1 border-r last:border-r-0 truncate max-w-[120px]"
+                            >
+                              {row[h]}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Step 3: Preview & Validate */}
+        {step === 3 && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-3 flex-wrap">
+              <Badge className="bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-0">
+                <CheckCircle2 size={11} className="mr-1" /> {validRows.length}{" "}
+                valid
+              </Badge>
+              {invalidRows.length > 0 && (
+                <Badge className="bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400 border-0">
+                  <AlertCircle size={11} className="mr-1" />{" "}
+                  {invalidRows.length} invalid (will be skipped)
+                </Badge>
+              )}
+            </div>
+            <div className="overflow-x-auto border rounded-lg max-h-72 overflow-y-auto">
+              <table className="text-xs w-full">
+                <thead className="bg-muted/40 sticky top-0">
+                  <tr>
+                    <th className="px-2 py-1.5 text-left font-medium border-r">
+                      Name
+                    </th>
+                    <th className="px-2 py-1.5 text-left font-medium border-r">
+                      Email
+                    </th>
+                    <th className="px-2 py-1.5 text-left font-medium border-r">
+                      Phone
+                    </th>
+                    <th className="px-2 py-1.5 text-left font-medium border-r">
+                      Role
+                    </th>
+                    <th className="px-2 py-1.5 text-left font-medium border-r">
+                      Dept
+                    </th>
+                    <th className="px-2 py-1.5 text-left font-medium">
+                      Status / Errors
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {mappedRows.map((row, i) => (
+                    <tr
+                      key={`mapped-${row.name}-${row.email}-${i}`}
+                      className={`border-t ${row.errors.length > 0 ? "bg-red-50 dark:bg-red-900/10" : ""}`}
+                      data-ocid={`import.preview_row.${i + 1}`}
+                    >
+                      <td className="px-2 py-1 border-r">
+                        {row.name || (
+                          <span className="text-muted-foreground italic">
+                            —
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-2 py-1 border-r truncate max-w-[120px]">
+                        {row.email || "—"}
+                      </td>
+                      <td className="px-2 py-1 border-r">{row.phone || "—"}</td>
+                      <td className="px-2 py-1 border-r">
+                        <span
+                          className={`px-1.5 py-0.5 rounded-full ${ROLE_COLORS[row.role] || "bg-secondary text-foreground"}`}
+                        >
+                          {row.role || "—"}
+                        </span>
+                      </td>
+                      <td className="px-2 py-1 border-r">
+                        {row.department || "—"}
+                      </td>
+                      <td className="px-2 py-1">
+                        {row.errors.length > 0 ? (
+                          <div className="flex items-start gap-1 text-red-600 dark:text-red-400">
+                            <AlertCircle
+                              size={11}
+                              className="mt-0.5 flex-shrink-0"
+                            />
+                            <span>{row.errors.join("; ")}</span>
+                          </div>
+                        ) : (
+                          <span
+                            className={`px-1.5 py-0.5 rounded-full text-[10px] ${row.status === "Active" ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" : "bg-secondary text-muted-foreground"}`}
+                          >
+                            {row.status}
+                          </span>
+                        )}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            {invalidRows.length > 0 && (
+              <p className="text-xs text-muted-foreground">
+                Invalid rows will be skipped. Only the {validRows.length} valid
+                rows will be imported.
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Step 4: Confirm */}
+        {step === 4 && (
+          <div className="space-y-4 py-4 text-center">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+              <Upload size={28} className="text-primary" />
+            </div>
+            <div>
+              <h3 className="text-lg font-bold">Ready to Import</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {validRows.length} users will be added with their role-default
+                permissions.
+                {invalidRows.length > 0 &&
+                  ` ${invalidRows.length} invalid rows will be skipped.`}
+              </p>
+            </div>
+            <div className="inline-flex items-center gap-2 text-sm bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border border-green-200 dark:border-green-800 rounded-lg px-4 py-2">
+              <CheckCircle2 size={15} /> {validRows.length} valid users ready to
+              import
+            </div>
+          </div>
+        )}
+
+        <DialogFooter className="mt-4 flex-col sm:flex-row gap-2">
+          <Button
+            variant="outline"
+            onClick={step === 1 ? handleClose : () => setStep((s) => s - 1)}
+            className="gap-1"
+            data-ocid="import.back_button"
+          >
+            {step === 1 ? (
+              "Cancel"
+            ) : (
+              <>
+                <ChevronLeft size={14} /> Back
+              </>
+            )}
+          </Button>
+          <div className="flex-1" />
+          {step < 4 && (
+            <Button
+              onClick={
+                step === 1
+                  ? goToStep2
+                  : step === 2
+                    ? goToStep3
+                    : () => setStep(4)
+              }
+              disabled={step === 1 && !file}
+              className="gap-1"
+              data-ocid="import.next_button"
+            >
+              {step === 3 && validRows.length === 0 ? (
+                "No valid rows"
+              ) : (
+                <>
+                  Next <ChevronRight size={14} />
+                </>
+              )}
+            </Button>
+          )}
+          {step === 4 && (
+            <Button
+              onClick={handleImport}
+              disabled={isImporting || validRows.length === 0}
+              data-ocid="import.confirm_button"
+            >
+              {isImporting ? (
+                <>
+                  <Loader2 size={14} className="mr-1.5 animate-spin" />{" "}
+                  Importing…
+                </>
+              ) : (
+                `Import ${validRows.length} Valid User${validRows.length !== 1 ? "s" : ""}`
+              )}
+            </Button>
+          )}
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
   );
 }
 
 // ─── Main Page ──────────────────────────────────────────────────────────────
 export function UserManagementPage() {
-  const [users, setUsers] = useState<UserEntry[]>(INITIAL_USERS);
-  const [search, setSearch] = useState("");
-  const [roleFilter, setRoleFilter] = useState("all");
+  const { actor } = useActor(createActor);
+  const { user: authUser } = useAuth();
+
+  const [isLoading, setIsLoading] = useState(true);
+  const [backendAvailable, setBackendAvailable] = useState(true);
+  const [lastSynced, setLastSynced] = useState<string | null>(null);
+
+  const [users, setUsers] = useState<UserEntry[]>(() => {
+    try {
+      const stored = localStorage.getItem("erp_users");
+      if (stored) return JSON.parse(stored) as UserEntry[];
+    } catch {}
+    return INITIAL_USERS;
+  });
 
   const [userPermissions, setUserPermissions] = useState<
     Record<string, string[]>
-  >(
-    Object.fromEntries(
+  >(() => {
+    try {
+      const stored = localStorage.getItem("erp_user_permissions");
+      if (stored) return JSON.parse(stored) as Record<string, string[]>;
+    } catch {}
+    return Object.fromEntries(
       INITIAL_USERS.map((u) => [
         u.id,
         DEFAULT_ROLE_PERMISSIONS[u.role] ?? ["Dashboard"],
       ]),
-    ),
-  );
+    );
+  });
 
+  const [search, setSearch] = useState("");
+  const [roleFilter, setRoleFilter] = useState("all");
   const [editingUser, setEditingUser] = useState<UserEntry | null>(null);
   const [isAddOpen, setIsAddOpen] = useState(false);
   const [form, setForm] = useState(blankForm);
   const [showPw, setShowPw] = useState(false);
   const [permissionsOpen, setPermissionsOpen] = useState(false);
   const [draftPermissions, setDraftPermissions] = useState<string[]>([]);
+  const [permSyncStatus, setPermSyncStatus] = useState<
+    "idle" | "syncing" | "saved" | "local"
+  >("idle");
 
   const [resetUser, setResetUser] = useState<UserEntry | null>(null);
   const [newPassword, setNewPassword] = useState("");
@@ -937,9 +1589,84 @@ export function UserManagementPage() {
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [deleteUser, setDeleteUser] = useState<UserEntry | null>(null);
-
-  // View-only permissions dialog
   const [viewPermUser, setViewPermUser] = useState<UserEntry | null>(null);
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
+  // ─── Load users from backend on mount ───────────────────────────────────
+  const loadFromBackend = useCallback(async () => {
+    if (!actor) return;
+    setIsLoading(true);
+    try {
+      const backendUsers = await actor.loadAllUsers();
+      if (backendUsers.length > 0) {
+        const mapped: UserEntry[] = backendUsers.map((bu: UserRecord) => ({
+          id: bu.id,
+          name: bu.name,
+          email: bu.email,
+          username: bu.email.split("@")[0],
+          role: bu.role,
+          status: bu.status === "Active" ? "Active" : "Inactive",
+          lastLogin: "Never",
+          permissions: bu.permissions,
+        }));
+        setUsers(mapped);
+
+        // Load permissions for each user
+        const permMap: Record<string, string[]> = {};
+        await Promise.all(
+          mapped.map(async (u) => {
+            try {
+              const perms = await actor.loadPermissions(u.id);
+              permMap[u.id] =
+                perms.length > 0
+                  ? perms
+                  : (DEFAULT_ROLE_PERMISSIONS[u.role] ?? ["Dashboard"]);
+            } catch {
+              permMap[u.id] = DEFAULT_ROLE_PERMISSIONS[u.role] ?? ["Dashboard"];
+            }
+          }),
+        );
+        setUserPermissions(permMap);
+        setBackendAvailable(true);
+        setLastSynced(new Date().toLocaleTimeString());
+        try {
+          localStorage.setItem("erp_users", JSON.stringify(mapped));
+        } catch {}
+        try {
+          localStorage.setItem("erp_user_permissions", JSON.stringify(permMap));
+        } catch {}
+      }
+    } catch {
+      setBackendAvailable(false);
+      toast.warning("Loading from local cache — backend unavailable");
+    } finally {
+      setIsLoading(false);
+    }
+  }, [actor]);
+
+  useEffect(() => {
+    if (actor) {
+      loadFromBackend();
+    } else {
+      setIsLoading(false);
+    }
+  }, [actor, loadFromBackend]);
+
+  // Persist to localStorage on changes
+  useEffect(() => {
+    try {
+      localStorage.setItem("erp_users", JSON.stringify(users));
+    } catch {}
+  }, [users]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "erp_user_permissions",
+        JSON.stringify(userPermissions),
+      );
+    } catch {}
+  }, [userPermissions]);
 
   const filtered = users.filter((u) => {
     const matchSearch =
@@ -954,7 +1681,10 @@ export function UserManagementPage() {
     setForm(blankForm);
     setShowPw(false);
     setPermissionsOpen(false);
-    setDraftPermissions(DEFAULT_ROLE_PERMISSIONS.teacher ?? ["Dashboard"]);
+    setDraftPermissions(
+      DEFAULT_ROLE_PERMISSIONS[blankForm.role] ?? ["Dashboard"],
+    );
+    setPermSyncStatus("idle");
     setIsAddOpen(true);
   };
 
@@ -974,34 +1704,63 @@ export function UserManagementPage() {
       userPermissions[u.id] ??
         DEFAULT_ROLE_PERMISSIONS[u.role] ?? ["Dashboard"],
     );
+    setPermSyncStatus("idle");
     setIsAddOpen(true);
   };
 
-  const handleSave = () => {
+  const buildUserRecord = (id: string, f: typeof form): UserRecord => ({
+    id,
+    name: f.name,
+    email: f.email,
+    role: f.role,
+    status: f.status,
+    permissions: draftPermissions,
+    phone: "",
+    createdAt: BigInt(Date.now()) * BigInt(1_000_000),
+    updatedAt: BigInt(Date.now()) * BigInt(1_000_000),
+  });
+
+  const handleSave = async () => {
     if (!form.name || !form.email || !form.username) {
       toast.error("Name, email, and username are required");
       return;
     }
+
     if (editingUser) {
+      const updated = {
+        ...editingUser,
+        name: form.name,
+        email: form.email,
+        username: form.username,
+        role: form.role,
+        status: form.status,
+      };
       setUsers((prev) =>
-        prev.map((u) =>
-          u.id === editingUser.id
-            ? {
-                ...u,
-                name: form.name,
-                email: form.email,
-                username: form.username,
-                role: form.role,
-                status: form.status,
-              }
-            : u,
-        ),
+        prev.map((u) => (u.id === editingUser.id ? updated : u)),
       );
-      setUserPermissions((prev) => ({
-        ...prev,
-        [editingUser.id]: draftPermissions,
-      }));
-      toast.success("User updated");
+      const savedPerms =
+        draftPermissions.length > 0
+          ? draftPermissions
+          : (DEFAULT_ROLE_PERMISSIONS[form.role] ?? ["Dashboard"]);
+      setUserPermissions((prev) => ({ ...prev, [editingUser.id]: savedPerms }));
+
+      if (actor) {
+        try {
+          const result = await actor.saveUser(
+            buildUserRecord(editingUser.id, form),
+          );
+          if (result.__kind__ === "ok") {
+            toast.success("User updated and synced to server");
+            setLastSynced(new Date().toLocaleTimeString());
+          } else {
+            toast.error(`Backend error: ${result.err}`);
+          }
+        } catch {
+          toast.error("Could not sync to server — saved locally");
+        }
+      } else {
+        toast.success("User updated");
+      }
     } else {
       if (!form.password) {
         toast.error("Password is required for new users");
@@ -1018,17 +1777,159 @@ export function UserManagementPage() {
         lastLogin: "Never",
       };
       setUsers((prev) => [...prev, newUser]);
-      setUserPermissions((prev) => ({ ...prev, [newId]: draftPermissions }));
-      toast.success("User added successfully");
+      const initialPerms =
+        draftPermissions.length > 0
+          ? draftPermissions
+          : (DEFAULT_ROLE_PERMISSIONS[form.role] ?? ["Dashboard"]);
+      setUserPermissions((prev) => ({ ...prev, [newId]: initialPerms }));
+
+      if (actor) {
+        try {
+          const result = await actor.saveUser(buildUserRecord(newId, form));
+          if (result.__kind__ === "ok") {
+            toast.success("User added and synced to server");
+            setLastSynced(new Date().toLocaleTimeString());
+          } else {
+            toast.error(`Backend error: ${result.err}`);
+          }
+        } catch {
+          toast.error("Could not sync to server — saved locally");
+        }
+      } else {
+        toast.success("User added successfully");
+      }
     }
     setIsAddOpen(false);
   };
 
-  const handleDeleteConfirm = () => {
+  const handleSavePermissions = async () => {
+    if (!editingUser) return;
+    setPermSyncStatus("syncing");
+    setUserPermissions((prev) => ({
+      ...prev,
+      [editingUser.id]: draftPermissions,
+    }));
+
+    if (actor) {
+      try {
+        const result = await actor.savePermissions(
+          editingUser.id,
+          draftPermissions,
+        );
+        if (result.__kind__ === "ok") {
+          setPermSyncStatus("saved");
+          setLastSynced(new Date().toLocaleTimeString());
+          toast.success("Permissions saved to server");
+        } else {
+          setPermSyncStatus("local");
+          toast.error(`Backend error: ${result.err}`);
+        }
+      } catch {
+        setPermSyncStatus("local");
+        toast.error("Could not sync permissions — saved locally");
+      }
+    } else {
+      setPermSyncStatus("local");
+      toast.success("Permissions saved locally");
+    }
+
+    setTimeout(() => setPermSyncStatus("idle"), 3000);
+  };
+
+  const handleDeleteConfirm = async () => {
     if (!deleteUser) return;
     setUsers((prev) => prev.filter((u) => u.id !== deleteUser.id));
-    toast.success("User deleted");
+    setUserPermissions((prev) => {
+      const n = { ...prev };
+      delete n[deleteUser.id];
+      return n;
+    });
+
+    if (actor) {
+      try {
+        const [delUser, delPerms] = await Promise.all([
+          actor.deleteUser(deleteUser.id),
+          actor.deletePermissions(deleteUser.id),
+        ]);
+        if (delUser.__kind__ === "ok" && delPerms.__kind__ === "ok") {
+          toast.success("User deleted from server");
+        } else {
+          toast.error("Deleted locally — backend error");
+        }
+      } catch {
+        toast.error("Deleted locally — could not reach server");
+      }
+    } else {
+      toast.success("User deleted");
+    }
     setDeleteUser(null);
+  };
+
+  const handleImport = async (rows: MappedRow[]) => {
+    const actorName = authUser?.name ?? "Admin";
+    const newUsers: UserEntry[] = [];
+    const newPermMap: Record<string, string[]> = {};
+
+    for (const row of rows) {
+      const id = `u-import-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+      const perms = DEFAULT_ROLE_PERMISSIONS[row.role] ?? ["Dashboard"];
+      const entry: UserEntry = {
+        id,
+        name: row.name,
+        email: row.email,
+        username: row.email
+          ? row.email.split("@")[0]
+          : row.name.toLowerCase().replace(/\s+/g, "."),
+        role: row.role,
+        status: (row.status === "Inactive" ? "Inactive" : "Active") as
+          | "Active"
+          | "Inactive",
+        lastLogin: "Never",
+      };
+      newUsers.push(entry);
+      newPermMap[id] = perms;
+
+      if (actor) {
+        const record: UserRecord = {
+          id,
+          name: row.name,
+          email: row.email,
+          phone: row.phone,
+          role: row.role,
+          status: entry.status,
+          permissions: perms,
+          createdAt: BigInt(Date.now()) * BigInt(1_000_000),
+          updatedAt: BigInt(Date.now()) * BigInt(1_000_000),
+        };
+        try {
+          await actor.saveUser(record);
+          const auditEntry: AuditRecord = {
+            id: `audit-${Date.now()}-${id}`,
+            action: "Create",
+            resourceType: "User",
+            resourceId: id,
+            actorId: actorName,
+            beforeValue: "",
+            afterValue: JSON.stringify({
+              name: row.name,
+              email: row.email,
+              role: row.role,
+            }),
+            status: "success",
+            timestamp: BigInt(Date.now()) * BigInt(1_000_000),
+          };
+          await actor.saveAuditRecord(auditEntry);
+        } catch {
+          // saved locally if backend fails
+        }
+      }
+    }
+
+    setUsers((prev) => [...prev, ...newUsers]);
+    setUserPermissions((prev) => ({ ...prev, ...newPermMap }));
+    toast.success(
+      `Successfully imported ${rows.length} user${rows.length !== 1 ? "s" : ""}`,
+    );
   };
 
   function handleResetPassword() {
@@ -1068,7 +1969,6 @@ export function UserManagementPage() {
     );
   }
 
-  // Build a readable summary of permissions grouped by module category
   function getPermSummary(perms: string[]) {
     return PERMISSION_GROUPS.map((g) => {
       const granted = g.permissions.filter((p) => perms.includes(p.key));
@@ -1092,12 +1992,39 @@ export function UserManagementPage() {
             <h1 className="text-2xl font-bold">User Management</h1>
             <p className="text-sm text-muted-foreground">
               Manage users, roles, and granular module permissions
+              {backendAvailable ? (
+                <span className="ml-2 text-green-600 dark:text-green-400 text-xs font-medium">
+                  ● Backend synced
+                </span>
+              ) : (
+                <span className="ml-2 text-yellow-600 dark:text-yellow-400 text-xs font-medium">
+                  ● Local only
+                </span>
+              )}
             </p>
           </div>
         </div>
-        <Button onClick={openAdd} data-ocid="usermgmt.add.button">
-          <Plus size={16} className="mr-1" /> Add User
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadFromBackend}
+            disabled={isLoading || !actor}
+            title="Refresh from backend"
+          >
+            <RefreshCw size={14} className={isLoading ? "animate-spin" : ""} />
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => setIsImportOpen(true)}
+            data-ocid="usermgmt.import.button"
+          >
+            <Upload size={16} className="mr-1" /> Import Users
+          </Button>
+          <Button onClick={openAdd} data-ocid="usermgmt.add.button">
+            <Plus size={16} className="mr-1" /> Add User
+          </Button>
+        </div>
       </div>
 
       {/* Stats */}
@@ -1172,7 +2099,17 @@ export function UserManagementPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {filtered.length === 0 && (
+            {isLoading ? (
+              ["sk1", "sk2", "sk3", "sk4", "sk5"].map((sk) => (
+                <TableRow key={sk}>
+                  {["a", "b", "c", "d", "e", "f", "g"].map((col) => (
+                    <TableCell key={col}>
+                      <Skeleton className="h-5 w-full" />
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : filtered.length === 0 ? (
               <TableRow>
                 <TableCell
                   colSpan={7}
@@ -1182,120 +2119,128 @@ export function UserManagementPage() {
                   No users found
                 </TableCell>
               </TableRow>
-            )}
-            {filtered.map((u, i) => {
-              const perms = userPermissions[u.id] ?? [];
-              const summary = getPermSummary(perms);
-              return (
-                <TableRow key={u.id} data-ocid={`users.item.${i + 1}`}>
-                  <TableCell className="font-medium">{u.name}</TableCell>
-                  <TableCell className="text-muted-foreground text-sm">
-                    <div>{u.email}</div>
-                    <div className="text-xs opacity-70">@{u.username}</div>
-                  </TableCell>
-                  <TableCell>
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${ROLE_COLORS[u.role] || "bg-gray-100 text-gray-700"}`}
-                    >
-                      {u.role}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={u.status === "Active"}
-                        onCheckedChange={() => toggleStatus(u.id)}
-                        data-ocid={`users.status.switch.${i + 1}`}
-                      />
-                      <Badge
-                        variant={
-                          u.status === "Active" ? "default" : "secondary"
-                        }
-                        className={
-                          u.status === "Active"
-                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-0"
-                            : ""
-                        }
+            ) : (
+              filtered.map((u, i) => {
+                const perms = userPermissions[u.id] ?? [];
+                const summary = getPermSummary(perms);
+                return (
+                  <TableRow key={u.id} data-ocid={`users.item.${i + 1}`}>
+                    <TableCell className="font-medium">{u.name}</TableCell>
+                    <TableCell className="text-muted-foreground text-sm">
+                      <div>{u.email}</div>
+                      <div className="text-xs opacity-70">@{u.username}</div>
+                    </TableCell>
+                    <TableCell>
+                      <span
+                        className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium capitalize ${ROLE_COLORS[u.role] || "bg-secondary text-foreground"}`}
                       >
-                        {u.status}
-                      </Badge>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-sm text-muted-foreground">
-                    {u.lastLogin}
-                  </TableCell>
-                  <TableCell>
-                    <button
-                      type="button"
-                      className="text-left"
-                      onClick={() => setViewPermUser(u)}
-                      title="View permissions"
-                    >
-                      <Badge
-                        variant="outline"
-                        className="text-xs cursor-pointer hover:bg-secondary/60 transition-colors"
-                      >
-                        {perms.length}/{ALL_PERMISSIONS.length} permissions
-                      </Badge>
-                      <div className="flex flex-wrap gap-0.5 mt-1 max-w-[180px]">
-                        {summary.slice(0, 3).map((s) => (
-                          <span
-                            key={s.group}
-                            className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full"
-                          >
-                            {s.group}: {s.granted}/{s.total}
-                          </span>
-                        ))}
-                        {summary.length > 3 && (
-                          <span className="text-[10px] text-muted-foreground">
-                            +{summary.length - 3} more
-                          </span>
-                        )}
+                        {u.role}
+                      </span>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Switch
+                          checked={u.status === "Active"}
+                          onCheckedChange={() => toggleStatus(u.id)}
+                          data-ocid={`users.status.switch.${i + 1}`}
+                        />
+                        <Badge
+                          variant={
+                            u.status === "Active" ? "default" : "secondary"
+                          }
+                          className={
+                            u.status === "Active"
+                              ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 border-0"
+                              : ""
+                          }
+                        >
+                          {u.status}
+                        </Badge>
                       </div>
-                    </button>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8"
-                        onClick={() => openEdit(u)}
-                        data-ocid={`usermgmt.edit.button.${u.id}`}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground">
+                      {u.lastLogin}
+                    </TableCell>
+                    <TableCell>
+                      <button
+                        type="button"
+                        className="text-left"
+                        onClick={() => setViewPermUser(u)}
+                        title="View permissions"
                       >
-                        <Edit size={14} />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setResetUser(u);
-                          setNewPassword("");
-                          setConfirmPassword("");
-                          setShowNew(false);
-                          setShowConfirm(false);
-                        }}
-                        data-ocid={`users.reset_password.button.${i + 1}`}
-                      >
-                        <KeyRound size={14} className="mr-1" /> Reset
-                      </Button>
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className="h-8 w-8 text-destructive hover:text-destructive"
-                        onClick={() => setDeleteUser(u)}
-                        data-ocid={`users.delete_button.${i + 1}`}
-                      >
-                        <Trash2 size={14} />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
+                        <Badge
+                          variant="outline"
+                          className="text-xs cursor-pointer hover:bg-secondary/60 transition-colors"
+                        >
+                          {perms.length}/{ALL_PERMISSIONS.length} permissions
+                        </Badge>
+                        <div className="flex flex-wrap gap-0.5 mt-1 max-w-[180px]">
+                          {summary.slice(0, 3).map((s) => (
+                            <span
+                              key={s.group}
+                              className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-full"
+                            >
+                              {s.group}: {s.granted}/{s.total}
+                            </span>
+                          ))}
+                          {summary.length > 3 && (
+                            <span className="text-[10px] text-muted-foreground">
+                              +{summary.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      </button>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8"
+                          onClick={() => openEdit(u)}
+                          data-ocid={`usermgmt.edit.button.${u.id}`}
+                        >
+                          <Edit size={14} />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            setResetUser(u);
+                            setNewPassword("");
+                            setConfirmPassword("");
+                            setShowNew(false);
+                            setShowConfirm(false);
+                          }}
+                          data-ocid={`users.reset_password.button.${i + 1}`}
+                        >
+                          <KeyRound size={14} className="mr-1" /> Reset
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          onClick={() => setDeleteUser(u)}
+                          data-ocid={`users.delete_button.${i + 1}`}
+                        >
+                          <Trash2 size={14} />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            )}
           </TableBody>
         </Table>
       </div>
+
+      {/* Last synced footer */}
+      {lastSynced && (
+        <p className="text-xs text-muted-foreground text-right flex items-center justify-end gap-1">
+          <Clock size={11} /> Last synced: {lastSynced}
+        </p>
+      )}
 
       {/* Add/Edit User Dialog */}
       <Dialog
@@ -1432,6 +2377,11 @@ export function UserManagementPage() {
                     draft={draftPermissions}
                     role={form.role}
                     onChange={setDraftPermissions}
+                    syncStatus={editingUser ? permSyncStatus : undefined}
+                    lastSynced={lastSynced}
+                    onSaveToBackend={
+                      editingUser ? handleSavePermissions : undefined
+                    }
                   />
                 </div>
               )}
@@ -1639,6 +2589,13 @@ export function UserManagementPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Import Users Dialog */}
+      <ImportUsersDialog
+        open={isImportOpen}
+        onOpenChange={setIsImportOpen}
+        onImport={handleImport}
+      />
     </div>
   );
 }

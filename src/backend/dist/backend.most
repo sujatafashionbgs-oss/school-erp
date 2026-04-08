@@ -1,0 +1,57 @@
+// Version: 1.0.0
+type AuditRecord__604071354 =
+  {
+    action : Text;
+    actorId : Text;
+    afterValue : Text;
+    beforeValue : Text;
+    id : Text;
+    resourceId : Text;
+    resourceType : Text;
+    status : Text;
+    timestamp : Int
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Text;
+type UserRecord__595106690 =
+  {
+    createdAt : Timestamp__301639476;
+    email : Text;
+    id : UserId__158757552;
+    name : Text;
+    permissions : [Text];
+    phone : Text;
+    role : Text;
+    status : Text;
+    updatedAt : Timestamp__301639476
+  };
+type UserSession__644385136 =
+  {isOnline : Bool; lastActivity : Int; role : Text; userId : Text};
+actor {
+  stable auditLog :
+    {
+      var root : Node__46230540<Text, AuditRecord__604071354>;
+      var size : Nat__490723111
+    };
+  stable perms :
+    {var root : Node__46230540<Text, [Text]>; var size : Nat__490723111};
+  stable sessions :
+    {
+      var root : Node__46230540<Text, UserSession__644385136>;
+      var size : Nat__490723111
+    };
+  stable users :
+    {
+      var root : Node__46230540<Text, UserRecord__595106690>;
+      var size : Nat__490723111
+    }
+};

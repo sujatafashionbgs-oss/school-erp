@@ -10,7 +10,62 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export interface AuditRecord {
+  'id' : string,
+  'status' : string,
+  'action' : string,
+  'resourceId' : string,
+  'actorId' : string,
+  'resourceType' : string,
+  'afterValue' : string,
+  'timestamp' : bigint,
+  'beforeValue' : string,
+}
+export type Result = { 'ok' : UserRecord } |
+  { 'err' : string };
+export type Result_1 = { 'ok' : boolean } |
+  { 'err' : string };
+export type Result_2 = { 'ok' : string } |
+  { 'err' : string };
+export interface Stats {
+  'totalWithPermissions' : bigint,
+  'totalUsers' : bigint,
+}
+export type Timestamp = bigint;
+export type UserId = string;
+export interface UserRecord {
+  'id' : UserId,
+  'status' : string,
+  'permissions' : Array<string>,
+  'name' : string,
+  'createdAt' : Timestamp,
+  'role' : string,
+  'email' : string,
+  'updatedAt' : Timestamp,
+  'phone' : string,
+}
+export interface UserSession {
+  'userId' : string,
+  'lastActivity' : bigint,
+  'role' : string,
+  'isOnline' : boolean,
+}
+export interface _SERVICE {
+  'clearAuditRecords' : ActorMethod<[], Result_2>,
+  'clearSession' : ActorMethod<[string], undefined>,
+  'deletePermissions' : ActorMethod<[string], Result_1>,
+  'deleteUser' : ActorMethod<[string], Result_1>,
+  'getStats' : ActorMethod<[], Stats>,
+  'loadAllUsers' : ActorMethod<[], Array<UserRecord>>,
+  'loadAuditRecords' : ActorMethod<[], Array<AuditRecord>>,
+  'loadOnlineSessions' : ActorMethod<[bigint], Array<UserSession>>,
+  'loadPermissions' : ActorMethod<[string], Array<string>>,
+  'loadUserById' : ActorMethod<[string], Result>,
+  'saveAuditRecord' : ActorMethod<[AuditRecord], Result_2>,
+  'savePermissions' : ActorMethod<[string, Array<string>], Result_1>,
+  'saveUser' : ActorMethod<[UserRecord], Result>,
+  'updateSession' : ActorMethod<[string, string], undefined>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;

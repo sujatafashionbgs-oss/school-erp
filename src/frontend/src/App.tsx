@@ -17,6 +17,7 @@ import { AdmissionsPage } from "@/pages/admin/AdmissionsPage";
 import { AlumniPage } from "@/pages/admin/AlumniPage";
 import { AppraisalPage } from "@/pages/admin/AppraisalPage";
 import { AttendancePage } from "@/pages/admin/AttendancePage";
+import { AuditLogPage } from "@/pages/admin/AuditLogPage";
 import { CertificatesPage } from "@/pages/admin/CertificatesPage";
 import { CommunicationPage } from "@/pages/admin/CommunicationPage";
 // Admin Pages
@@ -39,6 +40,7 @@ import { LiveChatPage } from "@/pages/admin/LiveChatPage";
 import { NoticesPage } from "@/pages/admin/NoticesPage";
 import { OnlineClassPage } from "@/pages/admin/OnlineClassPage";
 import { OnlineFeePaymentPage } from "@/pages/admin/OnlineFeePaymentPage";
+import { OnlineUsersPage } from "@/pages/admin/OnlineUsersPage";
 import { PharmacyPage } from "@/pages/admin/PharmacyPage";
 import { ReportCardPage } from "@/pages/admin/ReportCardPage";
 import { ReportsPage } from "@/pages/admin/ReportsPage";
@@ -256,11 +258,13 @@ const BREADCRUMBS: Record<string, BreadcrumbEntry> = {
     { label: "Admin" },
     { label: "Student Performance" },
   ],
+  "/admin/audit-log": [{ label: "Admin" }, { label: "Audit Log" }],
   "/student/diary": [{ label: "Student" }, { label: "My Diary" }],
   "/student/online-classes": [
     { label: "Student" },
     { label: "Online Classes" },
   ],
+  "/admin/online-users": [{ label: "Admin" }, { label: "Online Users" }],
 };
 
 // Define which roles can access which route prefixes
@@ -442,6 +446,8 @@ function AppInner() {
   if (path === "/admin/online-classes") return withLayout(<OnlineClassPage />);
   if (path === "/admin/student-performance")
     return withLayout(<StudentPerformancePage />);
+  if (path === "/admin/audit-log") return withLayout(<AuditLogPage />);
+  if (path === "/admin/online-users") return withLayout(<OnlineUsersPage />);
 
   // Teacher routes
   if (path === "/teacher/dashboard")

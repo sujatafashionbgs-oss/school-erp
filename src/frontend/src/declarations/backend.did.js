@@ -8,10 +8,122 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const Result_2 = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
+export const Result_1 = IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text });
+export const Stats = IDL.Record({
+  'totalWithPermissions' : IDL.Nat,
+  'totalUsers' : IDL.Nat,
+});
+export const UserId = IDL.Text;
+export const Timestamp = IDL.Int;
+export const UserRecord = IDL.Record({
+  'id' : UserId,
+  'status' : IDL.Text,
+  'permissions' : IDL.Vec(IDL.Text),
+  'name' : IDL.Text,
+  'createdAt' : Timestamp,
+  'role' : IDL.Text,
+  'email' : IDL.Text,
+  'updatedAt' : Timestamp,
+  'phone' : IDL.Text,
+});
+export const AuditRecord = IDL.Record({
+  'id' : IDL.Text,
+  'status' : IDL.Text,
+  'action' : IDL.Text,
+  'resourceId' : IDL.Text,
+  'actorId' : IDL.Text,
+  'resourceType' : IDL.Text,
+  'afterValue' : IDL.Text,
+  'timestamp' : IDL.Int,
+  'beforeValue' : IDL.Text,
+});
+export const UserSession = IDL.Record({
+  'userId' : IDL.Text,
+  'lastActivity' : IDL.Int,
+  'role' : IDL.Text,
+  'isOnline' : IDL.Bool,
+});
+export const Result = IDL.Variant({ 'ok' : UserRecord, 'err' : IDL.Text });
+
+export const idlService = IDL.Service({
+  'clearAuditRecords' : IDL.Func([], [Result_2], []),
+  'clearSession' : IDL.Func([IDL.Text], [], []),
+  'deletePermissions' : IDL.Func([IDL.Text], [Result_1], []),
+  'deleteUser' : IDL.Func([IDL.Text], [Result_1], []),
+  'getStats' : IDL.Func([], [Stats], ['query']),
+  'loadAllUsers' : IDL.Func([], [IDL.Vec(UserRecord)], ['query']),
+  'loadAuditRecords' : IDL.Func([], [IDL.Vec(AuditRecord)], ['query']),
+  'loadOnlineSessions' : IDL.Func([IDL.Int], [IDL.Vec(UserSession)], ['query']),
+  'loadPermissions' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], ['query']),
+  'loadUserById' : IDL.Func([IDL.Text], [Result], ['query']),
+  'saveAuditRecord' : IDL.Func([AuditRecord], [Result_2], []),
+  'savePermissions' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [Result_1], []),
+  'saveUser' : IDL.Func([UserRecord], [Result], []),
+  'updateSession' : IDL.Func([IDL.Text, IDL.Text], [], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const Result_2 = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
+  const Result_1 = IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text });
+  const Stats = IDL.Record({
+    'totalWithPermissions' : IDL.Nat,
+    'totalUsers' : IDL.Nat,
+  });
+  const UserId = IDL.Text;
+  const Timestamp = IDL.Int;
+  const UserRecord = IDL.Record({
+    'id' : UserId,
+    'status' : IDL.Text,
+    'permissions' : IDL.Vec(IDL.Text),
+    'name' : IDL.Text,
+    'createdAt' : Timestamp,
+    'role' : IDL.Text,
+    'email' : IDL.Text,
+    'updatedAt' : Timestamp,
+    'phone' : IDL.Text,
+  });
+  const AuditRecord = IDL.Record({
+    'id' : IDL.Text,
+    'status' : IDL.Text,
+    'action' : IDL.Text,
+    'resourceId' : IDL.Text,
+    'actorId' : IDL.Text,
+    'resourceType' : IDL.Text,
+    'afterValue' : IDL.Text,
+    'timestamp' : IDL.Int,
+    'beforeValue' : IDL.Text,
+  });
+  const UserSession = IDL.Record({
+    'userId' : IDL.Text,
+    'lastActivity' : IDL.Int,
+    'role' : IDL.Text,
+    'isOnline' : IDL.Bool,
+  });
+  const Result = IDL.Variant({ 'ok' : UserRecord, 'err' : IDL.Text });
+  
+  return IDL.Service({
+    'clearAuditRecords' : IDL.Func([], [Result_2], []),
+    'clearSession' : IDL.Func([IDL.Text], [], []),
+    'deletePermissions' : IDL.Func([IDL.Text], [Result_1], []),
+    'deleteUser' : IDL.Func([IDL.Text], [Result_1], []),
+    'getStats' : IDL.Func([], [Stats], ['query']),
+    'loadAllUsers' : IDL.Func([], [IDL.Vec(UserRecord)], ['query']),
+    'loadAuditRecords' : IDL.Func([], [IDL.Vec(AuditRecord)], ['query']),
+    'loadOnlineSessions' : IDL.Func(
+        [IDL.Int],
+        [IDL.Vec(UserSession)],
+        ['query'],
+      ),
+    'loadPermissions' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], ['query']),
+    'loadUserById' : IDL.Func([IDL.Text], [Result], ['query']),
+    'saveAuditRecord' : IDL.Func([AuditRecord], [Result_2], []),
+    'savePermissions' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [Result_1], []),
+    'saveUser' : IDL.Func([UserRecord], [Result], []),
+    'updateSession' : IDL.Func([IDL.Text, IDL.Text], [], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

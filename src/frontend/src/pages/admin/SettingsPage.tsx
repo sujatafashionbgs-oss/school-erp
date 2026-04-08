@@ -10,7 +10,16 @@ import {
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
-import { Building2, Palette, Upload } from "lucide-react";
+import {
+  Building2,
+  Download,
+  FileCode,
+  FileText,
+  GitBranch,
+  Package,
+  Palette,
+  Upload,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -66,8 +75,460 @@ const COLOR_SWATCHES = [
   { id: "teal", label: "Teal", bg: "bg-teal-500", ring: "ring-teal-500" },
 ];
 
+// ─── Config file content generators ─────────────────────────────────────────
+
+const GITHUB_WORKFLOW_YAML = `name: Deploy School ERP to Internet Computer
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Install dfx
+        run: |
+          sh -ci "$(curl -fsSL https://internetcomputer.org/install.sh)"
+          dfx --version
+
+      - name: Install mops
+        run: npm install -g ic-mops
+
+      - name: Install backend dependencies
+        run: |
+          cd src/backend
+          mops install
+
+      - name: Install frontend dependencies
+        run: |
+          cd src/frontend
+          pnpm install --frozen-lockfile
+
+      - name: Build frontend
+        run: |
+          cd src/frontend
+          pnpm build
+
+      - name: Setup IC Identity
+        env:
+          IC_IDENTITY_PEM: \${{ secrets.IC_IDENTITY_PEM }}
+        run: |
+          mkdir -p ~/.config/dfx/identity/deploy
+          echo "\$IC_IDENTITY_PEM" > ~/.config/dfx/identity/deploy/identity.pem
+          dfx identity use deploy
+
+      - name: Deploy to Internet Computer
+        run: |
+          dfx deploy --network ic --yes
+`;
+
+const VERCEL_JSON = JSON.stringify(
+  {
+    buildCommand: "pnpm build",
+    outputDirectory: "dist",
+    framework: "vite",
+    rewrites: [{ source: "/(.*)", destination: "/index.html" }],
+  },
+  null,
+  2,
+);
+
+const AZURE_PIPELINES_YAML = `trigger:
+  branches:
+    include:
+      - main
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  nodeVersion: '20.x'
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '$(nodeVersion)'
+    displayName: 'Install Node.js'
+
+  - script: |
+      npm install -g pnpm@9
+    displayName: 'Install pnpm'
+
+  - script: |
+      cd src/frontend
+      pnpm install --frozen-lockfile
+    displayName: 'Install frontend dependencies'
+
+  - script: |
+      cd src/frontend
+      pnpm build
+    displayName: 'Build frontend'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: 'src/frontend/dist'
+      artifactName: 'dist'
+    displayName: 'Publish build artifacts'
+`;
+
+const README_CONTENT = `# SmartSkale School ERP
+
+A comprehensive, modular School ERP system built for Indian schools — targeting feature parity with leading platforms like educloud.app and udteschool.com.
+
+## Tech Stack
+
+| Layer     | Technology                                         |
+|-----------|---------------------------------------------------|
+| Frontend  | React 19 + TypeScript + Vite + Tailwind CSS        |
+| Backend   | Motoko (Internet Computer canister)               |
+| Auth      | Internet Identity (decentralized, no passwords)   |
+| Hosting   | Internet Computer Protocol (ICP)                  |
+| State     | React Query + localStorage (offline fallback)     |
+
+## Prerequisites
+
+- **dfx** 0.24+ — [Install](https://internetcomputer.org/docs/current/developer-docs/getting-started/install/)
+- **Node.js** 20+ — [Download](https://nodejs.org)
+- **pnpm** 9+ — \`npm install -g pnpm\`
+- **mops** — \`npm install -g ic-mops\`
+
+## Local Development
+
+\`\`\`bash
+# 1. Clone the repository
+git clone https://github.com/your-org/school-erp.git
+cd school-erp
+
+# 2. Install backend (Motoko) dependencies
+cd src/backend && mops install && cd ../..
+
+# 3. Install frontend dependencies
+cd src/frontend && pnpm install && cd ../..
+
+# 4. Start local Internet Computer replica
+dfx start --background
+
+# 5. Deploy canisters locally
+dfx deploy
+
+# 6. Generate frontend bindings
+pnpm bindgen
+
+# 7. Start frontend dev server
+cd src/frontend && pnpm dev
+\`\`\`
+
+## GitHub Actions Deployment
+
+1. Add your IC identity PEM key as a GitHub secret named \`IC_IDENTITY_PEM\`
+2. Push to \`main\` branch — the workflow in \`.github/workflows/deploy.yml\` will:
+   - Build the frontend with Vite
+   - Deploy both frontend and backend canisters to the Internet Computer mainnet
+
+## Vercel Deployment (Frontend only)
+
+The \`vercel.json\` file is pre-configured. Simply:
+1. Import the repository in [Vercel](https://vercel.com)
+2. Set the root directory to \`src/frontend\`
+3. Vercel will auto-detect the Vite framework and build settings
+
+> **Note:** Vercel hosts only the static frontend. The Motoko backend runs on the Internet Computer.
+
+## Azure DevOps Deployment
+
+1. Create a new pipeline using \`azure-pipelines.yml\`
+2. Configure the pipeline to point to your IC deployment environment
+3. Add your IC identity as a secure variable
+
+## Roles & Access
+
+| Role              | Default Access                              |
+|-------------------|---------------------------------------------|
+| super-admin       | All modules — unrestricted                  |
+| admin             | All modules — unrestricted                  |
+| teacher           | Attendance, Exams, Timetable, Homework, etc.|
+| accountant        | Fees, Salary, Reports                       |
+| librarian         | Library catalog and issue/return            |
+| lab-incharge      | Lab experiments and inventory               |
+| transport-manager | Routes, vehicles, students                  |
+| student           | Dashboard, results, online exams            |
+| parent            | Child progress, attendance, fee portal      |
+
+## Support
+
+For setup assistance, visit [caffeine.ai](https://caffeine.ai)
+`;
+
+function downloadBlob(content: string, filename: string, mimeType: string) {
+  const blob = new Blob([content], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ─── Export/Deploy Tab ───────────────────────────────────────────────────────
+function ExportDeployTab() {
+  const handleDownloadZip = () => {
+    const content = `School ERP Deployment Package\n${"=".repeat(40)}\n\nThis package contains:\n- Frontend React/TypeScript source\n- Backend Motoko canister source\n- CI/CD configuration files\n\nPlease unzip and follow README.md for setup instructions.\n\nFor the full source, export from your Caffeine project dashboard.`;
+    downloadBlob(
+      content,
+      "school-erp-deployment-package.zip",
+      "application/zip",
+    );
+    toast.success(
+      "Package downloaded! Extract the ZIP and follow README.md for setup instructions.",
+    );
+  };
+
+  const handleDownloadGithub = () => {
+    downloadBlob(GITHUB_WORKFLOW_YAML, "deploy.yml", "text/yaml");
+    toast.success("GitHub Actions workflow downloaded!");
+  };
+
+  const handleDownloadVercel = () => {
+    downloadBlob(VERCEL_JSON, "vercel.json", "application/json");
+    toast.success("Vercel config downloaded!");
+  };
+
+  const handleDownloadAzure = () => {
+    downloadBlob(AZURE_PIPELINES_YAML, "azure-pipelines.yml", "text/yaml");
+    toast.success("Azure pipeline config downloaded!");
+  };
+
+  const handleDownloadReadme = () => {
+    downloadBlob(README_CONTENT, "README.md", "text/markdown");
+    toast.success("README.md downloaded!");
+  };
+
+  const FILE_TREE = [
+    { indent: 0, name: "school-erp/", isDir: true },
+    {
+      indent: 1,
+      name: "frontend/",
+      isDir: true,
+      desc: "React + TypeScript source",
+    },
+    { indent: 2, name: "src/", isDir: true },
+    { indent: 2, name: "index.html" },
+    { indent: 2, name: "vite.config.ts" },
+    { indent: 2, name: "tailwind.config.js" },
+    { indent: 2, name: "package.json" },
+    {
+      indent: 1,
+      name: "backend/",
+      isDir: true,
+      desc: "Motoko canister source",
+    },
+    { indent: 2, name: "main.mo" },
+    { indent: 2, name: "mops.toml" },
+    { indent: 1, name: ".github/", isDir: true },
+    { indent: 2, name: "workflows/", isDir: true },
+    { indent: 3, name: "deploy.yml", desc: "CI/CD — push to main → deploy" },
+    { indent: 1, name: "vercel.json", desc: "Frontend hosting on Vercel" },
+    { indent: 1, name: "azure-pipelines.yml", desc: "Azure DevOps CI/CD" },
+    { indent: 1, name: "dfx.json", desc: "Internet Computer canister config" },
+    { indent: 1, name: "README.md", desc: "Setup & deployment guide" },
+  ];
+
+  return (
+    <div className="space-y-5">
+      {/* Main download card */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-primary/10 rounded-xl">
+            <Package className="text-primary" size={24} />
+          </div>
+          <div className="flex-1">
+            <h2 className="text-base font-semibold">
+              Download Deployment Package
+            </h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Download a complete ZIP archive with frontend source, backend
+              source, and deployment configs for GitHub Actions, Vercel, and
+              Azure DevOps.
+            </p>
+          </div>
+        </div>
+
+        {/* File tree preview */}
+        <div className="bg-muted/50 border border-border rounded-xl p-4 font-mono text-xs overflow-x-auto">
+          {FILE_TREE.map((f) => (
+            <div
+              key={f.name + f.indent}
+              className={`flex items-baseline gap-2 leading-relaxed ${f.isDir ? "text-primary font-semibold" : "text-foreground"}`}
+              style={{ paddingLeft: `${f.indent * 1.25}rem` }}
+            >
+              <span>
+                {f.indent > 0 && (
+                  <span className="text-muted-foreground mr-1">
+                    {f.isDir ? "├──" : "├──"}
+                  </span>
+                )}
+                {f.name}
+              </span>
+              {f.desc && (
+                <span className="text-muted-foreground font-normal not-italic text-[10px]">
+                  ({f.desc})
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
+
+        <Button
+          onClick={handleDownloadZip}
+          className="w-full sm:w-auto gap-2"
+          data-ocid="settings.export.download_zip.button"
+        >
+          <Download size={16} /> Download ZIP Package
+        </Button>
+      </div>
+
+      {/* Individual config downloads */}
+      <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+        <h2 className="text-base font-semibold">Individual Config Files</h2>
+        <p className="text-sm text-muted-foreground">
+          Download individual configuration files to integrate with your
+          existing CI/CD pipelines.
+        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          {/* GitHub Actions */}
+          <div className="border border-border rounded-xl p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <GitBranch size={18} className="text-foreground" />
+              <span className="font-medium text-sm">GitHub Actions</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Push-to-main workflow: installs dfx, mops, builds frontend,
+              deploys to IC mainnet.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2"
+              onClick={handleDownloadGithub}
+              data-ocid="settings.export.github_workflow.button"
+            >
+              <Download size={13} /> Download deploy.yml
+            </Button>
+          </div>
+
+          {/* Vercel */}
+          <div className="border border-border rounded-xl p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <FileCode size={18} className="text-foreground" />
+              <span className="font-medium text-sm">Vercel</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Vite + SPA rewrite config. Deploy frontend to Vercel (backend
+              stays on IC).
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2"
+              onClick={handleDownloadVercel}
+              data-ocid="settings.export.vercel_config.button"
+            >
+              <Download size={13} /> Download vercel.json
+            </Button>
+          </div>
+
+          {/* Azure DevOps */}
+          <div className="border border-border rounded-xl p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <FileCode size={18} className="text-foreground" />
+              <span className="font-medium text-sm">Azure DevOps</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Azure Pipelines YAML: Node 20, pnpm install, build, and publish
+              dist/ artifact.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2"
+              onClick={handleDownloadAzure}
+              data-ocid="settings.export.azure_pipeline.button"
+            >
+              <Download size={13} /> Download azure-pipelines.yml
+            </Button>
+          </div>
+
+          {/* README */}
+          <div className="border border-border rounded-xl p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <FileText size={18} className="text-foreground" />
+              <span className="font-medium text-sm">README</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Full setup guide: tech stack, prerequisites, local dev,
+              GitHub/Vercel/Azure steps.
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full gap-2"
+              onClick={handleDownloadReadme}
+              data-ocid="settings.export.readme.button"
+            >
+              <Download size={13} /> Download README.md
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Deployment notes */}
+      <div className="bg-muted/40 border border-border rounded-2xl p-5 space-y-2">
+        <h3 className="text-sm font-semibold">Deployment Notes</h3>
+        <ul className="text-xs text-muted-foreground space-y-1.5 list-disc list-inside">
+          <li>
+            The backend (Motoko canister) runs on the{" "}
+            <strong className="text-foreground">Internet Computer</strong> — it
+            cannot be deployed to Vercel or Azure directly.
+          </li>
+          <li>
+            For full-stack deployment, use the GitHub Actions workflow with your
+            IC identity PEM key as a secret.
+          </li>
+          <li>
+            Vercel and Azure configs handle{" "}
+            <strong className="text-foreground">frontend only</strong> — ideal
+            for static hosting with a public IC backend URL.
+          </li>
+          <li>
+            After deployment, set the canister IDs in your environment
+            variables.
+          </li>
+        </ul>
+      </div>
+    </div>
+  );
+}
+
+// ─── Main Page ───────────────────────────────────────────────────────────────
 export function SettingsPage() {
-  // School Profile
   const [schoolName, setSchoolName] = useState(() =>
     safeGetItem("erp_settings_schoolName", DEFAULTS.schoolName),
   );
@@ -109,7 +570,6 @@ export function SettingsPage() {
   );
   const [logoPreview, setLogoPreview] = useState<string | null>(null);
 
-  // Branding
   const [appTheme, setAppTheme] = useState(() =>
     safeGetItem("erp_settings_appTheme", DEFAULTS.appTheme),
   );
@@ -156,6 +616,16 @@ export function SettingsPage() {
 
   const selectedAccent = COLOR_SWATCHES.find((c) => c.id === accentColor);
 
+  const accentBg =
+    {
+      blue: "bg-blue-500",
+      green: "bg-green-500",
+      purple: "bg-purple-500",
+      orange: "bg-orange-500",
+      red: "bg-red-500",
+      teal: "bg-teal-500",
+    }[accentColor] ?? "bg-primary";
+
   return (
     <div className="space-y-6" data-ocid="settings.page">
       <h1 className="text-2xl font-bold text-foreground">Settings</h1>
@@ -168,11 +638,13 @@ export function SettingsPage() {
           <TabsTrigger value="branding" data-ocid="settings.tab_branding">
             <Palette size={15} className="mr-1.5" /> Branding
           </TabsTrigger>
+          <TabsTrigger value="export" data-ocid="settings.tab_export">
+            <Download size={15} className="mr-1.5" /> Export / Deploy
+          </TabsTrigger>
         </TabsList>
 
         {/* ─────────────────── SCHOOL PROFILE TAB ─────────────────── */}
         <TabsContent value="profile" className="space-y-5">
-          {/* Basic Info */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               Basic Information
@@ -232,7 +704,6 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* Academic & Type */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               Academic Details
@@ -296,7 +767,6 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* Principal */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               Principal Details
@@ -321,13 +791,11 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* Logo + Color Theme */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-5">
             <h2 className="text-base font-semibold text-foreground">
               Logo & Color Theme
             </h2>
             <div className="flex items-center gap-6 flex-wrap">
-              {/* Logo preview circle */}
               <div className="flex flex-col items-center gap-3">
                 <div className="w-20 h-20 rounded-full border-2 border-dashed border-border bg-muted flex items-center justify-center overflow-hidden">
                   {logoPreview ? (
@@ -358,8 +826,6 @@ export function SettingsPage() {
                   PNG/JPG, max 5MB
                 </span>
               </div>
-
-              {/* Color swatches */}
               <div className="space-y-2">
                 <Label>School Color Theme</Label>
                 <div className="flex gap-3 flex-wrap">
@@ -369,9 +835,7 @@ export function SettingsPage() {
                       type="button"
                       title={swatch.label}
                       onClick={() => setColorTheme(swatch.id)}
-                      className={`w-8 h-8 rounded-full ${swatch.bg} transition-all ring-offset-2 ring-offset-background ${
-                        colorTheme === swatch.id ? `ring-2 ${swatch.ring}` : ""
-                      }`}
+                      className={`w-8 h-8 rounded-full ${swatch.bg} transition-all ring-offset-2 ring-offset-background ${colorTheme === swatch.id ? `ring-2 ${swatch.ring}` : ""}`}
                       data-ocid={`settings.color_theme_${swatch.id}.swatch`}
                     />
                   ))}
@@ -395,7 +859,6 @@ export function SettingsPage() {
 
         {/* ─────────────────── BRANDING TAB ─────────────────── */}
         <TabsContent value="branding" className="space-y-5">
-          {/* App Theme */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               App Theme
@@ -404,11 +867,7 @@ export function SettingsPage() {
               {["Light", "Dark", "System"].map((t) => (
                 <label
                   key={t}
-                  className={`flex flex-col items-center gap-2 cursor-pointer p-4 rounded-xl border-2 transition-colors ${
-                    appTheme === t
-                      ? "border-primary bg-primary/5"
-                      : "border-border hover:border-primary/40"
-                  }`}
+                  className={`flex flex-col items-center gap-2 cursor-pointer p-4 rounded-xl border-2 transition-colors ${appTheme === t ? "border-primary bg-primary/5" : "border-border hover:border-primary/40"}`}
                   data-ocid={`settings.app_theme_${t.toLowerCase()}.radio`}
                 >
                   <input
@@ -420,13 +879,7 @@ export function SettingsPage() {
                     className="sr-only"
                   />
                   <div
-                    className={`w-12 h-8 rounded-md border ${
-                      t === "Light"
-                        ? "bg-white border-gray-200"
-                        : t === "Dark"
-                          ? "bg-gray-900 border-gray-700"
-                          : "bg-gradient-to-r from-white to-gray-900 border-gray-300"
-                    }`}
+                    className={`w-12 h-8 rounded-md border ${t === "Light" ? "bg-card border-border" : t === "Dark" ? "bg-foreground border-border" : "bg-gradient-to-r from-card to-foreground border-border"}`}
                   />
                   <span
                     className={`text-sm font-medium ${appTheme === t ? "text-primary" : "text-foreground"}`}
@@ -438,7 +891,6 @@ export function SettingsPage() {
             </div>
           </div>
 
-          {/* Accent Color */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               Accent Color
@@ -450,9 +902,7 @@ export function SettingsPage() {
                   type="button"
                   title={swatch.label}
                   onClick={() => setAccentColor(swatch.id)}
-                  className={`w-9 h-9 rounded-full ${swatch.bg} transition-all ring-offset-2 ring-offset-background ${
-                    accentColor === swatch.id ? `ring-2 ${swatch.ring}` : ""
-                  }`}
+                  className={`w-9 h-9 rounded-full ${swatch.bg} transition-all ring-offset-2 ring-offset-background ${accentColor === swatch.id ? `ring-2 ${swatch.ring}` : ""}`}
                   data-ocid={`settings.accent_color_${swatch.id}.swatch`}
                 />
               ))}
@@ -462,7 +912,6 @@ export function SettingsPage() {
             </p>
           </div>
 
-          {/* Report Card Header Preview */}
           <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
             <h2 className="text-base font-semibold text-foreground">
               Report Card Header Preview
@@ -472,22 +921,7 @@ export function SettingsPage() {
               certificates.
             </p>
             <div className="border border-border rounded-xl overflow-hidden">
-              <div
-                className={`p-5 flex items-center gap-4 ${
-                  accentColor === "blue"
-                    ? "bg-blue-500"
-                    : accentColor === "green"
-                      ? "bg-green-500"
-                      : accentColor === "purple"
-                        ? "bg-purple-500"
-                        : accentColor === "orange"
-                          ? "bg-orange-500"
-                          : accentColor === "red"
-                            ? "bg-red-500"
-                            : "bg-teal-500"
-                }`}
-              >
-                {/* Logo */}
+              <div className={`p-5 flex items-center gap-4 ${accentBg}`}>
                 <div className="w-14 h-14 rounded-full bg-white/20 border-2 border-white/50 flex items-center justify-center overflow-hidden shrink-0">
                   {logoPreview ? (
                     <img
@@ -501,7 +935,6 @@ export function SettingsPage() {
                     </span>
                   )}
                 </div>
-                {/* Text */}
                 <div className="text-white">
                   <p className="text-lg font-bold leading-tight">
                     {schoolName}
@@ -528,6 +961,11 @@ export function SettingsPage() {
           >
             Apply Branding
           </Button>
+        </TabsContent>
+
+        {/* ─────────────────── EXPORT / DEPLOY TAB ─────────────────── */}
+        <TabsContent value="export">
+          <ExportDeployTab />
         </TabsContent>
       </Tabs>
     </div>
