@@ -13,16 +13,90 @@ import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { type Student, mockStudents } from "@/data/mockStudents";
 import { useClassConfig } from "@/hooks/useClassConfig";
-import { useLoadingData } from "@/hooks/useLoadingData";
-import { Edit, Eye, Filter, Plus, Search, Trash2, Upload } from "lucide-react";
-import { useRef, useState } from "react";
+import { useActor } from "@caffeineai/core-infrastructure";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Edit,
+  Eye,
+  Filter,
+  Plus,
+  Search,
+  Trash2,
+  Upload,
+  WifiOff,
+} from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { createActor } from "../../backend";
+import type { StudentRecord } from "../../backend.d.ts";
+
 // xlsx is loaded dynamically at runtime
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const XLSX: any = typeof window !== "undefined" ? (window as any).XLSX : null;
 
+const PAGE_SIZE = 30;
+
 interface StudentsPageProps {
   navigate: (path: string) => void;
+}
+
+// Convert backend StudentRecord → frontend Student shape
+function toFrontendStudent(r: StudentRecord): Student {
+  return {
+    id: r.id,
+    admissionNo: r.admissionNo,
+    name: r.name,
+    fatherName: r.parentName,
+    motherName: "",
+    dob: r.dob,
+    gender: r.gender === "Female" ? "Female" : "Male",
+    className: r.className,
+    section: r.section,
+    rollNo: String(r.rollNo),
+    mobile: r.phone,
+    email: "",
+    address: r.address,
+    city: "",
+    state: "",
+    pin: "",
+    admissionDate: r.admissionDate,
+    bloodGroup: r.bloodGroup,
+    religion: r.religion,
+    category: r.category,
+    attendance: 0,
+    feeDue: 0,
+    status:
+      r.status === "Inactive"
+        ? "Inactive"
+        : r.status === "Transfer"
+          ? "Transfer"
+          : "Active",
+  };
+}
+
+// Convert frontend Student → backend StudentRecord shape
+function toBackendStudent(s: Partial<Student> & { id: string }): StudentRecord {
+  return {
+    id: s.id,
+    admissionNo: s.admissionNo ?? "",
+    name: s.name ?? "",
+    dob: s.dob ?? "",
+    status: s.status ?? "Active",
+    feeStatus: "Paid",
+    admissionDate: s.admissionDate ?? new Date().toISOString().split("T")[0],
+    section: s.section ?? "",
+    bloodGroup: s.bloodGroup ?? "",
+    address: s.address ?? "",
+    gender: s.gender ?? "Male",
+    category: s.category ?? "General",
+    phone: s.mobile ?? "",
+    rollNo: BigInt(s.rollNo ? Number.parseInt(s.rollNo) || 0 : 0),
+    religion: s.religion ?? "",
+    parentMobile: s.mobile ?? "",
+    className: s.className ?? "",
+    parentName: s.fatherName ?? "",
+  };
 }
 
 function StudentsSkeleton() {
@@ -86,19 +160,26 @@ const STUDENT_FIELDS = [
 ];
 
 export function StudentsPage({ navigate }: StudentsPageProps) {
+  const { actor, isFetching: isActorLoading } = useActor(createActor);
+  const { getActiveSections } = useClassConfig();
+
+  const [students, setStudents] = useState<Student[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isDemoMode, setIsDemoMode] = useState(false);
+
   const [search, setSearch] = useState("");
   const [classFilter, setClassFilter] = useState("");
   const [sectionFilter, setSectionFilter] = useState("");
-  const { loading } = useLoadingData(null);
-  const { getActiveSections } = useClassConfig();
 
-  const [students, setStudents] = useState<Student[]>(mockStudents);
   const [viewStudent, setViewStudent] = useState<Student | null>(null);
   const [editStudent, setEditStudent] = useState<Student | null>(null);
-  const [deleteStudent, setDeleteStudent] = useState<Student | null>(null);
+  const [deleteStudentTarget, setDeleteStudentTarget] =
+    useState<Student | null>(null);
   const [editForm, setEditForm] = useState<Partial<Student>>({});
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Import dialog state
   const [importOpen, setImportOpen] = useState(false);
   const [importHeaders, setImportHeaders] = useState<string[]>([]);
   const [importRawRows, setImportRawRows] = useState<string[][]>([]);
@@ -107,48 +188,143 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
   const [importParsed, setImportParsed] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  if (loading) return <StudentsSkeleton />;
+  // Debounce timer ref
+  const searchTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const classes = [...new Set(students.map((s) => s.className))].sort();
+  // ─── Load students from backend ────────────────────────────────────────────
+  const loadStudents = useCallback(
+    async (page: number, searchTerm?: string, cls?: string, sec?: string) => {
+      setIsLoading(true);
+      try {
+        if (!actor || isActorLoading) throw new Error("actor unavailable");
+
+        let result: {
+          students: StudentRecord[];
+          total: bigint;
+          page: bigint;
+          pageSize: bigint;
+        };
+        if (searchTerm || cls || sec) {
+          result = await actor.searchStudents({
+            page: BigInt(page - 1),
+            pageSize: BigInt(PAGE_SIZE),
+            nameQuery: searchTerm || undefined,
+            className: cls || undefined,
+            section: sec || undefined,
+          });
+        } else {
+          result = await actor.loadAllStudents(
+            BigInt(page - 1),
+            BigInt(PAGE_SIZE),
+          );
+        }
+
+        setStudents(result.students.map(toFrontendStudent));
+        setTotalCount(Number(result.total));
+        setIsDemoMode(false);
+      } catch {
+        // Fallback to mock data
+        const filtered = mockStudents.filter((s) => {
+          const matchSearch =
+            !searchTerm ||
+            s.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            s.admissionNo.includes(searchTerm) ||
+            s.mobile.includes(searchTerm);
+          const matchClass = !cls || s.className === cls;
+          const matchSection = !sec || s.section === sec;
+          return matchSearch && matchClass && matchSection;
+        });
+        const start = (page - 1) * PAGE_SIZE;
+        setStudents(filtered.slice(start, start + PAGE_SIZE));
+        setTotalCount(filtered.length);
+        setIsDemoMode(true);
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [actor, isActorLoading],
+  );
+
+  // Initial load
+  useEffect(() => {
+    if (!isActorLoading) {
+      loadStudents(1, "", "", "");
+    }
+  }, [isActorLoading, loadStudents]);
+
+  // Debounced search
+  useEffect(() => {
+    if (searchTimer.current) clearTimeout(searchTimer.current);
+    searchTimer.current = setTimeout(() => {
+      setCurrentPage(1);
+      loadStudents(1, search, classFilter, sectionFilter);
+    }, 300);
+    return () => {
+      if (searchTimer.current) clearTimeout(searchTimer.current);
+    };
+  }, [search, classFilter, sectionFilter, loadStudents]);
+
+  // ─── Save / Edit ──────────────────────────────────────────────────────────
+  const handleEditSave = async () => {
+    if (!editStudent) return;
+    setIsSaving(true);
+    const updated = { ...editStudent, ...editForm } as Student;
+    try {
+      if (actor && !isActorLoading) {
+        const result = await actor.saveStudent(toBackendStudent(updated));
+        if (result.__kind__ === "err") throw new Error(result.err);
+        toast.success("Student updated successfully");
+      } else {
+        toast.success("Student updated (demo mode)");
+      }
+      setStudents((prev) =>
+        prev.map((s) => (s.id === editStudent.id ? updated : s)),
+      );
+      setEditStudent(null);
+    } catch (err) {
+      toast.error(
+        `Failed to save: ${err instanceof Error ? err.message : "Unknown error"}`,
+      );
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // ─── Delete ──────────────────────────────────────────────────────────────
+  const handleDeleteConfirm = async () => {
+    if (!deleteStudentTarget) return;
+    try {
+      if (actor && !isActorLoading) {
+        const result = await actor.deleteStudent(deleteStudentTarget.id);
+        if (result.__kind__ === "err") throw new Error(result.err);
+      }
+      setStudents((prev) =>
+        prev.filter((s) => s.id !== deleteStudentTarget.id),
+      );
+      setTotalCount((c) => c - 1);
+      toast.success("Student deleted");
+      setDeleteStudentTarget(null);
+    } catch (err) {
+      toast.error(
+        `Delete failed: ${err instanceof Error ? err.message : "Unknown error"}`,
+      );
+    }
+  };
+
+  // ─── Pagination ───────────────────────────────────────────────────────────
+  const totalPages = Math.max(1, Math.ceil(totalCount / PAGE_SIZE));
+  const handlePageChange = (p: number) => {
+    setCurrentPage(p);
+    loadStudents(p, search, classFilter, sectionFilter);
+  };
+
+  // ─── Derived UI state ─────────────────────────────────────────────────────
+  const classes = [...new Set(mockStudents.map((s) => s.className))].sort();
   const sections = classFilter
     ? getActiveSections(classFilter)
-    : [...new Set(students.map((s) => s.section))].sort();
+    : [...new Set(mockStudents.map((s) => s.section))].sort();
 
-  const filtered = students.filter((s) => {
-    const matchSearch =
-      !search ||
-      s.name.toLowerCase().includes(search.toLowerCase()) ||
-      s.admissionNo.includes(search) ||
-      s.mobile.includes(search);
-    const matchClass = !classFilter || s.className === classFilter;
-    const matchSection = !sectionFilter || s.section === sectionFilter;
-    return matchSearch && matchClass && matchSection;
-  });
-
-  const handleEditOpen = (s: Student) => {
-    setEditStudent(s);
-    setEditForm({ ...s });
-  };
-
-  const handleEditSave = () => {
-    if (!editStudent) return;
-    setStudents((prev) =>
-      prev.map((s) =>
-        s.id === editStudent.id ? ({ ...s, ...editForm } as Student) : s,
-      ),
-    );
-    toast.success("Student updated successfully");
-    setEditStudent(null);
-  };
-
-  const handleDeleteConfirm = () => {
-    if (!deleteStudent) return;
-    setStudents((prev) => prev.filter((s) => s.id !== deleteStudent.id));
-    toast.success("Student deleted");
-    setDeleteStudent(null);
-  };
-
-  // CSV Import handlers
+  // ─── CSV Import helpers ───────────────────────────────────────────────────
   const applyAutoMapping = (headers: string[]) => {
     const map: Record<number, string> = {};
     headers.forEach((h, idx) => {
@@ -178,7 +354,6 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
     if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
       const reader = new FileReader();
       reader.onload = (ev) => {
@@ -255,7 +430,7 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
     );
   };
 
-  const handleImportAll = () => {
+  const handleImportAll = async () => {
     const valid = importRows.filter((r) => r.name && r.admissionNo);
     const newStudents: Student[] = valid.map((r) => ({
       id: `s-imp-${Date.now()}-${r.id}`,
@@ -282,8 +457,26 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
       feeDue: 0,
       status: "Active",
     }));
+
+    if (actor && !isActorLoading) {
+      let saved = 0;
+      for (const s of newStudents) {
+        try {
+          const result = await actor.saveStudent(toBackendStudent(s));
+          if (result.__kind__ === "ok") saved++;
+        } catch {
+          // continue
+        }
+      }
+      toast.success(
+        `${saved} of ${newStudents.length} students saved to backend`,
+      );
+    } else {
+      toast.success(`${newStudents.length} students imported (demo mode)`);
+    }
+
     setStudents((prev) => [...prev, ...newStudents]);
-    toast.success(`${newStudents.length} students imported successfully!`);
+    setTotalCount((c) => c + newStudents.length);
     setImportOpen(false);
     setImportRows([]);
     setImportParsed(false);
@@ -291,7 +484,7 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
     setImportRawRows([]);
   };
 
-  const exportData = filtered.map((s) => ({
+  const exportData = students.map((s) => ({
     Name: s.name,
     "Admission No": s.admissionNo,
     Class: s.className,
@@ -302,13 +495,23 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
     "Fee Due": s.feeDue,
   }));
 
+  if (isLoading) return <StudentsSkeleton />;
+
   return (
     <div className="space-y-5" data-ocid="students.page">
+      {/* Demo mode banner */}
+      {isDemoMode && (
+        <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-sm">
+          <WifiOff size={15} />
+          <span>Demo mode — showing sample data. Backend unavailable.</span>
+        </div>
+      )}
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <h1 className="text-2xl font-bold text-foreground">Students</h1>
           <p className="text-muted-foreground text-sm">
-            {filtered.length} of {students.length} students
+            {students.length} of {totalCount} students
           </p>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -383,7 +586,7 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
       </div>
 
       <div className="space-y-2" data-ocid="students.list">
-        {filtered.map((s: Student, i: number) => (
+        {students.map((s: Student, i: number) => (
           <div
             key={s.admissionNo}
             data-ocid={`students.item.${i + 1}`}
@@ -427,7 +630,10 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => handleEditOpen(s)}
+                  onClick={() => {
+                    setEditStudent(s);
+                    setEditForm({ ...s });
+                  }}
                   data-ocid={`students.edit_button.${i + 1}`}
                 >
                   <Edit size={14} />
@@ -436,7 +642,7 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
                   variant="ghost"
                   size="icon"
                   className="h-8 w-8 text-destructive hover:text-destructive"
-                  onClick={() => setDeleteStudent(s)}
+                  onClick={() => setDeleteStudentTarget(s)}
                   data-ocid={`students.delete_button.${i + 1}`}
                 >
                   <Trash2 size={14} />
@@ -445,7 +651,7 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
             </div>
           </div>
         ))}
-        {filtered.length === 0 && (
+        {students.length === 0 && (
           <div
             className="text-center py-10 text-muted-foreground"
             data-ocid="students.empty_state"
@@ -454,6 +660,35 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
           </div>
         )}
       </div>
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2">
+          <span className="text-sm text-muted-foreground">
+            Page {currentPage} of {totalPages} ({totalCount} total)
+          </span>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage <= 1}
+              onClick={() => handlePageChange(currentPage - 1)}
+              data-ocid="students.pagination.prev"
+            >
+              <ChevronLeft size={15} /> Prev
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={currentPage >= totalPages}
+              onClick={() => handlePageChange(currentPage + 1)}
+              data-ocid="students.pagination.next"
+            >
+              Next <ChevronRight size={15} />
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* View Modal */}
       <Dialog
@@ -559,14 +794,16 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
               variant="outline"
               onClick={() => setEditStudent(null)}
               data-ocid="students.edit.cancel_button"
+              disabled={isSaving}
             >
               Cancel
             </Button>
             <Button
               onClick={handleEditSave}
+              disabled={isSaving}
               data-ocid="students.edit.save_button"
             >
-              Save Changes
+              {isSaving ? "Saving…" : "Save Changes"}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -574,8 +811,8 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
 
       {/* Delete Confirmation Modal */}
       <Dialog
-        open={!!deleteStudent}
-        onOpenChange={(open) => !open && setDeleteStudent(null)}
+        open={!!deleteStudentTarget}
+        onOpenChange={(open) => !open && setDeleteStudentTarget(null)}
       >
         <DialogContent className="max-w-sm">
           <DialogHeader>
@@ -584,14 +821,14 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
           <p className="text-sm text-muted-foreground">
             Are you sure you want to delete{" "}
             <span className="font-semibold text-foreground">
-              {deleteStudent?.name}
+              {deleteStudentTarget?.name}
             </span>
             ? This action cannot be undone.
           </p>
           <DialogFooter>
             <Button
               variant="outline"
-              onClick={() => setDeleteStudent(null)}
+              onClick={() => setDeleteStudentTarget(null)}
               data-ocid="students.delete.cancel_button"
             >
               Cancel
@@ -614,7 +851,6 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
             <DialogTitle>Import Students from CSV</DialogTitle>
           </DialogHeader>
           <div className="space-y-5">
-            {/* Step 1: File upload */}
             <div className="space-y-2">
               <Label className="text-sm font-semibold">
                 Step 1: Upload CSV File
@@ -647,7 +883,6 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
               />
             </div>
 
-            {/* Step 2: Column mapping */}
             {importHeaders.length > 0 && (
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">
@@ -683,16 +918,15 @@ export function StudentsPage({ navigate }: StudentsPageProps) {
                   onClick={handleParsePreview}
                   data-ocid="students.import.parse_button"
                 >
-                  Parse & Preview
+                  Parse &amp; Preview
                 </Button>
               </div>
             )}
 
-            {/* Step 3: Editable preview table */}
             {importParsed && importRows.length > 0 && (
               <div className="space-y-2">
                 <Label className="text-sm font-semibold">
-                  Step 3: Review & Edit ({importRows.length} rows)
+                  Step 3: Review &amp; Edit ({importRows.length} rows)
                 </Label>
                 <div className="overflow-x-auto border border-border rounded-xl">
                   <table className="w-full text-xs">

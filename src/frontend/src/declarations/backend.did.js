@@ -10,9 +10,96 @@ import { IDL } from '@icp-sdk/core/candid';
 
 export const Result_2 = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
 export const Result_1 = IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text });
+export const ExamId = IDL.Text;
+export const AcademicReport = IDL.Record({
+  'examTitle' : IDL.Text,
+  'section' : IDL.Text,
+  'averageMarks' : IDL.Float64,
+  'examId' : ExamId,
+  'topScore' : IDL.Float64,
+  'className' : IDL.Text,
+  'passPercentage' : IDL.Float64,
+});
+export const AcademicReportPage = IDL.Record({
+  'total' : IDL.Nat,
+  'page' : IDL.Nat,
+  'pageSize' : IDL.Nat,
+  'items' : IDL.Vec(AcademicReport),
+});
+export const AttendanceReport = IDL.Record({
+  'present' : IDL.Nat,
+  'date' : IDL.Text,
+  'late' : IDL.Nat,
+  'section' : IDL.Text,
+  'absent' : IDL.Nat,
+  'className' : IDL.Text,
+  'percentage' : IDL.Float64,
+});
+export const AttendanceReportPage = IDL.Record({
+  'total' : IDL.Nat,
+  'page' : IDL.Nat,
+  'pageSize' : IDL.Nat,
+  'items' : IDL.Vec(AttendanceReport),
+});
+export const StudentId = IDL.Text;
+export const AttendanceSummary = IDL.Record({
+  'studentId' : StudentId,
+  'halfDay' : IDL.Nat,
+  'present' : IDL.Nat,
+  'late' : IDL.Nat,
+  'totalDays' : IDL.Nat,
+  'absent' : IDL.Nat,
+  'percentage' : IDL.Float64,
+});
+export const FeeReport = IDL.Record({
+  'outstanding' : IDL.Float64,
+  'date' : IDL.Text,
+  'totalCollected' : IDL.Float64,
+  'cashPayments' : IDL.Float64,
+  'totalStudents' : IDL.Nat,
+  'onlinePayments' : IDL.Float64,
+});
+export const FeeReportPage = IDL.Record({
+  'total' : IDL.Nat,
+  'page' : IDL.Nat,
+  'pageSize' : IDL.Nat,
+  'items' : IDL.Vec(FeeReport),
+});
+export const FeeSummary = IDL.Record({
+  'totalCollected' : IDL.Float64,
+  'totalStudents' : IDL.Nat,
+  'totalOutstanding' : IDL.Float64,
+  'paidStudents' : IDL.Nat,
+});
 export const Stats = IDL.Record({
   'totalWithPermissions' : IDL.Nat,
   'totalUsers' : IDL.Nat,
+});
+export const StudentRecord = IDL.Record({
+  'id' : StudentId,
+  'dob' : IDL.Text,
+  'status' : IDL.Text,
+  'feeStatus' : IDL.Text,
+  'admissionDate' : IDL.Text,
+  'name' : IDL.Text,
+  'section' : IDL.Text,
+  'bloodGroup' : IDL.Text,
+  'address' : IDL.Text,
+  'gender' : IDL.Text,
+  'admissionNo' : IDL.Text,
+  'category' : IDL.Text,
+  'phone' : IDL.Text,
+  'rollNo' : IDL.Nat,
+  'religion' : IDL.Text,
+  'parentMobile' : IDL.Text,
+  'className' : IDL.Text,
+  'parentName' : IDL.Text,
+});
+export const StudentPage = IDL.Record({
+  'total' : IDL.Nat,
+  'students' : IDL.Vec(StudentRecord),
+  'page' : IDL.Nat,
+  'pageSize' : IDL.Nat,
 });
 export const UserId = IDL.Text;
 export const Timestamp = IDL.Int;
@@ -27,6 +114,23 @@ export const UserRecord = IDL.Record({
   'updatedAt' : Timestamp,
   'phone' : IDL.Text,
 });
+export const AttendanceId = IDL.Text;
+export const AttendanceStatus = IDL.Variant({
+  'halfDay' : IDL.Null,
+  'present' : IDL.Null,
+  'late' : IDL.Null,
+  'absent' : IDL.Null,
+});
+export const AttendanceRecord = IDL.Record({
+  'id' : AttendanceId,
+  'status' : AttendanceStatus,
+  'studentId' : StudentId,
+  'date' : IDL.Text,
+  'section' : IDL.Text,
+  'markedBy' : IDL.Text,
+  'className' : IDL.Text,
+  'remarks' : IDL.Text,
+});
 export const AuditRecord = IDL.Record({
   'id' : IDL.Text,
   'status' : IDL.Text,
@@ -38,28 +142,271 @@ export const AuditRecord = IDL.Record({
   'timestamp' : IDL.Int,
   'beforeValue' : IDL.Text,
 });
+export const ExamQuery = IDL.Record({
+  'subject' : IDL.Opt(IDL.Text),
+  'page' : IDL.Nat,
+  'term' : IDL.Opt(IDL.Text),
+  'pageSize' : IDL.Nat,
+  'section' : IDL.Opt(IDL.Text),
+  'academicYear' : IDL.Opt(IDL.Text),
+  'className' : IDL.Opt(IDL.Text),
+});
+export const ExamRecord = IDL.Record({
+  'id' : ExamId,
+  'title' : IDL.Text,
+  'duration' : IDL.Nat,
+  'subject' : IDL.Text,
+  'createdBy' : IDL.Text,
+  'term' : IDL.Text,
+  'section' : IDL.Text,
+  'academicYear' : IDL.Text,
+  'maxMarks' : IDL.Nat,
+  'examDate' : IDL.Text,
+  'className' : IDL.Text,
+});
+export const FeeStructureId = IDL.Text;
+export const FeeCategory = IDL.Record({
+  'id' : FeeStructureId,
+  'name' : IDL.Text,
+  'dueDate' : IDL.Text,
+  'section' : IDL.Text,
+  'academicYear' : IDL.Text,
+  'isOptional' : IDL.Bool,
+  'amount' : IDL.Float64,
+  'className' : IDL.Text,
+});
+export const StudentMarks = IDL.Record({
+  'studentId' : StudentId,
+  'studentName' : IDL.Text,
+  'rank' : IDL.Nat,
+  'grade' : IDL.Text,
+  'admissionNo' : IDL.Text,
+  'examId' : ExamId,
+  'obtainedMarks' : IDL.Float64,
+  'remarks' : IDL.Text,
+});
 export const UserSession = IDL.Record({
   'userId' : IDL.Text,
   'lastActivity' : IDL.Int,
   'role' : IDL.Text,
   'isOnline' : IDL.Bool,
 });
+export const FeeId = IDL.Text;
+export const FeeCategoryPayment = IDL.Record({
+  'categoryId' : FeeStructureId,
+  'categoryName' : IDL.Text,
+  'paid' : IDL.Float64,
+  'amount' : IDL.Float64,
+});
+export const FeePayment = IDL.Record({
+  'id' : FeeId,
+  'categories' : IDL.Vec(FeeCategoryPayment),
+  'status' : IDL.Text,
+  'txnId' : IDL.Text,
+  'studentId' : StudentId,
+  'balance' : IDL.Float64,
+  'studentName' : IDL.Text,
+  'section' : IDL.Text,
+  'academicYear' : IDL.Text,
+  'totalAmount' : IDL.Float64,
+  'admissionNo' : IDL.Text,
+  'paymentDate' : IDL.Text,
+  'paymentMode' : IDL.Text,
+  'receiptNo' : IDL.Text,
+  'paidAmount' : IDL.Float64,
+  'className' : IDL.Text,
+});
+export const ExamResult = IDL.Record({
+  'examTitle' : IDL.Text,
+  'subject' : IDL.Text,
+  'grade' : IDL.Text,
+  'maxMarks' : IDL.Nat,
+  'obtainedMarks' : IDL.Float64,
+});
+export const ReportCardData = IDL.Record({
+  'studentId' : StudentId,
+  'studentName' : IDL.Text,
+  'overallGrade' : IDL.Text,
+  'rank' : IDL.Nat,
+  'section' : IDL.Text,
+  'exams' : IDL.Vec(ExamResult),
+  'academicYear' : IDL.Text,
+  'attendance' : AttendanceSummary,
+  'rollNo' : IDL.Nat,
+  'className' : IDL.Text,
+  'remarks' : IDL.Text,
+});
 export const Result = IDL.Variant({ 'ok' : UserRecord, 'err' : IDL.Text });
+export const Result__1 = IDL.Variant({ 'ok' : StudentMarks, 'err' : IDL.Text });
+export const Result__1_1 = IDL.Variant({ 'ok' : ExamRecord, 'err' : IDL.Text });
+export const StudentSearchQuery = IDL.Record({
+  'page' : IDL.Nat,
+  'pageSize' : IDL.Nat,
+  'nameQuery' : IDL.Opt(IDL.Text),
+  'section' : IDL.Opt(IDL.Text),
+  'admissionNo' : IDL.Opt(IDL.Text),
+  'className' : IDL.Opt(IDL.Text),
+});
 
 export const idlService = IDL.Service({
   'clearAuditRecords' : IDL.Func([], [Result_2], []),
   'clearSession' : IDL.Func([IDL.Text], [], []),
+  'deleteExam' : IDL.Func([IDL.Text], [Result_1], []),
+  'deleteFeeCategory' : IDL.Func(
+      [IDL.Text],
+      [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+      [],
+    ),
   'deletePermissions' : IDL.Func([IDL.Text], [Result_1], []),
+  'deleteStudent' : IDL.Func(
+      [IDL.Text],
+      [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+      [],
+    ),
   'deleteUser' : IDL.Func([IDL.Text], [Result_1], []),
+  'getAcademicReport' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Nat, IDL.Nat],
+      [AcademicReportPage],
+      ['query'],
+    ),
+  'getAttendanceReport' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Nat,
+        IDL.Nat,
+      ],
+      [AttendanceReportPage],
+      ['query'],
+    ),
+  'getAttendanceSummary' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text],
+      [AttendanceSummary],
+      ['query'],
+    ),
+  'getDatesWithAttendance' : IDL.Func(
+      [IDL.Text, IDL.Text],
+      [IDL.Vec(IDL.Text)],
+      ['query'],
+    ),
+  'getFeeReport' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Nat, IDL.Nat],
+      [FeeReportPage],
+      ['query'],
+    ),
+  'getFeeSummary' : IDL.Func([IDL.Opt(IDL.Text)], [FeeSummary], ['query']),
   'getStats' : IDL.Func([], [Stats], ['query']),
+  'getStudentFeeStatus' : IDL.Func(
+      [IDL.Text, IDL.Text],
+      [
+        IDL.Record({
+          'due' : IDL.Float64,
+          'balance' : IDL.Float64,
+          'paid' : IDL.Float64,
+        }),
+      ],
+      ['query'],
+    ),
+  'getStudentStats' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'total' : IDL.Nat,
+          'active' : IDL.Nat,
+          'inactive' : IDL.Nat,
+        }),
+      ],
+      ['query'],
+    ),
+  'hasAttendanceForDate' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Bool],
+      ['query'],
+    ),
+  'loadAllStudents' : IDL.Func([IDL.Nat, IDL.Nat], [StudentPage], ['query']),
   'loadAllUsers' : IDL.Func([], [IDL.Vec(UserRecord)], ['query']),
+  'loadAttendanceByDate' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text],
+      [IDL.Vec(AttendanceRecord)],
+      ['query'],
+    ),
   'loadAuditRecords' : IDL.Func([], [IDL.Vec(AuditRecord)], ['query']),
+  'loadExams' : IDL.Func(
+      [ExamQuery],
+      [IDL.Record({ 'total' : IDL.Nat, 'exams' : IDL.Vec(ExamRecord) })],
+      ['query'],
+    ),
+  'loadFeeCategories' : IDL.Func(
+      [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [IDL.Vec(FeeCategory)],
+      ['query'],
+    ),
+  'loadMarksByExam' : IDL.Func([IDL.Text], [IDL.Vec(StudentMarks)], ['query']),
   'loadOnlineSessions' : IDL.Func([IDL.Int], [IDL.Vec(UserSession)], ['query']),
+  'loadPaymentsByDateRange' : IDL.Func(
+      [
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+        IDL.Opt(IDL.Text),
+        IDL.Nat,
+        IDL.Nat,
+      ],
+      [IDL.Record({ 'total' : IDL.Nat, 'payments' : IDL.Vec(FeePayment) })],
+      ['query'],
+    ),
+  'loadPaymentsByStudent' : IDL.Func(
+      [IDL.Text],
+      [IDL.Vec(FeePayment)],
+      ['query'],
+    ),
   'loadPermissions' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], ['query']),
+  'loadStudentAttendance' : IDL.Func(
+      [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+      [IDL.Vec(AttendanceRecord)],
+      ['query'],
+    ),
+  'loadStudentById' : IDL.Func([IDL.Text], [IDL.Opt(StudentRecord)], ['query']),
+  'loadStudentReportCard' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text],
+      [ReportCardData],
+      ['query'],
+    ),
+  'loadStudentsByClass' : IDL.Func(
+      [IDL.Text, IDL.Opt(IDL.Text)],
+      [IDL.Vec(StudentRecord)],
+      ['query'],
+    ),
   'loadUserById' : IDL.Func([IDL.Text], [Result], ['query']),
+  'saveAllMarks' : IDL.Func([IDL.Vec(StudentMarks)], [IDL.Vec(Result__1)], []),
   'saveAuditRecord' : IDL.Func([AuditRecord], [Result_2], []),
+  'saveDailyAttendance' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Vec(AttendanceRecord)],
+      [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+      [],
+    ),
+  'saveExam' : IDL.Func([ExamRecord], [Result__1_1], []),
+  'saveFeeCategory' : IDL.Func(
+      [FeeCategory],
+      [IDL.Variant({ 'ok' : FeeCategory, 'err' : IDL.Text })],
+      [],
+    ),
+  'saveMarks' : IDL.Func([StudentMarks], [Result__1], []),
+  'savePayment' : IDL.Func(
+      [FeePayment],
+      [IDL.Variant({ 'ok' : FeePayment, 'err' : IDL.Text })],
+      [],
+    ),
   'savePermissions' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [Result_1], []),
+  'saveStudent' : IDL.Func(
+      [StudentRecord],
+      [IDL.Variant({ 'ok' : StudentRecord, 'err' : IDL.Text })],
+      [],
+    ),
   'saveUser' : IDL.Func([UserRecord], [Result], []),
+  'searchStudents' : IDL.Func([StudentSearchQuery], [StudentPage], ['query']),
   'updateSession' : IDL.Func([IDL.Text, IDL.Text], [], []),
 });
 
@@ -68,9 +415,96 @@ export const idlInitArgs = [];
 export const idlFactory = ({ IDL }) => {
   const Result_2 = IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text });
   const Result_1 = IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text });
+  const ExamId = IDL.Text;
+  const AcademicReport = IDL.Record({
+    'examTitle' : IDL.Text,
+    'section' : IDL.Text,
+    'averageMarks' : IDL.Float64,
+    'examId' : ExamId,
+    'topScore' : IDL.Float64,
+    'className' : IDL.Text,
+    'passPercentage' : IDL.Float64,
+  });
+  const AcademicReportPage = IDL.Record({
+    'total' : IDL.Nat,
+    'page' : IDL.Nat,
+    'pageSize' : IDL.Nat,
+    'items' : IDL.Vec(AcademicReport),
+  });
+  const AttendanceReport = IDL.Record({
+    'present' : IDL.Nat,
+    'date' : IDL.Text,
+    'late' : IDL.Nat,
+    'section' : IDL.Text,
+    'absent' : IDL.Nat,
+    'className' : IDL.Text,
+    'percentage' : IDL.Float64,
+  });
+  const AttendanceReportPage = IDL.Record({
+    'total' : IDL.Nat,
+    'page' : IDL.Nat,
+    'pageSize' : IDL.Nat,
+    'items' : IDL.Vec(AttendanceReport),
+  });
+  const StudentId = IDL.Text;
+  const AttendanceSummary = IDL.Record({
+    'studentId' : StudentId,
+    'halfDay' : IDL.Nat,
+    'present' : IDL.Nat,
+    'late' : IDL.Nat,
+    'totalDays' : IDL.Nat,
+    'absent' : IDL.Nat,
+    'percentage' : IDL.Float64,
+  });
+  const FeeReport = IDL.Record({
+    'outstanding' : IDL.Float64,
+    'date' : IDL.Text,
+    'totalCollected' : IDL.Float64,
+    'cashPayments' : IDL.Float64,
+    'totalStudents' : IDL.Nat,
+    'onlinePayments' : IDL.Float64,
+  });
+  const FeeReportPage = IDL.Record({
+    'total' : IDL.Nat,
+    'page' : IDL.Nat,
+    'pageSize' : IDL.Nat,
+    'items' : IDL.Vec(FeeReport),
+  });
+  const FeeSummary = IDL.Record({
+    'totalCollected' : IDL.Float64,
+    'totalStudents' : IDL.Nat,
+    'totalOutstanding' : IDL.Float64,
+    'paidStudents' : IDL.Nat,
+  });
   const Stats = IDL.Record({
     'totalWithPermissions' : IDL.Nat,
     'totalUsers' : IDL.Nat,
+  });
+  const StudentRecord = IDL.Record({
+    'id' : StudentId,
+    'dob' : IDL.Text,
+    'status' : IDL.Text,
+    'feeStatus' : IDL.Text,
+    'admissionDate' : IDL.Text,
+    'name' : IDL.Text,
+    'section' : IDL.Text,
+    'bloodGroup' : IDL.Text,
+    'address' : IDL.Text,
+    'gender' : IDL.Text,
+    'admissionNo' : IDL.Text,
+    'category' : IDL.Text,
+    'phone' : IDL.Text,
+    'rollNo' : IDL.Nat,
+    'religion' : IDL.Text,
+    'parentMobile' : IDL.Text,
+    'className' : IDL.Text,
+    'parentName' : IDL.Text,
+  });
+  const StudentPage = IDL.Record({
+    'total' : IDL.Nat,
+    'students' : IDL.Vec(StudentRecord),
+    'page' : IDL.Nat,
+    'pageSize' : IDL.Nat,
   });
   const UserId = IDL.Text;
   const Timestamp = IDL.Int;
@@ -85,6 +519,23 @@ export const idlFactory = ({ IDL }) => {
     'updatedAt' : Timestamp,
     'phone' : IDL.Text,
   });
+  const AttendanceId = IDL.Text;
+  const AttendanceStatus = IDL.Variant({
+    'halfDay' : IDL.Null,
+    'present' : IDL.Null,
+    'late' : IDL.Null,
+    'absent' : IDL.Null,
+  });
+  const AttendanceRecord = IDL.Record({
+    'id' : AttendanceId,
+    'status' : AttendanceStatus,
+    'studentId' : StudentId,
+    'date' : IDL.Text,
+    'section' : IDL.Text,
+    'markedBy' : IDL.Text,
+    'className' : IDL.Text,
+    'remarks' : IDL.Text,
+  });
   const AuditRecord = IDL.Record({
     'id' : IDL.Text,
     'status' : IDL.Text,
@@ -96,32 +547,287 @@ export const idlFactory = ({ IDL }) => {
     'timestamp' : IDL.Int,
     'beforeValue' : IDL.Text,
   });
+  const ExamQuery = IDL.Record({
+    'subject' : IDL.Opt(IDL.Text),
+    'page' : IDL.Nat,
+    'term' : IDL.Opt(IDL.Text),
+    'pageSize' : IDL.Nat,
+    'section' : IDL.Opt(IDL.Text),
+    'academicYear' : IDL.Opt(IDL.Text),
+    'className' : IDL.Opt(IDL.Text),
+  });
+  const ExamRecord = IDL.Record({
+    'id' : ExamId,
+    'title' : IDL.Text,
+    'duration' : IDL.Nat,
+    'subject' : IDL.Text,
+    'createdBy' : IDL.Text,
+    'term' : IDL.Text,
+    'section' : IDL.Text,
+    'academicYear' : IDL.Text,
+    'maxMarks' : IDL.Nat,
+    'examDate' : IDL.Text,
+    'className' : IDL.Text,
+  });
+  const FeeStructureId = IDL.Text;
+  const FeeCategory = IDL.Record({
+    'id' : FeeStructureId,
+    'name' : IDL.Text,
+    'dueDate' : IDL.Text,
+    'section' : IDL.Text,
+    'academicYear' : IDL.Text,
+    'isOptional' : IDL.Bool,
+    'amount' : IDL.Float64,
+    'className' : IDL.Text,
+  });
+  const StudentMarks = IDL.Record({
+    'studentId' : StudentId,
+    'studentName' : IDL.Text,
+    'rank' : IDL.Nat,
+    'grade' : IDL.Text,
+    'admissionNo' : IDL.Text,
+    'examId' : ExamId,
+    'obtainedMarks' : IDL.Float64,
+    'remarks' : IDL.Text,
+  });
   const UserSession = IDL.Record({
     'userId' : IDL.Text,
     'lastActivity' : IDL.Int,
     'role' : IDL.Text,
     'isOnline' : IDL.Bool,
   });
+  const FeeId = IDL.Text;
+  const FeeCategoryPayment = IDL.Record({
+    'categoryId' : FeeStructureId,
+    'categoryName' : IDL.Text,
+    'paid' : IDL.Float64,
+    'amount' : IDL.Float64,
+  });
+  const FeePayment = IDL.Record({
+    'id' : FeeId,
+    'categories' : IDL.Vec(FeeCategoryPayment),
+    'status' : IDL.Text,
+    'txnId' : IDL.Text,
+    'studentId' : StudentId,
+    'balance' : IDL.Float64,
+    'studentName' : IDL.Text,
+    'section' : IDL.Text,
+    'academicYear' : IDL.Text,
+    'totalAmount' : IDL.Float64,
+    'admissionNo' : IDL.Text,
+    'paymentDate' : IDL.Text,
+    'paymentMode' : IDL.Text,
+    'receiptNo' : IDL.Text,
+    'paidAmount' : IDL.Float64,
+    'className' : IDL.Text,
+  });
+  const ExamResult = IDL.Record({
+    'examTitle' : IDL.Text,
+    'subject' : IDL.Text,
+    'grade' : IDL.Text,
+    'maxMarks' : IDL.Nat,
+    'obtainedMarks' : IDL.Float64,
+  });
+  const ReportCardData = IDL.Record({
+    'studentId' : StudentId,
+    'studentName' : IDL.Text,
+    'overallGrade' : IDL.Text,
+    'rank' : IDL.Nat,
+    'section' : IDL.Text,
+    'exams' : IDL.Vec(ExamResult),
+    'academicYear' : IDL.Text,
+    'attendance' : AttendanceSummary,
+    'rollNo' : IDL.Nat,
+    'className' : IDL.Text,
+    'remarks' : IDL.Text,
+  });
   const Result = IDL.Variant({ 'ok' : UserRecord, 'err' : IDL.Text });
+  const Result__1 = IDL.Variant({ 'ok' : StudentMarks, 'err' : IDL.Text });
+  const Result__1_1 = IDL.Variant({ 'ok' : ExamRecord, 'err' : IDL.Text });
+  const StudentSearchQuery = IDL.Record({
+    'page' : IDL.Nat,
+    'pageSize' : IDL.Nat,
+    'nameQuery' : IDL.Opt(IDL.Text),
+    'section' : IDL.Opt(IDL.Text),
+    'admissionNo' : IDL.Opt(IDL.Text),
+    'className' : IDL.Opt(IDL.Text),
+  });
   
   return IDL.Service({
     'clearAuditRecords' : IDL.Func([], [Result_2], []),
     'clearSession' : IDL.Func([IDL.Text], [], []),
+    'deleteExam' : IDL.Func([IDL.Text], [Result_1], []),
+    'deleteFeeCategory' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+        [],
+      ),
     'deletePermissions' : IDL.Func([IDL.Text], [Result_1], []),
+    'deleteStudent' : IDL.Func(
+        [IDL.Text],
+        [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+        [],
+      ),
     'deleteUser' : IDL.Func([IDL.Text], [Result_1], []),
+    'getAcademicReport' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text), IDL.Nat, IDL.Nat],
+        [AcademicReportPage],
+        ['query'],
+      ),
+    'getAttendanceReport' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Nat,
+          IDL.Nat,
+        ],
+        [AttendanceReportPage],
+        ['query'],
+      ),
+    'getAttendanceSummary' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [AttendanceSummary],
+        ['query'],
+      ),
+    'getDatesWithAttendance' : IDL.Func(
+        [IDL.Text, IDL.Text],
+        [IDL.Vec(IDL.Text)],
+        ['query'],
+      ),
+    'getFeeReport' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Opt(IDL.Text), IDL.Nat, IDL.Nat],
+        [FeeReportPage],
+        ['query'],
+      ),
+    'getFeeSummary' : IDL.Func([IDL.Opt(IDL.Text)], [FeeSummary], ['query']),
     'getStats' : IDL.Func([], [Stats], ['query']),
+    'getStudentFeeStatus' : IDL.Func(
+        [IDL.Text, IDL.Text],
+        [
+          IDL.Record({
+            'due' : IDL.Float64,
+            'balance' : IDL.Float64,
+            'paid' : IDL.Float64,
+          }),
+        ],
+        ['query'],
+      ),
+    'getStudentStats' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'total' : IDL.Nat,
+            'active' : IDL.Nat,
+            'inactive' : IDL.Nat,
+          }),
+        ],
+        ['query'],
+      ),
+    'hasAttendanceForDate' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Bool],
+        ['query'],
+      ),
+    'loadAllStudents' : IDL.Func([IDL.Nat, IDL.Nat], [StudentPage], ['query']),
     'loadAllUsers' : IDL.Func([], [IDL.Vec(UserRecord)], ['query']),
+    'loadAttendanceByDate' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [IDL.Vec(AttendanceRecord)],
+        ['query'],
+      ),
     'loadAuditRecords' : IDL.Func([], [IDL.Vec(AuditRecord)], ['query']),
+    'loadExams' : IDL.Func(
+        [ExamQuery],
+        [IDL.Record({ 'total' : IDL.Nat, 'exams' : IDL.Vec(ExamRecord) })],
+        ['query'],
+      ),
+    'loadFeeCategories' : IDL.Func(
+        [IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [IDL.Vec(FeeCategory)],
+        ['query'],
+      ),
+    'loadMarksByExam' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(StudentMarks)],
+        ['query'],
+      ),
     'loadOnlineSessions' : IDL.Func(
         [IDL.Int],
         [IDL.Vec(UserSession)],
         ['query'],
       ),
+    'loadPaymentsByDateRange' : IDL.Func(
+        [
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+          IDL.Opt(IDL.Text),
+          IDL.Nat,
+          IDL.Nat,
+        ],
+        [IDL.Record({ 'total' : IDL.Nat, 'payments' : IDL.Vec(FeePayment) })],
+        ['query'],
+      ),
+    'loadPaymentsByStudent' : IDL.Func(
+        [IDL.Text],
+        [IDL.Vec(FeePayment)],
+        ['query'],
+      ),
     'loadPermissions' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], ['query']),
+    'loadStudentAttendance' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text), IDL.Opt(IDL.Text)],
+        [IDL.Vec(AttendanceRecord)],
+        ['query'],
+      ),
+    'loadStudentById' : IDL.Func(
+        [IDL.Text],
+        [IDL.Opt(StudentRecord)],
+        ['query'],
+      ),
+    'loadStudentReportCard' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text],
+        [ReportCardData],
+        ['query'],
+      ),
+    'loadStudentsByClass' : IDL.Func(
+        [IDL.Text, IDL.Opt(IDL.Text)],
+        [IDL.Vec(StudentRecord)],
+        ['query'],
+      ),
     'loadUserById' : IDL.Func([IDL.Text], [Result], ['query']),
+    'saveAllMarks' : IDL.Func(
+        [IDL.Vec(StudentMarks)],
+        [IDL.Vec(Result__1)],
+        [],
+      ),
     'saveAuditRecord' : IDL.Func([AuditRecord], [Result_2], []),
+    'saveDailyAttendance' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Vec(AttendanceRecord)],
+        [IDL.Variant({ 'ok' : IDL.Bool, 'err' : IDL.Text })],
+        [],
+      ),
+    'saveExam' : IDL.Func([ExamRecord], [Result__1_1], []),
+    'saveFeeCategory' : IDL.Func(
+        [FeeCategory],
+        [IDL.Variant({ 'ok' : FeeCategory, 'err' : IDL.Text })],
+        [],
+      ),
+    'saveMarks' : IDL.Func([StudentMarks], [Result__1], []),
+    'savePayment' : IDL.Func(
+        [FeePayment],
+        [IDL.Variant({ 'ok' : FeePayment, 'err' : IDL.Text })],
+        [],
+      ),
     'savePermissions' : IDL.Func([IDL.Text, IDL.Vec(IDL.Text)], [Result_1], []),
+    'saveStudent' : IDL.Func(
+        [StudentRecord],
+        [IDL.Variant({ 'ok' : StudentRecord, 'err' : IDL.Text })],
+        [],
+      ),
     'saveUser' : IDL.Func([UserRecord], [Result], []),
+    'searchStudents' : IDL.Func([StudentSearchQuery], [StudentPage], ['query']),
     'updateSession' : IDL.Func([IDL.Text, IDL.Text], [], []),
   });
 };

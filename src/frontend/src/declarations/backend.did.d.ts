@@ -10,6 +10,60 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
+export interface AcademicReport {
+  'examTitle' : string,
+  'section' : string,
+  'averageMarks' : number,
+  'examId' : ExamId,
+  'topScore' : number,
+  'className' : string,
+  'passPercentage' : number,
+}
+export interface AcademicReportPage {
+  'total' : bigint,
+  'page' : bigint,
+  'pageSize' : bigint,
+  'items' : Array<AcademicReport>,
+}
+export type AttendanceId = string;
+export interface AttendanceRecord {
+  'id' : AttendanceId,
+  'status' : AttendanceStatus,
+  'studentId' : StudentId,
+  'date' : string,
+  'section' : string,
+  'markedBy' : string,
+  'className' : string,
+  'remarks' : string,
+}
+export interface AttendanceReport {
+  'present' : bigint,
+  'date' : string,
+  'late' : bigint,
+  'section' : string,
+  'absent' : bigint,
+  'className' : string,
+  'percentage' : number,
+}
+export interface AttendanceReportPage {
+  'total' : bigint,
+  'page' : bigint,
+  'pageSize' : bigint,
+  'items' : Array<AttendanceReport>,
+}
+export type AttendanceStatus = { 'halfDay' : null } |
+  { 'present' : null } |
+  { 'late' : null } |
+  { 'absent' : null };
+export interface AttendanceSummary {
+  'studentId' : StudentId,
+  'halfDay' : bigint,
+  'present' : bigint,
+  'late' : bigint,
+  'totalDays' : bigint,
+  'absent' : bigint,
+  'percentage' : number,
+}
 export interface AuditRecord {
   'id' : string,
   'status' : string,
@@ -21,15 +75,163 @@ export interface AuditRecord {
   'timestamp' : bigint,
   'beforeValue' : string,
 }
+export type ExamId = string;
+export interface ExamQuery {
+  'subject' : [] | [string],
+  'page' : bigint,
+  'term' : [] | [string],
+  'pageSize' : bigint,
+  'section' : [] | [string],
+  'academicYear' : [] | [string],
+  'className' : [] | [string],
+}
+export interface ExamRecord {
+  'id' : ExamId,
+  'title' : string,
+  'duration' : bigint,
+  'subject' : string,
+  'createdBy' : string,
+  'term' : string,
+  'section' : string,
+  'academicYear' : string,
+  'maxMarks' : bigint,
+  'examDate' : string,
+  'className' : string,
+}
+export interface ExamResult {
+  'examTitle' : string,
+  'subject' : string,
+  'grade' : string,
+  'maxMarks' : bigint,
+  'obtainedMarks' : number,
+}
+export interface FeeCategory {
+  'id' : FeeStructureId,
+  'name' : string,
+  'dueDate' : string,
+  'section' : string,
+  'academicYear' : string,
+  'isOptional' : boolean,
+  'amount' : number,
+  'className' : string,
+}
+export interface FeeCategoryPayment {
+  'categoryId' : FeeStructureId,
+  'categoryName' : string,
+  'paid' : number,
+  'amount' : number,
+}
+export type FeeId = string;
+export interface FeePayment {
+  'id' : FeeId,
+  'categories' : Array<FeeCategoryPayment>,
+  'status' : string,
+  'txnId' : string,
+  'studentId' : StudentId,
+  'balance' : number,
+  'studentName' : string,
+  'section' : string,
+  'academicYear' : string,
+  'totalAmount' : number,
+  'admissionNo' : string,
+  'paymentDate' : string,
+  'paymentMode' : string,
+  'receiptNo' : string,
+  'paidAmount' : number,
+  'className' : string,
+}
+export interface FeeReport {
+  'outstanding' : number,
+  'date' : string,
+  'totalCollected' : number,
+  'cashPayments' : number,
+  'totalStudents' : bigint,
+  'onlinePayments' : number,
+}
+export interface FeeReportPage {
+  'total' : bigint,
+  'page' : bigint,
+  'pageSize' : bigint,
+  'items' : Array<FeeReport>,
+}
+export type FeeStructureId = string;
+export interface FeeSummary {
+  'totalCollected' : number,
+  'totalStudents' : bigint,
+  'totalOutstanding' : number,
+  'paidStudents' : bigint,
+}
+export interface ReportCardData {
+  'studentId' : StudentId,
+  'studentName' : string,
+  'overallGrade' : string,
+  'rank' : bigint,
+  'section' : string,
+  'exams' : Array<ExamResult>,
+  'academicYear' : string,
+  'attendance' : AttendanceSummary,
+  'rollNo' : bigint,
+  'className' : string,
+  'remarks' : string,
+}
 export type Result = { 'ok' : UserRecord } |
   { 'err' : string };
 export type Result_1 = { 'ok' : boolean } |
   { 'err' : string };
 export type Result_2 = { 'ok' : string } |
   { 'err' : string };
+export type Result__1 = { 'ok' : StudentMarks } |
+  { 'err' : string };
+export type Result__1_1 = { 'ok' : ExamRecord } |
+  { 'err' : string };
 export interface Stats {
   'totalWithPermissions' : bigint,
   'totalUsers' : bigint,
+}
+export type StudentId = string;
+export interface StudentMarks {
+  'studentId' : StudentId,
+  'studentName' : string,
+  'rank' : bigint,
+  'grade' : string,
+  'admissionNo' : string,
+  'examId' : ExamId,
+  'obtainedMarks' : number,
+  'remarks' : string,
+}
+export interface StudentPage {
+  'total' : bigint,
+  'students' : Array<StudentRecord>,
+  'page' : bigint,
+  'pageSize' : bigint,
+}
+export interface StudentRecord {
+  'id' : StudentId,
+  'dob' : string,
+  'status' : string,
+  'feeStatus' : string,
+  'admissionDate' : string,
+  'name' : string,
+  'section' : string,
+  'bloodGroup' : string,
+  'address' : string,
+  'gender' : string,
+  'admissionNo' : string,
+  'category' : string,
+  'phone' : string,
+  'rollNo' : bigint,
+  'religion' : string,
+  'parentMobile' : string,
+  'className' : string,
+  'parentName' : string,
+}
+export interface StudentSearchQuery {
+  'page' : bigint,
+  'pageSize' : bigint,
+  'nameQuery' : [] | [string],
+  'section' : [] | [string],
+  'admissionNo' : [] | [string],
+  'className' : [] | [string],
 }
 export type Timestamp = bigint;
 export type UserId = string;
@@ -53,17 +255,111 @@ export interface UserSession {
 export interface _SERVICE {
   'clearAuditRecords' : ActorMethod<[], Result_2>,
   'clearSession' : ActorMethod<[string], undefined>,
+  'deleteExam' : ActorMethod<[string], Result_1>,
+  'deleteFeeCategory' : ActorMethod<
+    [string],
+    { 'ok' : boolean } |
+      { 'err' : string }
+  >,
   'deletePermissions' : ActorMethod<[string], Result_1>,
+  'deleteStudent' : ActorMethod<
+    [string],
+    { 'ok' : boolean } |
+      { 'err' : string }
+  >,
   'deleteUser' : ActorMethod<[string], Result_1>,
+  'getAcademicReport' : ActorMethod<
+    [[] | [string], [] | [string], bigint, bigint],
+    AcademicReportPage
+  >,
+  'getAttendanceReport' : ActorMethod<
+    [string, string, [] | [string], [] | [string], bigint, bigint],
+    AttendanceReportPage
+  >,
+  'getAttendanceSummary' : ActorMethod<
+    [string, string, string],
+    AttendanceSummary
+  >,
+  'getDatesWithAttendance' : ActorMethod<[string, string], Array<string>>,
+  'getFeeReport' : ActorMethod<
+    [string, string, [] | [string], bigint, bigint],
+    FeeReportPage
+  >,
+  'getFeeSummary' : ActorMethod<[[] | [string]], FeeSummary>,
   'getStats' : ActorMethod<[], Stats>,
+  'getStudentFeeStatus' : ActorMethod<
+    [string, string],
+    { 'due' : number, 'balance' : number, 'paid' : number }
+  >,
+  'getStudentStats' : ActorMethod<
+    [],
+    { 'total' : bigint, 'active' : bigint, 'inactive' : bigint }
+  >,
+  'hasAttendanceForDate' : ActorMethod<[string, string, string], boolean>,
+  'loadAllStudents' : ActorMethod<[bigint, bigint], StudentPage>,
   'loadAllUsers' : ActorMethod<[], Array<UserRecord>>,
+  'loadAttendanceByDate' : ActorMethod<
+    [string, string, string],
+    Array<AttendanceRecord>
+  >,
   'loadAuditRecords' : ActorMethod<[], Array<AuditRecord>>,
+  'loadExams' : ActorMethod<
+    [ExamQuery],
+    { 'total' : bigint, 'exams' : Array<ExamRecord> }
+  >,
+  'loadFeeCategories' : ActorMethod<
+    [[] | [string], [] | [string]],
+    Array<FeeCategory>
+  >,
+  'loadMarksByExam' : ActorMethod<[string], Array<StudentMarks>>,
   'loadOnlineSessions' : ActorMethod<[bigint], Array<UserSession>>,
+  'loadPaymentsByDateRange' : ActorMethod<
+    [string, string, [] | [string], [] | [string], bigint, bigint],
+    { 'total' : bigint, 'payments' : Array<FeePayment> }
+  >,
+  'loadPaymentsByStudent' : ActorMethod<[string], Array<FeePayment>>,
   'loadPermissions' : ActorMethod<[string], Array<string>>,
+  'loadStudentAttendance' : ActorMethod<
+    [string, [] | [string], [] | [string]],
+    Array<AttendanceRecord>
+  >,
+  'loadStudentById' : ActorMethod<[string], [] | [StudentRecord]>,
+  'loadStudentReportCard' : ActorMethod<
+    [string, string, string],
+    ReportCardData
+  >,
+  'loadStudentsByClass' : ActorMethod<
+    [string, [] | [string]],
+    Array<StudentRecord>
+  >,
   'loadUserById' : ActorMethod<[string], Result>,
+  'saveAllMarks' : ActorMethod<[Array<StudentMarks>], Array<Result__1>>,
   'saveAuditRecord' : ActorMethod<[AuditRecord], Result_2>,
+  'saveDailyAttendance' : ActorMethod<
+    [string, string, string, Array<AttendanceRecord>],
+    { 'ok' : boolean } |
+      { 'err' : string }
+  >,
+  'saveExam' : ActorMethod<[ExamRecord], Result__1_1>,
+  'saveFeeCategory' : ActorMethod<
+    [FeeCategory],
+    { 'ok' : FeeCategory } |
+      { 'err' : string }
+  >,
+  'saveMarks' : ActorMethod<[StudentMarks], Result__1>,
+  'savePayment' : ActorMethod<
+    [FeePayment],
+    { 'ok' : FeePayment } |
+      { 'err' : string }
+  >,
   'savePermissions' : ActorMethod<[string, Array<string>], Result_1>,
+  'saveStudent' : ActorMethod<
+    [StudentRecord],
+    { 'ok' : StudentRecord } |
+      { 'err' : string }
+  >,
   'saveUser' : ActorMethod<[UserRecord], Result>,
+  'searchStudents' : ActorMethod<[StudentSearchQuery], StudentPage>,
   'updateSession' : ActorMethod<[string, string], undefined>,
 }
 export declare const idlService: IDL.ServiceClass;

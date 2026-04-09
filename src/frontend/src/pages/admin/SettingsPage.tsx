@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Building2,
+  Code,
   Download,
   FileCode,
   FileText,
@@ -641,6 +642,9 @@ export function SettingsPage() {
           <TabsTrigger value="export" data-ocid="settings.tab_export">
             <Download size={15} className="mr-1.5" /> Export / Deploy
           </TabsTrigger>
+          <TabsTrigger value="backend-ref" data-ocid="settings.tab_backend_ref">
+            <Code size={15} className="mr-1.5" /> Backend Reference
+          </TabsTrigger>
         </TabsList>
 
         {/* ─────────────────── SCHOOL PROFILE TAB ─────────────────── */}
@@ -966,6 +970,90 @@ export function SettingsPage() {
         {/* ─────────────────── EXPORT / DEPLOY TAB ─────────────────── */}
         <TabsContent value="export">
           <ExportDeployTab />
+        </TabsContent>
+
+        {/* ─────────────────── BACKEND REFERENCE TAB ─────────────────── */}
+        <TabsContent value="backend-ref" className="space-y-5">
+          <div className="bg-card border border-border rounded-2xl p-6 space-y-4">
+            <div className="flex items-start gap-4">
+              <div className="p-3 bg-primary/10 rounded-xl">
+                <Code className="text-primary" size={24} />
+              </div>
+              <div className="flex-1">
+                <h2 className="text-base font-semibold">
+                  Python Backend Reference Docs
+                </h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Comprehensive FastAPI + SQLAlchemy + PostgreSQL + Redis
+                  reference for the School ERP system. Includes full schema
+                  design, API endpoints, database connection pooling,
+                  authentication, and Docker deployment.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {[
+                {
+                  label: "Schema Design",
+                  desc: "SQLAlchemy ORM models for Student, Attendance, Fees, Exams, Users, AuditLog",
+                },
+                {
+                  label: "API Endpoints",
+                  desc: "FastAPI routes with pagination, CRUD, bulk ops, and role-based guards",
+                },
+                {
+                  label: "Auth & RBAC",
+                  desc: "JWT tokens, bcrypt passwords, per-permission Depends guards",
+                },
+              ].map((item) => (
+                <div
+                  key={item.label}
+                  className="border border-border rounded-xl p-3 space-y-1"
+                >
+                  <p className="text-sm font-medium text-foreground">
+                    {item.label}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            <Button
+              onClick={() => {
+                window.location.hash = "/admin/python-reference";
+              }}
+              className="gap-2"
+              data-ocid="settings.open_python_ref.button"
+            >
+              <Code size={15} /> Open Reference Docs
+            </Button>
+          </div>
+
+          <div className="bg-muted/40 border border-border rounded-2xl p-5 space-y-2">
+            <h3 className="text-sm font-semibold">What's included</h3>
+            <ul className="text-xs text-muted-foreground space-y-1.5 list-disc list-inside">
+              <li>
+                <strong className="text-foreground">6 reference tabs</strong> —
+                Overview, Schema Design, API Endpoints, DB Connection,
+                Authentication, Docker &amp; Deploy
+              </li>
+              <li>
+                <strong className="text-foreground">
+                  11 downloadable files
+                </strong>{" "}
+                — requirements.txt, .env, models.py, schemas.py, endpoints.py,
+                database.py, auth.py, Dockerfile, docker-compose.yml, Alembic
+                commands, deploy guide
+              </li>
+              <li>
+                Copy button on every code block for easy paste into your project
+              </li>
+              <li>
+                "Download All Files" button exports all code as a single bundle
+              </li>
+            </ul>
+          </div>
         </TabsContent>
       </Tabs>
     </div>

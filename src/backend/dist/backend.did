@@ -19,10 +19,69 @@ type UserRecord =
  };
 type UserId = text;
 type Timestamp = int;
+type StudentSearchQuery = 
+ record {
+   admissionNo: opt text;
+   className: opt text;
+   nameQuery: opt text;
+   page: nat;
+   pageSize: nat;
+   section: opt text;
+ };
+type StudentRecord = 
+ record {
+   address: text;
+   admissionDate: text;
+   admissionNo: text;
+   bloodGroup: text;
+   category: text;
+   className: text;
+   dob: text;
+   feeStatus: text;
+   gender: text;
+   id: StudentId;
+   name: text;
+   parentMobile: text;
+   parentName: text;
+   phone: text;
+   religion: text;
+   rollNo: nat;
+   section: text;
+   status: text;
+ };
+type StudentPage = 
+ record {
+   page: nat;
+   pageSize: nat;
+   students: vec StudentRecord;
+   total: nat;
+ };
+type StudentMarks = 
+ record {
+   admissionNo: text;
+   examId: ExamId;
+   grade: text;
+   obtainedMarks: float64;
+   rank: nat;
+   remarks: text;
+   studentId: StudentId;
+   studentName: text;
+ };
+type StudentId = text;
 type Stats = 
  record {
    totalUsers: nat;
    totalWithPermissions: nat;
+ };
+type Result__1_1 = 
+ variant {
+   err: text;
+   ok: ExamRecord;
+ };
+type Result__1 = 
+ variant {
+   err: text;
+   ok: StudentMarks;
  };
 type Result_2 = 
  variant {
@@ -39,6 +98,115 @@ type Result =
    err: text;
    ok: UserRecord;
  };
+type ReportCardData = 
+ record {
+   academicYear: text;
+   attendance: AttendanceSummary;
+   className: text;
+   exams: vec ExamResult;
+   overallGrade: text;
+   rank: nat;
+   remarks: text;
+   rollNo: nat;
+   section: text;
+   studentId: StudentId;
+   studentName: text;
+ };
+type FeeSummary = 
+ record {
+   paidStudents: nat;
+   totalCollected: float64;
+   totalOutstanding: float64;
+   totalStudents: nat;
+ };
+type FeeStructureId = text;
+type FeeReportPage = 
+ record {
+   items: vec FeeReport;
+   page: nat;
+   pageSize: nat;
+   total: nat;
+ };
+type FeeReport = 
+ record {
+   cashPayments: float64;
+   date: text;
+   onlinePayments: float64;
+   outstanding: float64;
+   totalCollected: float64;
+   totalStudents: nat;
+ };
+type FeePayment = 
+ record {
+   academicYear: text;
+   admissionNo: text;
+   balance: float64;
+   categories: vec FeeCategoryPayment;
+   className: text;
+   id: FeeId;
+   paidAmount: float64;
+   paymentDate: text;
+   paymentMode: text;
+   receiptNo: text;
+   section: text;
+   status: text;
+   studentId: StudentId;
+   studentName: text;
+   totalAmount: float64;
+   txnId: text;
+ };
+type FeeId = text;
+type FeeCategoryPayment = 
+ record {
+   amount: float64;
+   categoryId: FeeStructureId;
+   categoryName: text;
+   paid: float64;
+ };
+type FeeCategory = 
+ record {
+   academicYear: text;
+   amount: float64;
+   className: text;
+   dueDate: text;
+   id: FeeStructureId;
+   isOptional: bool;
+   name: text;
+   section: text;
+ };
+type ExamResult = 
+ record {
+   examTitle: text;
+   grade: text;
+   maxMarks: nat;
+   obtainedMarks: float64;
+   subject: text;
+ };
+type ExamRecord = 
+ record {
+   academicYear: text;
+   className: text;
+   createdBy: text;
+   duration: nat;
+   examDate: text;
+   id: ExamId;
+   maxMarks: nat;
+   section: text;
+   subject: text;
+   term: text;
+   title: text;
+ };
+type ExamQuery = 
+ record {
+   academicYear: opt text;
+   className: opt text;
+   page: nat;
+   pageSize: nat;
+   section: opt text;
+   subject: opt text;
+   term: opt text;
+ };
+type ExamId = text;
 type AuditRecord = 
  record {
    action: text;
@@ -51,19 +219,165 @@ type AuditRecord =
    status: text;
    timestamp: int;
  };
+type AttendanceSummary = 
+ record {
+   absent: nat;
+   halfDay: nat;
+   late: nat;
+   percentage: float64;
+   present: nat;
+   studentId: StudentId;
+   totalDays: nat;
+ };
+type AttendanceStatus = 
+ variant {
+   absent;
+   halfDay;
+   late;
+   present;
+ };
+type AttendanceReportPage = 
+ record {
+   items: vec AttendanceReport;
+   page: nat;
+   pageSize: nat;
+   total: nat;
+ };
+type AttendanceReport = 
+ record {
+   absent: nat;
+   className: text;
+   date: text;
+   late: nat;
+   percentage: float64;
+   present: nat;
+   section: text;
+ };
+type AttendanceRecord = 
+ record {
+   className: text;
+   date: text;
+   id: AttendanceId;
+   markedBy: text;
+   remarks: text;
+   section: text;
+   status: AttendanceStatus;
+   studentId: StudentId;
+ };
+type AttendanceId = text;
+type AcademicReportPage = 
+ record {
+   items: vec AcademicReport;
+   page: nat;
+   pageSize: nat;
+   total: nat;
+ };
+type AcademicReport = 
+ record {
+   averageMarks: float64;
+   className: text;
+   examId: ExamId;
+   examTitle: text;
+   passPercentage: float64;
+   section: text;
+   topScore: float64;
+ };
 service : {
   clearAuditRecords: () -> (Result_2);
   clearSession: (userId: text) -> ();
+  deleteExam: (id: text) -> (Result_1);
+  deleteFeeCategory: (id: text) -> (variant {
+                                      err: text;
+                                      ok: bool;
+                                    });
   deletePermissions: (userId: text) -> (Result_1);
+  deleteStudent: (id: text) -> (variant {
+                                  err: text;
+                                  ok: bool;
+                                });
   deleteUser: (id: text) -> (Result_1);
+  getAcademicReport: (className: opt text, academicYear: opt text, page: 
+   nat, pageSize: nat) -> (AcademicReportPage) query;
+  getAttendanceReport: (dateFrom: text, dateTo: text, className: opt text,
+   section: opt text, page: nat, pageSize: nat) ->
+   (AttendanceReportPage) query;
+  getAttendanceSummary: (studentId: text, dateFrom: text, dateTo: text) ->
+   (AttendanceSummary) query;
+  getDatesWithAttendance: (className: text, section: text) ->
+   (vec text) query;
+  getFeeReport: (dateFrom: text, dateTo: text, className: opt text, page:
+   nat, pageSize: nat) -> (FeeReportPage) query;
+  getFeeSummary: (academicYear: opt text) -> (FeeSummary) query;
   getStats: () -> (Stats) query;
+  getStudentFeeStatus: (studentId: text, academicYear: text) ->
+   (record {
+      balance: float64;
+      due: float64;
+      paid: float64;
+    }) query;
+  getStudentStats: () ->
+   (record {
+      active: nat;
+      inactive: nat;
+      total: nat;
+    }) query;
+  hasAttendanceForDate: (date: text, className: text, section: text) ->
+   (bool) query;
+  loadAllStudents: (page: nat, pageSize: nat) -> (StudentPage) query;
   loadAllUsers: () -> (vec UserRecord) query;
+  loadAttendanceByDate: (date: text, className: text, section: text) ->
+   (vec AttendanceRecord) query;
   loadAuditRecords: () -> (vec AuditRecord) query;
+  loadExams: (q: ExamQuery) ->
+   (record {
+      exams: vec ExamRecord;
+      total: nat;
+    }) query;
+  loadFeeCategories: (className: opt text, academicYear: opt text) ->
+   (vec FeeCategory) query;
+  loadMarksByExam: (examId: text) -> (vec StudentMarks) query;
   loadOnlineSessions: (thresholdSeconds: int) -> (vec UserSession) query;
+  loadPaymentsByDateRange: (dateFrom: text, dateTo: text, className:
+   opt text, section: opt text, page: nat, pageSize: nat) ->
+   (record {
+      payments: vec FeePayment;
+      total: nat;
+    }) query;
+  loadPaymentsByStudent: (studentId: text) -> (vec FeePayment) query;
   loadPermissions: (userId: text) -> (vec text) query;
+  loadStudentAttendance: (studentId: text, dateFrom: opt text, dateTo:
+   opt text) -> (vec AttendanceRecord) query;
+  loadStudentById: (id: text) -> (opt StudentRecord) query;
+  loadStudentReportCard: (studentId: text, className: text, academicYear:
+   text) -> (ReportCardData) query;
+  loadStudentsByClass: (className: text, section: opt text) ->
+   (vec StudentRecord) query;
   loadUserById: (id: text) -> (Result) query;
+  saveAllMarks: (entries: vec StudentMarks) -> (vec Result__1);
   saveAuditRecord: ("record": AuditRecord) -> (Result_2);
+  saveDailyAttendance: (date: text, className: text, section: text, records:
+   vec AttendanceRecord) -> (variant {
+                               err: text;
+                               ok: bool;
+                             });
+  saveExam: (exam: ExamRecord) -> (Result__1_1);
+  saveFeeCategory: (category: FeeCategory) ->
+   (variant {
+      err: text;
+      ok: FeeCategory;
+    });
+  saveMarks: (entry: StudentMarks) -> (Result__1);
+  savePayment: (payment: FeePayment) -> (variant {
+                                           err: text;
+                                           ok: FeePayment;
+                                         });
   savePermissions: (userId: text, permissions: vec text) -> (Result_1);
+  saveStudent: (student: StudentRecord) ->
+   (variant {
+      err: text;
+      ok: StudentRecord;
+    });
   saveUser: (user: UserRecord) -> (Result);
+  searchStudents: (q: StudentSearchQuery) -> (StudentPage) query;
   updateSession: (userId: text, role: text) -> ();
 }

@@ -1,22 +1,35 @@
 import { ExportButtons } from "@/components/ExportButtons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mockStaff } from "@/data/mockStaff";
 import { mockStudents } from "@/data/mockStudents";
+import { useActor } from "@caffeineai/core-infrastructure";
 import {
   BarChart2,
   Bus,
   CalendarDays,
+  ChevronLeft,
+  ChevronRight,
   GraduationCap,
   IndianRupee,
+  Loader2,
   Receipt,
   Search,
   TrendingUp,
   Users,
 } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { createActor } from "../../backend";
+import type {
+  AcademicReport,
+  AttendanceReport,
+  FeeReport,
+} from "../../backend.d.ts";
 
+// ── Seed-based mock helpers ───────────────────────────────────────────────────
 function seedRand(str: string, i: number, date = ""): number {
   let h = 0;
   for (const c of str + i + date) h = (Math.imul(31, h) + c.charCodeAt(0)) | 0;
@@ -103,6 +116,7 @@ function genDailyExpenseRows(date: string) {
   }));
 }
 
+// ── Shared components ─────────────────────────────────────────────────────────
 interface SectionProps {
   title: string;
   exportTitle: string;
@@ -182,6 +196,49 @@ function DataTable({ headers, rows }: DataTableProps) {
   );
 }
 
+function PaginationBar({
+  page,
+  pageSize,
+  total,
+  onPage,
+}: {
+  page: number;
+  pageSize: number;
+  total: number;
+  onPage: (p: number) => void;
+}) {
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if (totalPages <= 1) return null;
+  return (
+    <div className="flex items-center justify-end gap-2 pt-2 text-sm text-muted-foreground">
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => onPage(page - 1)}
+        disabled={page <= 1}
+        aria-label="Previous page"
+      >
+        <ChevronLeft size={14} />
+      </Button>
+      <span>
+        Page {page} / {totalPages}
+      </span>
+      <Button
+        variant="outline"
+        size="icon"
+        className="h-7 w-7"
+        onClick={() => onPage(page + 1)}
+        disabled={page >= totalPages}
+        aria-label="Next page"
+      >
+        <ChevronRight size={14} />
+      </Button>
+    </div>
+  );
+}
+
+// ── Overview tab (mock only) ──────────────────────────────────────────────────
 function OverviewTab() {
   const classBreakdown = CLASSES_LIST.map((c) => ({
     class: c,
@@ -359,15 +416,77 @@ function OverviewTab() {
   );
 }
 
-function FeeReportsTab() {
+// ── Fee Reports tab (backend-wired) ───────────────────────────────────────────
+function FeeReportsTab({
+  actor,
+  actorLoading,
+}: {
+  actor: ReturnType<typeof createActor> | null;
+  actorLoading: boolean;
+}) {
   const today = new Date().toISOString().split("T")[0];
   const [dailyDate, setDailyDate] = useState(today);
   const [summaryMonth, setSummaryMonth] = useState(MONTHS[7]);
   const [feeClassFilter, setFeeClassFilter] = useState("all");
-  const dailyRows = genDailyFeeRows(dailyDate).filter((row) => {
-    if (feeClassFilter === "all") return true;
-    return row.Class.startsWith(feeClassFilter);
-  });
+
+  // Backend state
+  const [backendFee, setBackendFee] = useState<FeeReport[]>([]);
+  const [feeLoading, setFeeLoading] = useState(false);
+  const [feePage, setFeePage] = useState(1);
+  const [feeTotal, setFeeTotal] = useState(0);
+  const PAGE_SIZE = 10;
+
+  const fetchFeeReport = useCallback(
+    async (page: number) => {
+      if (!actor || actorLoading) return;
+      setFeeLoading(true);
+      try {
+        const res = await actor.getFeeReport(
+          dailyDate,
+          dailyDate,
+          feeClassFilter !== "all" ? feeClassFilter : null,
+          BigInt(page),
+          BigInt(PAGE_SIZE),
+        );
+        if (Number(res.total) > 0) {
+          setBackendFee(res.items);
+          setFeeTotal(Number(res.total));
+        } else {
+          setBackendFee([]);
+          setFeeTotal(0);
+        }
+      } catch {
+        setBackendFee([]);
+      } finally {
+        setFeeLoading(false);
+      }
+    },
+    [actor, actorLoading, dailyDate, feeClassFilter],
+  );
+
+  useEffect(() => {
+    setFeePage(1);
+    fetchFeeReport(1);
+  }, [fetchFeeReport]);
+
+  // Fallback mock daily rows
+  const mockDailyRows = genDailyFeeRows(dailyDate).filter((row) =>
+    feeClassFilter === "all" ? true : row.Class.startsWith(feeClassFilter),
+  );
+
+  // Use backend if it has data, else mock
+  const displayFeeRows =
+    backendFee.length > 0
+      ? backendFee.map((r) => ({
+          Date: r.date,
+          "Total Collected": `Rs.${r.totalCollected.toLocaleString()}`,
+          Cash: `Rs.${r.cashPayments.toLocaleString()}`,
+          Online: `Rs.${r.onlinePayments.toLocaleString()}`,
+          Outstanding: `Rs.${r.outstanding.toLocaleString()}`,
+          Students: String(r.totalStudents),
+        }))
+      : null;
+
   const summaryRows = CLASSES_LIST.map((c, i) => {
     const total = (seedRand(summaryMonth, i) % 50000) + 80000;
     const collected = Math.round(
@@ -381,6 +500,7 @@ function FeeReportsTab() {
       "Collection %": `${((collected / total) * 100).toFixed(1)}%`,
     };
   });
+
   const defaulters = [
     {
       "Student Name": "Rahul Verma",
@@ -446,23 +566,8 @@ function FeeReportsTab() {
       "Last Payment": "18-Nov-2025",
       "Days Overdue": 105,
     },
-    {
-      "Student Name": "Arjun Pillai",
-      Class: "IX-C",
-      "Admission No": "2024-0399",
-      "Total Due": 16800,
-      "Last Payment": "03-Sep-2025",
-      "Days Overdue": 181,
-    },
-    {
-      "Student Name": "Simran Kaur",
-      Class: "X-A",
-      "Admission No": "2023-0512",
-      "Total Due": 21500,
-      "Last Payment": "28-Aug-2025",
-      "Days Overdue": 187,
-    },
   ];
+
   const categoryRows = [
     {
       Category: "Tuition Fee",
@@ -495,12 +600,18 @@ function FeeReportsTab() {
       Pending: 24000,
     },
   ];
+
   return (
     <div className="space-y-6">
+      {/* Daily Fee Collection — backend or mock */}
       <ReportSection
         title="Daily Fee Collection"
         exportTitle="Daily_Fee_Collection"
-        exportData={dailyRows as unknown as Record<string, unknown>[]}
+        exportData={
+          displayFeeRows
+            ? (displayFeeRows as unknown as Record<string, unknown>[])
+            : (mockDailyRows as unknown as Record<string, unknown>[])
+        }
         controls={
           <>
             <input
@@ -512,39 +623,83 @@ function FeeReportsTab() {
             />
             <select
               value={feeClassFilter}
-              onChange={(e) => {
-                setFeeClassFilter(e.target.value);
-              }}
+              onChange={(e) => setFeeClassFilter(e.target.value)}
               className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
               data-ocid="reports.fee.class_filter.select"
             >
               <option value="all">All Classes</option>
-              {["V", "VI", "VII", "VIII", "IX", "X", "XI", "XII"].map((c) => (
+              {CLASSES_LIST.map((c) => (
                 <option key={c} value={c}>
                   Class {c}
                 </option>
               ))}
             </select>
+            {feeLoading && (
+              <Loader2
+                size={16}
+                className="animate-spin text-muted-foreground"
+              />
+            )}
           </>
         }
       >
-        <DataTable
-          headers={[
-            "Student Name",
-            "Class",
-            "Amount (Rs)",
-            "Payment Mode",
-            "Receipt No",
-          ]}
-          rows={dailyRows.map((r) => [
-            r["Student Name"],
-            r.Class,
-            `Rs.${r.Amount.toLocaleString()}`,
-            r["Payment Mode"],
-            r["Receipt No"],
-          ])}
-        />
+        {feeLoading ? (
+          <div className="space-y-2">
+            {["f1", "f2", "f3", "f4", "f5"].map((k) => (
+              <Skeleton key={k} className="h-8" />
+            ))}
+          </div>
+        ) : displayFeeRows ? (
+          <>
+            <DataTable
+              headers={[
+                "Date",
+                "Total Collected",
+                "Cash",
+                "Online",
+                "Outstanding",
+                "Students",
+              ]}
+              rows={displayFeeRows.map((r) => [
+                r.Date,
+                r["Total Collected"],
+                r.Cash,
+                r.Online,
+                r.Outstanding,
+                r.Students,
+              ])}
+            />
+            <PaginationBar
+              page={feePage}
+              pageSize={PAGE_SIZE}
+              total={feeTotal}
+              onPage={(p) => {
+                setFeePage(p);
+                fetchFeeReport(p);
+              }}
+            />
+          </>
+        ) : (
+          <DataTable
+            headers={[
+              "Student Name",
+              "Class",
+              "Amount (Rs)",
+              "Payment Mode",
+              "Receipt No",
+            ]}
+            rows={mockDailyRows.map((r) => [
+              r["Student Name"],
+              r.Class,
+              `Rs.${r.Amount.toLocaleString()}`,
+              r["Payment Mode"],
+              r["Receipt No"],
+            ])}
+          />
+        )}
       </ReportSection>
+
+      {/* Monthly summary (always mock) */}
       <ReportSection
         title="Monthly Fee Summary"
         exportTitle="Monthly_Fee_Summary"
@@ -579,6 +734,8 @@ function FeeReportsTab() {
           ])}
         />
       </ReportSection>
+
+      {/* Defaulters */}
       <ReportSection
         title="Fee Defaulters List"
         exportTitle="Fee_Defaulters"
@@ -599,12 +756,17 @@ function FeeReportsTab() {
             r["Admission No"],
             `Rs.${r["Total Due"].toLocaleString()}`,
             r["Last Payment"],
-            <span key={r["Admission No"]} className="text-red-500 font-medium">
+            <span
+              key={r["Admission No"]}
+              className="text-destructive font-medium"
+            >
               {r["Days Overdue"]} days
             </span>,
           ])}
         />
       </ReportSection>
+
+      {/* Category */}
       <ReportSection
         title="Fee Category Wise Report"
         exportTitle="Fee_Category_Report"
@@ -629,6 +791,694 @@ function FeeReportsTab() {
   );
 }
 
+// ── Attendance Reports tab (backend-wired) ────────────────────────────────────
+function AttendanceReportsTab({
+  actor,
+  actorLoading,
+  dateFrom,
+  dateTo,
+}: {
+  actor: ReturnType<typeof createActor> | null;
+  actorLoading: boolean;
+  dateFrom: string;
+  dateTo: string;
+}) {
+  const [attMonth, setAttMonth] = useState(MONTHS[7]);
+  const [studentSearch, setStudentSearch] = useState("");
+  const [attClassFilter, setAttClassFilter] = useState("all");
+  const [attSectionFilter, setAttSectionFilter] = useState("all");
+
+  // Backend state
+  const [backendAtt, setBackendAtt] = useState<AttendanceReport[]>([]);
+  const [attLoading, setAttLoading] = useState(false);
+  const [attPage, setAttPage] = useState(1);
+  const [attTotal, setAttTotal] = useState(0);
+  const PAGE_SIZE = 10;
+
+  const effectiveDateFrom = dateFrom || new Date().toISOString().split("T")[0];
+  const effectiveDateTo = dateTo || new Date().toISOString().split("T")[0];
+
+  const fetchAttendance = useCallback(
+    async (page: number) => {
+      if (!actor || actorLoading) return;
+      setAttLoading(true);
+      try {
+        const res = await actor.getAttendanceReport(
+          effectiveDateFrom,
+          effectiveDateTo,
+          attClassFilter !== "all" ? attClassFilter : null,
+          attSectionFilter !== "all" ? attSectionFilter : null,
+          BigInt(page),
+          BigInt(PAGE_SIZE),
+        );
+        if (Number(res.total) > 0) {
+          setBackendAtt(res.items);
+          setAttTotal(Number(res.total));
+        } else {
+          setBackendAtt([]);
+          setAttTotal(0);
+        }
+      } catch {
+        setBackendAtt([]);
+      } finally {
+        setAttLoading(false);
+      }
+    },
+    [
+      actor,
+      actorLoading,
+      effectiveDateFrom,
+      effectiveDateTo,
+      attClassFilter,
+      attSectionFilter,
+    ],
+  );
+
+  useEffect(() => {
+    setAttPage(1);
+    fetchAttendance(1);
+  }, [fetchAttendance]);
+
+  // Mock fallback
+  const mockClassAttRows = CLASSES_LIST.filter(
+    (c) => attClassFilter === "all" || c === attClassFilter,
+  )
+    .map((c) => {
+      const students = mockStudents.filter((s) => s.className === c);
+      if (students.length === 0) return null;
+      const present = Math.round(students.length * 0.87);
+      const absent = Math.round(students.length * 0.08);
+      return {
+        Class: `Class ${c}`,
+        Section: "A",
+        "Total Students": students.length,
+        Present: present,
+        Absent: absent,
+        Late: Math.max(0, students.length - present - absent),
+        "Attendance %": `${((present / students.length) * 100).toFixed(1)}%`,
+      };
+    })
+    .filter((r): r is NonNullable<typeof r> => r !== null);
+
+  const backendAttRows = backendAtt.map((r) => ({
+    Class: `Class ${r.className}`,
+    Section: r.section,
+    Present: String(r.present),
+    Absent: String(r.absent),
+    Late: String(r.late),
+    "Attendance %": `${r.percentage.toFixed(1)}%`,
+  }));
+
+  const monthlyAttRows = CLASSES_LIST.map((c, i) => ({
+    Class: `Class ${c}`,
+    "Working Days": 24,
+    "Avg Present %": `${80 + (seedRand(attMonth, i) % 18)}%`,
+    "Avg Absent %": `${2 + (seedRand(attMonth, i + 4) % 10)}%`,
+  }));
+
+  const matchedStudent = mockStudents.find(
+    (s) =>
+      studentSearch.length > 1 &&
+      s.name.toLowerCase().includes(studentSearch.toLowerCase()),
+  );
+  const studentAttRows = matchedStudent
+    ? Array.from({ length: 10 }, (_, i) => {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        return {
+          Date: d.toLocaleDateString("en-IN"),
+          Status: [
+            "Present",
+            "Present",
+            "Present",
+            "Absent",
+            "Late",
+            "Present",
+            "Present",
+            "Present",
+            "Absent",
+            "Present",
+          ][i],
+        };
+      })
+    : [];
+
+  const staffAttRows = mockStaff.slice(0, 10).map((s, si) => ({
+    "Staff Name": s.name,
+    Designation: s.designation,
+    "Present Days": 22,
+    "Absent Days": 2,
+    "Leave Days": 0,
+    "%": `${87 + (seedRand(s.name, si) % 12)}%`,
+  }));
+
+  return (
+    <div className="space-y-6">
+      <ReportSection
+        title="Class-wise Attendance"
+        exportTitle="Classwise_Attendance"
+        exportData={
+          (backendAttRows.length > 0
+            ? backendAttRows
+            : mockClassAttRows) as unknown as Record<string, unknown>[]
+        }
+        controls={
+          <div className="flex gap-2 flex-wrap">
+            <select
+              value={attClassFilter}
+              onChange={(e) => {
+                setAttClassFilter(e.target.value);
+                setAttSectionFilter("all");
+              }}
+              className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
+              data-ocid="reports.attendance.class_filter.select"
+            >
+              <option value="all">All Classes</option>
+              {CLASSES_LIST.map((c) => (
+                <option key={c} value={c}>
+                  Class {c}
+                </option>
+              ))}
+            </select>
+            <select
+              value={attSectionFilter}
+              onChange={(e) => setAttSectionFilter(e.target.value)}
+              className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
+              data-ocid="reports.attendance.section_filter.select"
+            >
+              <option value="all">All Sections</option>
+              {["A", "B", "C", "D", "E"].map((s) => (
+                <option key={s} value={s}>
+                  Section {s}
+                </option>
+              ))}
+            </select>
+            {attLoading && (
+              <Loader2
+                size={16}
+                className="animate-spin text-muted-foreground self-center"
+              />
+            )}
+          </div>
+        }
+      >
+        {attLoading ? (
+          <div className="space-y-2">
+            {["a1", "a2", "a3", "a4", "a5"].map((k) => (
+              <Skeleton key={k} className="h-8" />
+            ))}
+          </div>
+        ) : backendAttRows.length > 0 ? (
+          <>
+            <DataTable
+              headers={[
+                "Class",
+                "Section",
+                "Present",
+                "Absent",
+                "Late",
+                "Attendance %",
+              ]}
+              rows={backendAttRows.map((r) => [
+                r.Class,
+                r.Section,
+                r.Present,
+                r.Absent,
+                r.Late,
+                r["Attendance %"],
+              ])}
+            />
+            <PaginationBar
+              page={attPage}
+              pageSize={PAGE_SIZE}
+              total={attTotal}
+              onPage={(p) => {
+                setAttPage(p);
+                fetchAttendance(p);
+              }}
+            />
+          </>
+        ) : (
+          <DataTable
+            headers={[
+              "Class",
+              "Section",
+              "Total Students",
+              "Present",
+              "Absent",
+              "Late",
+              "Attendance %",
+            ]}
+            rows={mockClassAttRows.map((r) => [
+              r.Class,
+              r.Section,
+              r["Total Students"],
+              r.Present,
+              r.Absent,
+              r.Late,
+              r["Attendance %"],
+            ])}
+          />
+        )}
+      </ReportSection>
+
+      <ReportSection
+        title="Monthly Attendance Summary"
+        exportTitle="Monthly_Attendance"
+        exportData={monthlyAttRows as unknown as Record<string, unknown>[]}
+        controls={
+          <select
+            value={attMonth}
+            onChange={(e) => setAttMonth(e.target.value)}
+            className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
+            data-ocid="reports.attendance.month_select"
+          >
+            {MONTHS.map((m) => (
+              <option key={m}>{m}</option>
+            ))}
+          </select>
+        }
+      >
+        <DataTable
+          headers={["Class", "Working Days", "Avg Present %", "Avg Absent %"]}
+          rows={monthlyAttRows.map((r) => [
+            r.Class,
+            r["Working Days"],
+            r["Avg Present %"],
+            r["Avg Absent %"],
+          ])}
+        />
+      </ReportSection>
+
+      <ReportSection
+        title="Student-wise Attendance"
+        exportTitle="Studentwise_Attendance"
+        exportData={studentAttRows as unknown as Record<string, unknown>[]}
+        controls={
+          <div className="relative">
+            <Search
+              size={14}
+              className="absolute left-2.5 top-2.5 text-muted-foreground"
+            />
+            <Input
+              placeholder="Search student name..."
+              value={studentSearch}
+              onChange={(e) => setStudentSearch(e.target.value)}
+              className="pl-8 h-8 text-sm w-52"
+              data-ocid="reports.attendance.student_search"
+            />
+          </div>
+        }
+      >
+        {!matchedStudent ? (
+          <p className="text-sm text-muted-foreground text-center py-6">
+            Type a student name to view attendance records.
+          </p>
+        ) : (
+          <>
+            <p className="text-sm font-medium">
+              Showing:{" "}
+              <span className="text-primary">{matchedStudent.name}</span> —{" "}
+              {matchedStudent.className}
+            </p>
+            <DataTable
+              headers={["Date", "Status"]}
+              rows={studentAttRows.map((r) => [
+                r.Date,
+                <span
+                  key={r.Date}
+                  className={
+                    r.Status === "Present"
+                      ? "text-green-600 font-medium"
+                      : r.Status === "Absent"
+                        ? "text-destructive font-medium"
+                        : "text-amber-600 font-medium"
+                  }
+                >
+                  {r.Status}
+                </span>,
+              ])}
+            />
+          </>
+        )}
+      </ReportSection>
+
+      <ReportSection
+        title="Staff Attendance Report"
+        exportTitle="Staff_Attendance"
+        exportData={staffAttRows as unknown as Record<string, unknown>[]}
+      >
+        <DataTable
+          headers={[
+            "Staff Name",
+            "Designation",
+            "Present Days",
+            "Absent Days",
+            "Leave Days",
+            "%",
+          ]}
+          rows={staffAttRows.map((r) => [
+            r["Staff Name"],
+            r.Designation,
+            r["Present Days"],
+            r["Absent Days"],
+            r["Leave Days"],
+            r["%"],
+          ])}
+        />
+      </ReportSection>
+    </div>
+  );
+}
+
+// ── Academic Reports tab (backend-wired) ──────────────────────────────────────
+function AcademicReportsTab({
+  actor,
+  actorLoading,
+}: {
+  actor: ReturnType<typeof createActor> | null;
+  actorLoading: boolean;
+}) {
+  const [acadClass, setAcadClass] = useState("all");
+  const [backendAcad, setBackendAcad] = useState<AcademicReport[]>([]);
+  const [acadLoading, setAcadLoading] = useState(false);
+  const [acadPage, setAcadPage] = useState(1);
+  const [acadTotal, setAcadTotal] = useState(0);
+  const PAGE_SIZE = 10;
+
+  const fetchAcademic = useCallback(
+    async (page: number) => {
+      if (!actor || actorLoading) return;
+      setAcadLoading(true);
+      try {
+        const res = await actor.getAcademicReport(
+          acadClass !== "all" ? acadClass : null,
+          "2026-27",
+          BigInt(page),
+          BigInt(PAGE_SIZE),
+        );
+        if (Number(res.total) > 0) {
+          setBackendAcad(res.items);
+          setAcadTotal(Number(res.total));
+        } else {
+          setBackendAcad([]);
+          setAcadTotal(0);
+        }
+      } catch {
+        setBackendAcad([]);
+      } finally {
+        setAcadLoading(false);
+      }
+    },
+    [actor, actorLoading, acadClass],
+  );
+
+  useEffect(() => {
+    setAcadPage(1);
+    fetchAcademic(1);
+  }, [fetchAcademic]);
+
+  const backendAcadRows = backendAcad.map((r) => ({
+    "Exam Title": r.examTitle,
+    Class: `Class ${r.className}`,
+    Section: r.section,
+    "Avg Marks": r.averageMarks.toFixed(1),
+    "Top Score": r.topScore,
+    "Pass %": `${r.passPercentage.toFixed(1)}%`,
+  }));
+
+  // Mock fallback
+  const mockExamRows = CLASSES_LIST.map((c, i) => {
+    const total = (seedRand(c, i) % 20) + 30;
+    const pass = Math.round(total * (0.8 + (seedRand(c, i + 5) % 18) / 100));
+    return {
+      Class: `Class ${c}`,
+      "Total Students": total,
+      Pass: pass,
+      Fail: total - pass,
+      "Pass %": `${((pass / total) * 100).toFixed(1)}%`,
+      "Avg Score": `${65 + (seedRand(c, i + 2) % 28)}%`,
+    };
+  });
+
+  const toppersRows = [
+    {
+      Rank: 1,
+      "Student Name": "Aarav Sharma",
+      Class: "X-A",
+      Section: "A",
+      Score: 96,
+      Grade: "A+",
+    },
+    {
+      Rank: 2,
+      "Student Name": "Ananya Singh",
+      Class: "XII-B",
+      Section: "B",
+      Score: 94,
+      Grade: "A+",
+    },
+    {
+      Rank: 3,
+      "Student Name": "Kabir Mehta",
+      Class: "IX-A",
+      Section: "A",
+      Score: 92,
+      Grade: "A+",
+    },
+    {
+      Rank: 4,
+      "Student Name": "Priya Patel",
+      Class: "XI-A",
+      Section: "A",
+      Score: 91,
+      Grade: "A+",
+    },
+    {
+      Rank: 5,
+      "Student Name": "Sneha Rao",
+      Class: "X-B",
+      Section: "B",
+      Score: 90,
+      Grade: "A+",
+    },
+    {
+      Rank: 6,
+      "Student Name": "Dev Gupta",
+      Class: "VIII-C",
+      Section: "C",
+      Score: 89,
+      Grade: "A",
+    },
+    {
+      Rank: 7,
+      "Student Name": "Meera Nair",
+      Class: "VII-A",
+      Section: "A",
+      Score: 88,
+      Grade: "A",
+    },
+    {
+      Rank: 8,
+      "Student Name": "Rohit Kumar",
+      Class: "XII-A",
+      Section: "A",
+      Score: 87,
+      Grade: "A",
+    },
+  ];
+
+  const subjectRows = [
+    {
+      Subject: "Mathematics",
+      "Class Avg": "72%",
+      "School Avg": "74%",
+      "Pass %": "88%",
+      "Top Score": 98,
+    },
+    {
+      Subject: "Science",
+      "Class Avg": "78%",
+      "School Avg": "76%",
+      "Pass %": "91%",
+      "Top Score": 96,
+    },
+    {
+      Subject: "English",
+      "Class Avg": "81%",
+      "School Avg": "80%",
+      "Pass %": "94%",
+      "Top Score": 100,
+    },
+    {
+      Subject: "Hindi",
+      "Class Avg": "76%",
+      "School Avg": "77%",
+      "Pass %": "92%",
+      "Top Score": 99,
+    },
+    {
+      Subject: "Social Studies",
+      "Class Avg": "74%",
+      "School Avg": "73%",
+      "Pass %": "90%",
+      "Top Score": 97,
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
+      <ReportSection
+        title="Exam Results Summary"
+        exportTitle="Exam_Results_Summary"
+        exportData={
+          (backendAcadRows.length > 0
+            ? backendAcadRows
+            : mockExamRows) as unknown as Record<string, unknown>[]
+        }
+        controls={
+          <div className="flex gap-2 items-center">
+            <select
+              value={acadClass}
+              onChange={(e) => setAcadClass(e.target.value)}
+              className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
+              data-ocid="reports.academic.class_filter.select"
+            >
+              <option value="all">All Classes</option>
+              {CLASSES_LIST.map((c) => (
+                <option key={c} value={c}>
+                  Class {c}
+                </option>
+              ))}
+            </select>
+            {acadLoading && (
+              <Loader2
+                size={16}
+                className="animate-spin text-muted-foreground"
+              />
+            )}
+          </div>
+        }
+      >
+        {acadLoading ? (
+          <div className="space-y-2">
+            {["ac1", "ac2", "ac3", "ac4", "ac5"].map((k) => (
+              <Skeleton key={k} className="h-8" />
+            ))}
+          </div>
+        ) : backendAcadRows.length > 0 ? (
+          <>
+            <DataTable
+              headers={[
+                "Exam Title",
+                "Class",
+                "Section",
+                "Avg Marks",
+                "Top Score",
+                "Pass %",
+              ]}
+              rows={backendAcadRows.map((r) => [
+                r["Exam Title"],
+                r.Class,
+                r.Section,
+                r["Avg Marks"],
+                r["Top Score"],
+                r["Pass %"],
+              ])}
+            />
+            <PaginationBar
+              page={acadPage}
+              pageSize={PAGE_SIZE}
+              total={acadTotal}
+              onPage={(p) => {
+                setAcadPage(p);
+                fetchAcademic(p);
+              }}
+            />
+          </>
+        ) : (
+          <DataTable
+            headers={[
+              "Class",
+              "Total Students",
+              "Pass",
+              "Fail",
+              "Pass %",
+              "Avg Score",
+            ]}
+            rows={mockExamRows.map((r) => [
+              r.Class,
+              r["Total Students"],
+              r.Pass,
+              r.Fail,
+              r["Pass %"],
+              r["Avg Score"],
+            ])}
+          />
+        )}
+      </ReportSection>
+
+      <ReportSection
+        title="Class Toppers"
+        exportTitle="Class_Toppers"
+        exportData={toppersRows as unknown as Record<string, unknown>[]}
+      >
+        <DataTable
+          headers={[
+            "Rank",
+            "Student Name",
+            "Class",
+            "Section",
+            "Score",
+            "Grade",
+          ]}
+          rows={toppersRows.map((r) => [
+            <span key={`rank-${r.Rank}`} className="font-bold text-primary">
+              #{r.Rank}
+            </span>,
+            r["Student Name"],
+            r.Class,
+            r.Section,
+            <span
+              key={`score-${r.Rank}`}
+              className="font-semibold text-green-600"
+            >
+              {r.Score}/100
+            </span>,
+            <span key={`grade-${r.Rank}`} className="font-bold text-amber-600">
+              {r.Grade}
+            </span>,
+          ])}
+        />
+      </ReportSection>
+
+      <ReportSection
+        title="Subject-wise Performance"
+        exportTitle="Subject_Performance"
+        exportData={subjectRows as unknown as Record<string, unknown>[]}
+      >
+        <DataTable
+          headers={[
+            "Subject",
+            "Class Avg",
+            "School Avg",
+            "Pass %",
+            "Top Score",
+          ]}
+          rows={subjectRows.map((r) => [
+            r.Subject,
+            r["Class Avg"],
+            r["School Avg"],
+            r["Pass %"],
+            r["Top Score"],
+          ])}
+        />
+      </ReportSection>
+    </div>
+  );
+}
+
+// ── Expense tab (mock only) ───────────────────────────────────────────────────
 function ExpenseReportsTab() {
   const today = new Date().toISOString().split("T")[0];
   const [dailyDate, setDailyDate] = useState(today);
@@ -752,419 +1602,7 @@ function ExpenseReportsTab() {
   );
 }
 
-function AttendanceReportsTab() {
-  const [attMonth, setAttMonth] = useState(MONTHS[7]);
-  const [studentSearch, setStudentSearch] = useState("");
-  const [attClassFilter, setAttClassFilter] = useState("all");
-  const classAttRows = CLASSES_LIST.filter(
-    (c) => attClassFilter === "all" || c === attClassFilter,
-  )
-    .map((c) => {
-      const students = mockStudents.filter((s) => s.className === c);
-      if (students.length === 0) return null;
-      const present = Math.round(students.length * 0.87);
-      const absent = Math.round(students.length * 0.08);
-      return {
-        Class: `Class ${c}`,
-        Section: "A",
-        "Total Students": students.length,
-        Present: present,
-        Absent: absent,
-        Late: Math.max(0, students.length - present - absent),
-        "Attendance %": `${((present / students.length) * 100).toFixed(1)}%`,
-      };
-    })
-    .filter((r): r is NonNullable<typeof r> => r !== null);
-  const monthlyAttRows = CLASSES_LIST.map((c, i) => ({
-    Class: `Class ${c}`,
-    "Working Days": 24,
-    "Avg Present %": `${80 + (seedRand(attMonth, i) % 18)}%`,
-    "Avg Absent %": `${2 + (seedRand(attMonth, i + 4) % 10)}%`,
-  }));
-  const matchedStudent = mockStudents.find(
-    (s) =>
-      studentSearch.length > 1 &&
-      s.name.toLowerCase().includes(studentSearch.toLowerCase()),
-  );
-  const studentAttRows = matchedStudent
-    ? Array.from({ length: 10 }, (_, i) => {
-        const d = new Date();
-        d.setDate(d.getDate() - i);
-        return {
-          Date: d.toLocaleDateString("en-IN"),
-          Status: [
-            "Present",
-            "Present",
-            "Present",
-            "Absent",
-            "Late",
-            "Present",
-            "Present",
-            "Present",
-            "Absent",
-            "Present",
-          ][i],
-        };
-      })
-    : [];
-  const staffAttRows = mockStaff.slice(0, 10).map((s) => ({
-    "Staff Name": s.name,
-    Designation: s.designation,
-    "Present Days": 22,
-    "Absent Days": 2,
-    "Leave Days": 0,
-    "%": "91.7%",
-  }));
-  return (
-    <div className="space-y-6">
-      <ReportSection
-        title="Class-wise Attendance Today"
-        exportTitle="Classwise_Attendance"
-        exportData={classAttRows as unknown as Record<string, unknown>[]}
-      >
-        <DataTable
-          headers={[
-            "Class",
-            "Section",
-            "Total Students",
-            "Present",
-            "Absent",
-            "Late",
-            "Attendance %",
-          ]}
-          rows={classAttRows.map((r) => [
-            r.Class,
-            r.Section,
-            r["Total Students"],
-            r.Present,
-            r.Absent,
-            r.Late,
-            r["Attendance %"],
-          ])}
-        />
-      </ReportSection>
-      <ReportSection
-        title="Monthly Attendance Summary"
-        exportTitle="Monthly_Attendance"
-        exportData={monthlyAttRows as unknown as Record<string, unknown>[]}
-        controls={
-          <select
-            value={attMonth}
-            onChange={(e) => setAttMonth(e.target.value)}
-            className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
-            data-ocid="reports.attendance.month_select"
-          >
-            {MONTHS.map((m) => (
-              <option key={m}>{m}</option>
-            ))}
-          </select>
-        }
-      >
-        <DataTable
-          headers={["Class", "Working Days", "Avg Present %", "Avg Absent %"]}
-          rows={monthlyAttRows.map((r) => [
-            r.Class,
-            r["Working Days"],
-            r["Avg Present %"],
-            r["Avg Absent %"],
-          ])}
-        />
-      </ReportSection>
-      <div className="flex gap-3 flex-wrap items-center mb-3">
-        <select
-          value={attClassFilter}
-          onChange={(e) => {
-            setAttClassFilter(e.target.value);
-          }}
-          className="border border-border rounded-lg px-3 py-1.5 text-sm bg-background text-foreground"
-          data-ocid="reports.attendance.class_filter.select"
-        >
-          <option value="all">All Classes</option>
-          {CLASSES_LIST.map((c) => (
-            <option key={c} value={c}>
-              Class {c}
-            </option>
-          ))}
-        </select>
-      </div>
-      <ReportSection
-        title="Student-wise Attendance"
-        exportTitle="Studentwise_Attendance"
-        exportData={studentAttRows as unknown as Record<string, unknown>[]}
-        controls={
-          <div className="relative">
-            <Search
-              size={14}
-              className="absolute left-2.5 top-2.5 text-muted-foreground"
-            />
-            <Input
-              placeholder="Search student name..."
-              value={studentSearch}
-              onChange={(e) => setStudentSearch(e.target.value)}
-              className="pl-8 h-8 text-sm w-52"
-              data-ocid="reports.attendance.student_search"
-            />
-          </div>
-        }
-      >
-        {!matchedStudent ? (
-          <p className="text-sm text-muted-foreground text-center py-6">
-            Type a student name to view attendance records.
-          </p>
-        ) : (
-          <>
-            <p className="text-sm font-medium">
-              Showing:{" "}
-              <span className="text-primary">{matchedStudent.name}</span> —{" "}
-              {matchedStudent.className}
-            </p>
-            <DataTable
-              headers={["Date", "Status"]}
-              rows={studentAttRows.map((r) => [
-                r.Date,
-                <span
-                  key={r.Date}
-                  className={
-                    r.Status === "Present"
-                      ? "text-green-600 font-medium"
-                      : r.Status === "Absent"
-                        ? "text-red-500 font-medium"
-                        : "text-amber-600 font-medium"
-                  }
-                >
-                  {r.Status}
-                </span>,
-              ])}
-            />
-          </>
-        )}
-      </ReportSection>
-      <ReportSection
-        title="Staff Attendance Report"
-        exportTitle="Staff_Attendance"
-        exportData={staffAttRows as unknown as Record<string, unknown>[]}
-      >
-        <DataTable
-          headers={[
-            "Staff Name",
-            "Designation",
-            "Present Days",
-            "Absent Days",
-            "Leave Days",
-            "%",
-          ]}
-          rows={staffAttRows.map((r) => [
-            r["Staff Name"],
-            r.Designation,
-            r["Present Days"],
-            r["Absent Days"],
-            r["Leave Days"],
-            r["%"],
-          ])}
-        />
-      </ReportSection>
-    </div>
-  );
-}
-
-function AcademicReportsTab() {
-  const examResultRows = CLASSES_LIST.map((c, i) => {
-    const total = (seedRand(c, i) % 20) + 30;
-    const pass = Math.round(total * (0.8 + (seedRand(c, i + 5) % 18) / 100));
-    return {
-      Class: `Class ${c}`,
-      "Total Students": total,
-      Pass: pass,
-      Fail: total - pass,
-      "Pass %": `${((pass / total) * 100).toFixed(1)}%`,
-      "Avg Score": `${65 + (seedRand(c, i + 2) % 28)}%`,
-    };
-  });
-  const toppersRows = [
-    {
-      Rank: 1,
-      "Student Name": "Aarav Sharma",
-      Class: "X-A",
-      Section: "A",
-      Score: 96,
-      Grade: "A+",
-    },
-    {
-      Rank: 2,
-      "Student Name": "Ananya Singh",
-      Class: "XII-B",
-      Section: "B",
-      Score: 94,
-      Grade: "A+",
-    },
-    {
-      Rank: 3,
-      "Student Name": "Kabir Mehta",
-      Class: "IX-A",
-      Section: "A",
-      Score: 92,
-      Grade: "A+",
-    },
-    {
-      Rank: 4,
-      "Student Name": "Priya Patel",
-      Class: "XI-A",
-      Section: "A",
-      Score: 91,
-      Grade: "A+",
-    },
-    {
-      Rank: 5,
-      "Student Name": "Sneha Rao",
-      Class: "X-B",
-      Section: "B",
-      Score: 90,
-      Grade: "A+",
-    },
-    {
-      Rank: 6,
-      "Student Name": "Dev Gupta",
-      Class: "VIII-C",
-      Section: "C",
-      Score: 89,
-      Grade: "A",
-    },
-    {
-      Rank: 7,
-      "Student Name": "Meera Nair",
-      Class: "VII-A",
-      Section: "A",
-      Score: 88,
-      Grade: "A",
-    },
-    {
-      Rank: 8,
-      "Student Name": "Rohit Kumar",
-      Class: "XII-A",
-      Section: "A",
-      Score: 87,
-      Grade: "A",
-    },
-  ];
-  const subjectRows = [
-    {
-      Subject: "Mathematics",
-      "Class Avg": "72%",
-      "School Avg": "74%",
-      "Pass %": "88%",
-      "Top Score": 98,
-    },
-    {
-      Subject: "Science",
-      "Class Avg": "78%",
-      "School Avg": "76%",
-      "Pass %": "91%",
-      "Top Score": 96,
-    },
-    {
-      Subject: "English",
-      "Class Avg": "81%",
-      "School Avg": "80%",
-      "Pass %": "94%",
-      "Top Score": 100,
-    },
-    {
-      Subject: "Hindi",
-      "Class Avg": "76%",
-      "School Avg": "77%",
-      "Pass %": "92%",
-      "Top Score": 99,
-    },
-    {
-      Subject: "Social Studies",
-      "Class Avg": "74%",
-      "School Avg": "73%",
-      "Pass %": "90%",
-      "Top Score": 97,
-    },
-  ];
-  return (
-    <div className="space-y-6">
-      <ReportSection
-        title="Exam Results Summary"
-        exportTitle="Exam_Results_Summary"
-        exportData={examResultRows as unknown as Record<string, unknown>[]}
-      >
-        <DataTable
-          headers={[
-            "Class",
-            "Total Students",
-            "Pass",
-            "Fail",
-            "Pass %",
-            "Avg Score",
-          ]}
-          rows={examResultRows.map((r) => [
-            r.Class,
-            r["Total Students"],
-            r.Pass,
-            r.Fail,
-            r["Pass %"],
-            r["Avg Score"],
-          ])}
-        />
-      </ReportSection>
-      <ReportSection
-        title="Class Toppers"
-        exportTitle="Class_Toppers"
-        exportData={toppersRows as unknown as Record<string, unknown>[]}
-      >
-        <DataTable
-          headers={[
-            "Rank",
-            "Student Name",
-            "Class",
-            "Section",
-            "Score",
-            "Grade",
-          ]}
-          rows={toppersRows.map((r) => [
-            <span key={r.Rank} className="font-bold text-primary">
-              #{r.Rank}
-            </span>,
-            r["Student Name"],
-            r.Class,
-            r.Section,
-            <span key={`s${r.Rank}`} className="font-semibold text-green-600">
-              {r.Score}/100
-            </span>,
-            <span key={`g${r.Rank}`} className="font-bold text-amber-600">
-              {r.Grade}
-            </span>,
-          ])}
-        />
-      </ReportSection>
-      <ReportSection
-        title="Subject-wise Performance"
-        exportTitle="Subject_Performance"
-        exportData={subjectRows as unknown as Record<string, unknown>[]}
-      >
-        <DataTable
-          headers={[
-            "Subject",
-            "Class Avg",
-            "School Avg",
-            "Pass %",
-            "Top Score",
-          ]}
-          rows={subjectRows.map((r) => [
-            r.Subject,
-            r["Class Avg"],
-            r["School Avg"],
-            r["Pass %"],
-            r["Top Score"],
-          ])}
-        />
-      </ReportSection>
-    </div>
-  );
-}
-
+// ── Staff tab (mock only) ─────────────────────────────────────────────────────
 function StaffReportsTab() {
   const departments = [
     "Teaching",
@@ -1232,6 +1670,7 @@ function StaffReportsTab() {
   );
 }
 
+// ── Transport tab (mock only) ─────────────────────────────────────────────────
 function TransportReportsTab() {
   const routeRows = [
     {
@@ -1331,6 +1770,7 @@ function TransportReportsTab() {
   );
 }
 
+// ── Root page ─────────────────────────────────────────────────────────────────
 const REPORT_TABS = [
   { id: "overview", label: "Overview", icon: <BarChart2 size={14} /> },
   { id: "fee", label: "Fee Reports", icon: <IndianRupee size={14} /> },
@@ -1350,9 +1790,17 @@ const REPORT_TABS = [
 ];
 
 export function ReportsPage() {
+  const { actor, isFetching } = useActor(createActor);
   const [globalSearch, setGlobalSearch] = useState("");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+
+  // Attempt to keep actor alive — log backend availability
+  useEffect(() => {
+    if (actor && !isFetching) {
+      // Actor is available; backend-wired tabs will fetch on mount
+    }
+  }, [actor, isFetching]);
 
   return (
     <div className="space-y-6" data-ocid="reports.page">
@@ -1367,6 +1815,12 @@ export function ReportsPage() {
             School-wide analytics and downloadable reports
           </p>
         </div>
+        {isFetching && (
+          <Loader2
+            size={16}
+            className="animate-spin text-muted-foreground ml-auto"
+          />
+        )}
       </div>
       <div
         className="flex flex-wrap gap-3 p-4 bg-card rounded-xl border border-border"
@@ -1422,6 +1876,7 @@ export function ReportsPage() {
           Clear
         </Button>
       </div>
+
       <Tabs defaultValue="overview" data-ocid="reports.tabs">
         <div className="overflow-x-auto">
           <TabsList className="flex-nowrap inline-flex h-auto p-1 gap-1 bg-muted/50 rounded-xl">
@@ -1442,13 +1897,18 @@ export function ReportsPage() {
           <OverviewTab />
         </TabsContent>
         <TabsContent value="fee" className="mt-4">
-          <FeeReportsTab />
+          <FeeReportsTab actor={actor} actorLoading={isFetching} />
         </TabsContent>
         <TabsContent value="attendance" className="mt-4">
-          <AttendanceReportsTab />
+          <AttendanceReportsTab
+            actor={actor}
+            actorLoading={isFetching}
+            dateFrom={dateFrom}
+            dateTo={dateTo}
+          />
         </TabsContent>
         <TabsContent value="academic" className="mt-4">
-          <AcademicReportsTab />
+          <AcademicReportsTab actor={actor} actorLoading={isFetching} />
         </TabsContent>
         <TabsContent value="expense" className="mt-4">
           <ExpenseReportsTab />

@@ -1,4 +1,17 @@
 // Version: 1.0.0
+type AttendanceId__1047620299 = Text;
+type AttendanceRecord__699091857 =
+  {
+    className : Text;
+    date : Text;
+    id : AttendanceId__1047620299;
+    markedBy : Text;
+    remarks : Text;
+    section : Text;
+    status : AttendanceStatus__1021638340;
+    studentId : StudentId__888719682
+  };
+type AttendanceStatus__1021638340 = {#absent; #halfDay; #late; #present};
 type AuditRecord__604071354 =
   {
     action : Text;
@@ -13,6 +26,60 @@ type AuditRecord__604071354 =
   };
 type Data__791452850<K, V> =
   {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type ExamId__1032019441 = Text;
+type ExamRecord__136656379 =
+  {
+    academicYear : Text;
+    className : Text;
+    createdBy : Text;
+    duration : Nat;
+    examDate : Text;
+    id : ExamId__1032019441;
+    maxMarks : Nat;
+    section : Text;
+    subject : Text;
+    term : Text;
+    title : Text
+  };
+type FeeCategoryPayment__487211774 =
+  {
+    amount : Float;
+    categoryId : FeeStructureId__413090819;
+    categoryName : Text;
+    paid : Float
+  };
+type FeeCategory__317436732 =
+  {
+    academicYear : Text;
+    amount : Float;
+    className : Text;
+    dueDate : Text;
+    id : FeeStructureId__413090819;
+    isOptional : Bool;
+    name : Text;
+    section : Text
+  };
+type FeeId__806649260 = Text;
+type FeePayment__252991136 =
+  {
+    academicYear : Text;
+    admissionNo : Text;
+    balance : Float;
+    categories : [FeeCategoryPayment__487211774];
+    className : Text;
+    id : FeeId__806649260;
+    paidAmount : Float;
+    paymentDate : Text;
+    paymentMode : Text;
+    receiptNo : Text;
+    section : Text;
+    status : Text;
+    studentId : StudentId__692306224;
+    studentName : Text;
+    totalAmount : Float;
+    txnId : Text
+  };
+type FeeStructureId__413090819 = Text;
 type Internal__8484328<K, V> =
   {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
 type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
@@ -20,6 +87,42 @@ type Nat__490723111 = Nat__920180692;
 type Nat__920180692 = Nat;
 type Node__46230540<K, V> =
   {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type StudentId__381756952 = Text;
+type StudentId__514518814 = StudentId__381756952;
+type StudentId__692306224 = StudentId__381756952;
+type StudentId__888719682 = StudentId__381756952;
+type StudentMarks__142195102 =
+  {
+    admissionNo : Text;
+    examId : ExamId__1032019441;
+    grade : Text;
+    obtainedMarks : Float;
+    rank : Nat;
+    remarks : Text;
+    studentId : StudentId__514518814;
+    studentName : Text
+  };
+type StudentRecord__414823591 =
+  {
+    address : Text;
+    admissionDate : Text;
+    admissionNo : Text;
+    bloodGroup : Text;
+    category : Text;
+    className : Text;
+    dob : Text;
+    feeStatus : Text;
+    gender : Text;
+    id : StudentId__381756952;
+    name : Text;
+    parentMobile : Text;
+    parentName : Text;
+    phone : Text;
+    religion : Text;
+    rollNo : Nat;
+    section : Text;
+    status : Text
+  };
 type Timestamp__301639476 = Int;
 type UserId__158757552 = Text;
 type UserRecord__595106690 =
@@ -37,9 +140,34 @@ type UserRecord__595106690 =
 type UserSession__644385136 =
   {isOnline : Bool; lastActivity : Int; role : Text; userId : Text};
 actor {
+  stable attendance :
+    {
+      var root : Node__46230540<Text, AttendanceRecord__699091857>;
+      var size : Nat__490723111
+    };
   stable auditLog :
     {
       var root : Node__46230540<Text, AuditRecord__604071354>;
+      var size : Nat__490723111
+    };
+  stable examMarks :
+    {
+      var root : Node__46230540<Text, StudentMarks__142195102>;
+      var size : Nat__490723111
+    };
+  stable exams :
+    {
+      var root : Node__46230540<Text, ExamRecord__136656379>;
+      var size : Nat__490723111
+    };
+  stable feePayments :
+    {
+      var root : Node__46230540<Text, FeePayment__252991136>;
+      var size : Nat__490723111
+    };
+  stable feeStructures :
+    {
+      var root : Node__46230540<Text, FeeCategory__317436732>;
       var size : Nat__490723111
     };
   stable perms :
@@ -47,6 +175,11 @@ actor {
   stable sessions :
     {
       var root : Node__46230540<Text, UserSession__644385136>;
+      var size : Nat__490723111
+    };
+  stable students :
+    {
+      var root : Node__46230540<Text, StudentRecord__414823591>;
       var size : Nat__490723111
     };
   stable users :

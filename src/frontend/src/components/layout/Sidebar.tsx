@@ -22,6 +22,7 @@ import {
   ClipboardCheck,
   ClipboardList,
   Clock,
+  Code,
   CreditCard,
   FileText,
   FlaskConical,
@@ -349,6 +350,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               label: "Online Users",
               icon: <Users size={16} />,
               path: "/admin/online-users",
+            },
+            {
+              label: "Python Reference",
+              icon: <Code size={16} />,
+              path: "/admin/python-reference",
             },
             {
               label: "Change Password",

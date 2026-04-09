@@ -42,6 +42,7 @@ import { OnlineClassPage } from "@/pages/admin/OnlineClassPage";
 import { OnlineFeePaymentPage } from "@/pages/admin/OnlineFeePaymentPage";
 import { OnlineUsersPage } from "@/pages/admin/OnlineUsersPage";
 import { PharmacyPage } from "@/pages/admin/PharmacyPage";
+import { PythonBackendReferencePage } from "@/pages/admin/PythonBackendReferencePage";
 import { ReportCardPage } from "@/pages/admin/ReportCardPage";
 import { ReportsPage } from "@/pages/admin/ReportsPage";
 import { ScholarshipPage } from "@/pages/admin/ScholarshipPage";
@@ -265,6 +266,10 @@ const BREADCRUMBS: Record<string, BreadcrumbEntry> = {
     { label: "Online Classes" },
   ],
   "/admin/online-users": [{ label: "Admin" }, { label: "Online Users" }],
+  "/admin/python-reference": [
+    { label: "Admin" },
+    { label: "Python Reference" },
+  ],
 };
 
 // Define which roles can access which route prefixes
@@ -448,6 +453,8 @@ function AppInner() {
     return withLayout(<StudentPerformancePage />);
   if (path === "/admin/audit-log") return withLayout(<AuditLogPage />);
   if (path === "/admin/online-users") return withLayout(<OnlineUsersPage />);
+  if (path === "/admin/python-reference")
+    return withLayout(<PythonBackendReferencePage />);
 
   // Teacher routes
   if (path === "/teacher/dashboard")
