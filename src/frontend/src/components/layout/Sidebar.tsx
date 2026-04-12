@@ -16,6 +16,7 @@ import {
   Calendar,
   CalendarCheck,
   CalendarDays,
+  CheckSquare,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -31,6 +32,7 @@ import {
   Image,
   IndianRupee,
   KeyRound,
+  Layers,
   LayoutDashboard,
   Library,
   ListChecks,
@@ -40,6 +42,7 @@ import {
   Monitor,
   Package,
   Pill,
+  RefreshCw,
   Settings,
   Settings2,
   Shield,
@@ -133,6 +136,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               icon: <CreditCard size={16} />,
               path: "/admin/id-cards",
             },
+            {
+              label: "Class Builder",
+              icon: <Layers size={16} />,
+              path: "/admin/class-builder",
+            },
           ],
         },
         {
@@ -148,6 +156,26 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               label: "Collect Fee",
               icon: <Calculator size={16} />,
               path: "/admin/fees/collect",
+            },
+            {
+              label: "Cash Desk",
+              icon: <Calculator size={16} />,
+              path: "/admin/cash-desk",
+            },
+            {
+              label: "Split Billing",
+              icon: <Users size={16} />,
+              path: "/admin/split-billing",
+            },
+            {
+              label: "Payment Plans",
+              icon: <CalendarCheck size={16} />,
+              path: "/admin/payment-plans",
+            },
+            {
+              label: "Reconciliation",
+              icon: <RefreshCw size={16} />,
+              path: "/admin/reconciliation",
             },
             {
               label: "Online Fee Payment",
@@ -247,6 +275,16 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               label: "Communication",
               icon: <MessageCircle size={16} />,
               path: "/admin/communication",
+            },
+            {
+              label: "Digital Forms",
+              icon: <FileText size={16} />,
+              path: "/admin/forms",
+            },
+            {
+              label: "Absence Alerts",
+              icon: <AlertCircle size={16} />,
+              path: "/admin/absence-workflow",
             },
             {
               label: "Live Chat",
@@ -352,6 +390,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               path: "/admin/online-users",
             },
             {
+              label: "Tasks",
+              icon: <CheckSquare size={16} />,
+              path: "/admin/tasks",
+            },
+            {
               label: "Python Reference",
               icon: <Code size={16} />,
               path: "/admin/python-reference",
@@ -420,6 +463,11 @@ function getNavGroups(role: UserRole): NavGroup[] | null {
               label: "My Appraisal",
               icon: <Star size={16} />,
               path: "/teacher/appraisal",
+            },
+            {
+              label: "Tasks",
+              icon: <CheckSquare size={16} />,
+              path: "/teacher/tasks",
             },
             {
               label: "Notices",

@@ -625,6 +625,10 @@ export function ScholarshipPage() {
                         key={app.id}
                         className="cursor-pointer hover:bg-muted/50"
                         onClick={() => openDrawer(app)}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") openDrawer(app);
+                        }}
+                        tabIndex={0}
                         data-ocid={`scholarship.applications.item.${idx + 1}`}
                       >
                         <TableCell className="font-medium">

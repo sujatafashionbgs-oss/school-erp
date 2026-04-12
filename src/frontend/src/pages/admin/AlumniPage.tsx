@@ -451,19 +451,21 @@ export function AlumniPage() {
             <DialogTitle>Add Alumni Record</DialogTitle>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-3 py-2">
-            {[
-              { label: "Full Name *", key: "name", type: "text" },
-              { label: "Admission No *", key: "admNo", type: "text" },
-              { label: "Batch Year *", key: "batchYear", type: "text" },
-              { label: "Last Class", key: "lastClass", type: "text" },
-              { label: "Contact", key: "contact", type: "text" },
-              { label: "Email", key: "email", type: "email" },
-            ].map(({ label, key, type }) => (
+            {(
+              [
+                { label: "Full Name *", key: "name", type: "text" },
+                { label: "Admission No *", key: "admNo", type: "text" },
+                { label: "Batch Year *", key: "batchYear", type: "text" },
+                { label: "Last Class", key: "lastClass", type: "text" },
+                { label: "Contact", key: "contact", type: "text" },
+                { label: "Email", key: "email", type: "email" },
+              ] as { label: string; key: keyof typeof form; type: string }[]
+            ).map(({ label, key, type }) => (
               <div key={key} className="grid gap-1">
                 <Label>{label}</Label>
                 <Input
                   type={type}
-                  value={(form as any)[key]}
+                  value={form[key]}
                   onChange={(e) =>
                     setForm((p) => ({ ...p, [key]: e.target.value }))
                   }

@@ -9,6 +9,7 @@ import { AdminLogin } from "@/pages/public/AdminLogin";
 import { StudentLogin } from "@/pages/public/StudentLogin";
 
 import { AIAnalyticsDashboard } from "@/pages/admin/AIAnalyticsDashboard";
+import { AbsenceWorkflowPage } from "@/pages/admin/AbsenceWorkflowPage";
 import { AcademicPlannerPage } from "@/pages/admin/AcademicPlannerPage";
 import { AddStaffPage } from "@/pages/admin/AddStaffPage";
 import { AddStudentPage } from "@/pages/admin/AddStudentPage";
@@ -18,6 +19,7 @@ import { AlumniPage } from "@/pages/admin/AlumniPage";
 import { AppraisalPage } from "@/pages/admin/AppraisalPage";
 import { AttendancePage } from "@/pages/admin/AttendancePage";
 import { AuditLogPage } from "@/pages/admin/AuditLogPage";
+import { CashDeskPage } from "@/pages/admin/CashDeskPage";
 import { CertificatesPage } from "@/pages/admin/CertificatesPage";
 import { CommunicationPage } from "@/pages/admin/CommunicationPage";
 // Admin Pages
@@ -29,6 +31,8 @@ import { ExamsPage } from "@/pages/admin/ExamsPage";
 import { FeeCollect } from "@/pages/admin/FeeCollect";
 import { FeeRemindersPage } from "@/pages/admin/FeeRemindersPage";
 import { FeesPage } from "@/pages/admin/FeesPage";
+import { FormBuilderPage } from "@/pages/admin/FormBuilderPage";
+import { FormsPage } from "@/pages/admin/FormsPage";
 import { GalleryPage } from "@/pages/admin/GalleryPage";
 import { GrievancePage } from "@/pages/admin/GrievancePage";
 import { HealthRecordsPage } from "@/pages/admin/HealthRecordsPage";
@@ -41,16 +45,20 @@ import { NoticesPage } from "@/pages/admin/NoticesPage";
 import { OnlineClassPage } from "@/pages/admin/OnlineClassPage";
 import { OnlineFeePaymentPage } from "@/pages/admin/OnlineFeePaymentPage";
 import { OnlineUsersPage } from "@/pages/admin/OnlineUsersPage";
+import { PaymentPlansPage } from "@/pages/admin/PaymentPlansPage";
 import { PharmacyPage } from "@/pages/admin/PharmacyPage";
 import { PythonBackendReferencePage } from "@/pages/admin/PythonBackendReferencePage";
+import { ReconciliationPage } from "@/pages/admin/ReconciliationPage";
 import { ReportCardPage } from "@/pages/admin/ReportCardPage";
 import { ReportsPage } from "@/pages/admin/ReportsPage";
 import { ScholarshipPage } from "@/pages/admin/ScholarshipPage";
 import { SettingsPage } from "@/pages/admin/SettingsPage";
+import { SplitBillingPage } from "@/pages/admin/SplitBillingPage";
 import { StaffPage } from "@/pages/admin/StaffPage";
 import { StudentPerformancePage } from "@/pages/admin/StudentPerformancePage";
 import { StudentsPage } from "@/pages/admin/StudentsPage";
 import { SyllabusPage } from "@/pages/admin/SyllabusPage";
+import { TasksPage } from "@/pages/admin/TasksPage";
 import { TimetablePage } from "@/pages/admin/TimetablePage";
 import { TransportPage } from "@/pages/admin/TransportPage";
 import { UserManagementPage } from "@/pages/admin/UserManagementPage";
@@ -88,6 +96,7 @@ import { UnauthorizedPage } from "@/pages/UnauthorizedPage";
 import { AccountantDashboard } from "@/pages/accountant/AccountantDashboard";
 import { SalaryPage } from "@/pages/accountant/SalaryPage";
 import { BulkReportCardPage } from "@/pages/admin/BulkReportCardPage";
+import { ClassBuilderPage } from "@/pages/admin/ClassBuilderPage";
 import { ClassConfigPage } from "@/pages/admin/ClassConfigPage";
 import { StudentTransferPage } from "@/pages/admin/StudentTransferPage";
 import { LabDashboard } from "@/pages/lab-incharge/LabDashboard";
@@ -254,6 +263,22 @@ const BREADCRUMBS: Record<string, BreadcrumbEntry> = {
   "/admin/documents": [{ label: "Admin" }, { label: "Documents" }],
   "/admin/fee-reminders": [{ label: "Admin" }, { label: "Fee Reminders" }],
   "/admin/live-chat": [{ label: "Admin" }, { label: "Live Chat" }],
+  "/admin/forms": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Forms" },
+  ],
+  "/admin/forms/builder": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Forms", path: "/admin/forms" },
+    { label: "Form Builder" },
+  ],
+  "/admin/absence-workflow": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Absence Alerts" },
+  ],
   "/admin/online-classes": [{ label: "Admin" }, { label: "Online Classes" }],
   "/admin/student-performance": [
     { label: "Admin" },
@@ -266,9 +291,36 @@ const BREADCRUMBS: Record<string, BreadcrumbEntry> = {
     { label: "Online Classes" },
   ],
   "/admin/online-users": [{ label: "Admin" }, { label: "Online Users" }],
+  "/admin/class-builder": [
+    { label: "Admin" },
+    { label: "Students", path: "/admin/students" },
+    { label: "Class Builder" },
+  ],
   "/admin/python-reference": [
     { label: "Admin" },
     { label: "Python Reference" },
+  ],
+  "/admin/tasks": [{ label: "Admin" }, { label: "Tasks" }],
+  "/teacher/tasks": [{ label: "Teacher" }, { label: "Tasks" }],
+  "/admin/split-billing": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Split Billing" },
+  ],
+  "/admin/payment-plans": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Payment Plans" },
+  ],
+  "/admin/reconciliation": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Reconciliation" },
+  ],
+  "/admin/cash-desk": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Cash Desk" },
   ],
 };
 
@@ -448,6 +500,10 @@ function AppInner() {
   if (path === "/admin/documents") return withLayout(<DocumentsPage />);
   if (path === "/admin/fee-reminders") return withLayout(<FeeRemindersPage />);
   if (path === "/admin/live-chat") return withLayout(<LiveChatPage />);
+  if (path === "/admin/forms") return withLayout(<FormsPage />);
+  if (path === "/admin/forms/builder") return withLayout(<FormBuilderPage />);
+  if (path === "/admin/absence-workflow")
+    return withLayout(<AbsenceWorkflowPage />);
   if (path === "/admin/online-classes") return withLayout(<OnlineClassPage />);
   if (path === "/admin/student-performance")
     return withLayout(<StudentPerformancePage />);
@@ -455,6 +511,13 @@ function AppInner() {
   if (path === "/admin/online-users") return withLayout(<OnlineUsersPage />);
   if (path === "/admin/python-reference")
     return withLayout(<PythonBackendReferencePage />);
+  if (path === "/admin/tasks") return withLayout(<TasksPage />);
+  if (path === "/admin/split-billing") return withLayout(<SplitBillingPage />);
+  if (path === "/admin/payment-plans") return withLayout(<PaymentPlansPage />);
+  if (path === "/admin/reconciliation")
+    return withLayout(<ReconciliationPage />);
+  if (path === "/admin/cash-desk") return withLayout(<CashDeskPage />);
+  if (path === "/admin/class-builder") return withLayout(<ClassBuilderPage />);
 
   // Teacher routes
   if (path === "/teacher/dashboard")
@@ -471,6 +534,7 @@ function AppInner() {
   if (path === "/teacher/leave") return withLayout(<TeacherLeavePage />);
   if (path === "/teacher/lesson-plan") return withLayout(<LessonPlanPage />);
   if (path === "/teacher/appraisal") return withLayout(<SelfAppraisalPage />);
+  if (path === "/teacher/tasks") return withLayout(<TasksPage />);
 
   // Student routes
   if (path === "/student/dashboard")

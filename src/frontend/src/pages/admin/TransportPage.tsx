@@ -57,6 +57,7 @@ export function TransportPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editId, setEditId] = useState<number | null>(null);
   const [form, setForm] = useState(emptyForm);
+  const [deleteTarget, setDeleteTarget] = useState<Route | null>(null);
 
   const update = (key: string, value: string) =>
     setForm((prev) => ({ ...prev, [key]: value }));
@@ -117,11 +118,16 @@ export function TransportPage() {
     setDialogOpen(false);
   }
 
-  function handleDelete(id: number, name: string) {
-    if (window.confirm(`Delete route "${name}"?`)) {
-      setRoutes((prev) => prev.filter((r) => r.id !== id));
-      toast.success("Route deleted.");
-    }
+  function handleDelete(id: number) {
+    const route = routes.find((r) => r.id === id);
+    if (route) setDeleteTarget(route);
+  }
+
+  function confirmDelete() {
+    if (!deleteTarget) return;
+    setRoutes((prev) => prev.filter((r) => r.id !== deleteTarget.id));
+    toast.success("Route deleted.");
+    setDeleteTarget(null);
   }
 
   return (
@@ -168,7 +174,7 @@ export function TransportPage() {
                   size="icon"
                   variant="ghost"
                   className="h-7 w-7 text-destructive hover:text-destructive"
-                  onClick={() => handleDelete(r.id, r.name)}
+                  onClick={() => handleDelete(r.id)}
                   data-ocid={`transport.delete_button.${i + 1}`}
                 >
                   <Trash2 size={13} />
@@ -253,6 +259,41 @@ export function TransportPage() {
             </Button>
             <Button onClick={handleSubmit} data-ocid="transport.submit_button">
               {editId !== null ? "Save Changes" : "Add Route"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <DialogContent className="max-w-sm" data-ocid="transport.delete.dialog">
+          <DialogHeader>
+            <DialogTitle>Delete Route</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-foreground">
+              {deleteTarget?.name}
+            </span>
+            ? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              data-ocid="transport.delete.cancel_button"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDelete}
+              data-ocid="transport.delete.confirm_button"
+            >
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>

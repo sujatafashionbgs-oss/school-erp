@@ -9,16 +9,22 @@ import { useLoadingData } from "@/hooks/useLoadingData";
 import {
   AlertCircle,
   AlertTriangle,
+  Banknote,
   Bell,
   Calendar,
+  CheckSquare,
   ChevronRight,
   ClipboardCheck,
   CreditCard,
+  FileText,
   GraduationCap,
+  Layers,
   Package,
+  RefreshCw,
   TrendingUp,
   UserCheck,
   UserPlus,
+  UserX,
   Users,
   Zap,
 } from "lucide-react";
@@ -214,6 +220,81 @@ export function AdminDashboard({ navigate }: DashboardProps) {
   const feeTarget = 50000;
   const feePct = Math.round((feeCollected / feeTarget) * 100);
 
+  const moduleStats = [
+    {
+      label: "Split Billing Active",
+      value: "5 students",
+      sub: "1 inactive",
+      icon: <Users size={20} />,
+      color: "text-cyan-600",
+      bg: "bg-cyan-500/10",
+      path: "/admin/split-billing",
+    },
+    {
+      label: "Payment Plans",
+      value: "2 overdue",
+      sub: "6 total plans",
+      icon: <CreditCard size={20} />,
+      color: "text-red-600",
+      bg: "bg-red-500/10",
+      path: "/admin/payment-plans",
+    },
+    {
+      label: "Reconciliation",
+      value: "5 pending",
+      sub: "13 auto-reconciled today",
+      icon: <RefreshCw size={20} />,
+      color: "text-indigo-600",
+      bg: "bg-indigo-500/10",
+      path: "/admin/reconciliation",
+    },
+    {
+      label: "Cash Desk Today",
+      value: "₹26,300",
+      sub: "5 transactions",
+      icon: <Banknote size={20} />,
+      color: "text-emerald-600",
+      bg: "bg-emerald-500/10",
+      path: "/admin/cash-desk",
+    },
+    {
+      label: "Forms Pending",
+      value: "3 forms",
+      sub: "242 responses awaited",
+      icon: <FileText size={20} />,
+      color: "text-violet-600",
+      bg: "bg-violet-500/10",
+      path: "/admin/forms",
+    },
+    {
+      label: "Unexplained Absences",
+      value: "4 today",
+      sub: "2 escalated",
+      icon: <UserX size={20} />,
+      color: "text-rose-600",
+      bg: "bg-rose-500/10",
+      path: "/admin/absence-workflow",
+    },
+    {
+      label: "Tasks",
+      value: "3 overdue",
+      sub: "4 due today",
+      icon: <CheckSquare size={20} />,
+      color: "text-amber-600",
+      bg: "bg-amber-500/10",
+      path: "/admin/tasks",
+    },
+    {
+      label: "Class Builder",
+      value: "3/48 classes built",
+      sub: "19 students allocated",
+      icon: <Layers size={20} />,
+      color: "text-teal-600",
+      bg: "bg-teal-500/10",
+      path: "/admin/class-builder",
+    },
+  ];
+
   return (
     <div className="space-y-6" data-ocid="admin_dashboard.page">
       <div className="flex items-center justify-between">
@@ -236,6 +317,26 @@ export function AdminDashboard({ navigate }: DashboardProps) {
             <div className={`${s.bg} ${s.color} p-3 rounded-xl`}>{s.icon}</div>
             <div>
               <p className="text-2xl font-bold text-foreground">{s.value}</p>
+              <p className="text-sm text-muted-foreground">{s.label}</p>
+              <p className="text-xs text-muted-foreground">{s.sub}</p>
+            </div>
+          </button>
+        ))}
+      </div>
+
+      {/* Module Summary Cards — new modules */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {moduleStats.map((s, i) => (
+          <button
+            type="button"
+            key={s.label}
+            onClick={() => navigate(s.path)}
+            data-ocid={`admin_dashboard.module_stat.${i + 1}`}
+            className="bg-card border border-border rounded-2xl p-5 flex items-start gap-4 hover:shadow-md transition-shadow text-left"
+          >
+            <div className={`${s.bg} ${s.color} p-3 rounded-xl`}>{s.icon}</div>
+            <div>
+              <p className="text-xl font-bold text-foreground">{s.value}</p>
               <p className="text-sm text-muted-foreground">{s.label}</p>
               <p className="text-xs text-muted-foreground">{s.sub}</p>
             </div>

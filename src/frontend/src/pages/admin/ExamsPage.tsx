@@ -370,6 +370,7 @@ export function ExamsPage() {
   const [maxMarksError, setMaxMarksError] = useState("");
   const [saving, setSaving] = useState(false);
   const [expandedExam, setExpandedExam] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Exam | null>(null);
 
   // Filter state
   const [filterClass, setFilterClass] = useState("all");
@@ -493,8 +494,14 @@ export function ExamsPage() {
     toast.success(editId ? "Exam updated!" : "Exam scheduled!");
   }
 
-  async function handleDelete(id: string, name: string) {
-    if (!window.confirm(`Delete exam "${name}"?`)) return;
+  async function handleDelete(id: string) {
+    const exam = exams.find((e) => e.id === id);
+    if (exam) setDeleteTarget(exam);
+  }
+
+  async function confirmDeleteExam() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
     if (actor) {
       try {
         const res = await actor.deleteExam(id);
@@ -512,6 +519,7 @@ export function ExamsPage() {
       setExams((prev) => prev.filter((e) => e.id !== id));
       toast.success("Exam deleted.");
     }
+    setDeleteTarget(null);
   }
 
   const filteredExams = exams.filter((e) => {
@@ -654,7 +662,7 @@ export function ExamsPage() {
                       size="icon"
                       variant="ghost"
                       className="h-7 w-7 text-destructive hover:text-destructive"
-                      onClick={() => handleDelete(e.id, e.name)}
+                      onClick={() => handleDelete(e.id)}
                       data-ocid={`exams.delete_button.${i + 1}`}
                     >
                       <Trash2 size={13} />
@@ -819,6 +827,41 @@ export function ExamsPage() {
             >
               {saving && <Loader2 size={13} className="mr-1 animate-spin" />}
               {editId ? "Save Changes" : "Schedule Exam"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <DialogContent className="max-w-sm" data-ocid="exams.delete.dialog">
+          <DialogHeader>
+            <DialogTitle>Delete Exam</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Are you sure you want to delete{" "}
+            <span className="font-semibold text-foreground">
+              {deleteTarget?.name}
+            </span>
+            ? This action cannot be undone.
+          </p>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setDeleteTarget(null)}
+              data-ocid="exams.delete.cancel_button"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmDeleteExam}
+              data-ocid="exams.delete.confirm_button"
+            >
+              Delete
             </Button>
           </DialogFooter>
         </DialogContent>
