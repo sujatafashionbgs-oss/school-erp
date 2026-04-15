@@ -28,7 +28,7 @@ import {
   User,
   X,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -86,6 +86,18 @@ const AVAILABLE_TEACHERS = [
   "Ms. Joshi",
 ];
 
+// Subject panel card colors (cycle through)
+const SUBJECT_COLORS = [
+  { bg: "#EFF6FF", border: "#BFDBFE", text: "#1D4ED8" }, // blue
+  { bg: "#F0FDF4", border: "#BBF7D0", text: "#15803D" }, // green
+  { bg: "#FEFCE8", border: "#FEF08A", text: "#A16207" }, // yellow
+  { bg: "#FFF1F2", border: "#FECDD3", text: "#BE123C" }, // red
+  { bg: "#FAF5FF", border: "#E9D5FF", text: "#7E22CE" }, // purple
+  { bg: "#FDF2F8", border: "#FBCFE8", text: "#9D174D" }, // pink
+  { bg: "#FFF7ED", border: "#FED7AA", text: "#C2410C" }, // orange
+  { bg: "#F0FDFA", border: "#99F6E4", text: "#0F766E" }, // teal
+];
+
 // Sections helper
 function getSectionsForClass(cls: string): string[] {
   const base = ["A", "B", "C", "D", "E", "F", "G", "H"];
@@ -101,6 +113,12 @@ type CellEntry = { subject: string; teacher: string };
 type TimetableMap = Record<string, CellEntry[][]>;
 type ConflictInfo = { teacher: string; day: string } | null;
 type ViewMode = "class" | "section" | "teacher";
+
+interface UndoSnapshot {
+  key: string;
+  cells: Array<{ pi: number; di: number }>;
+  prev: TimetableMap;
+}
 
 // ─── Mock Data Generation ──────────────────────────────────────────────────────
 
@@ -326,6 +344,98 @@ export function TimetablePage() {
   const [absentTeachers, setAbsentTeachers] =
     useState<AbsentTeacher[]>(initialAbsent);
 
+  // ── Drag / Selection state ─────────────────────────────────────────────────
+
+  const [selectedCells, setSelectedCells] = useState<Set<string>>(new Set());
+  const [isDragging, setIsDragging] = useState(false);
+  const [firstSelected, setFirstSelected] = useState<{
+    pi: number;
+    di: number;
+  } | null>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+
+  // Bulk assign modal
+  const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
+  const [bulkDraft, setBulkDraft] = useState<CellEntry>({
+    subject: "",
+    teacher: "",
+  });
+
+  // Undo state
+  const [undoVisible, setUndoVisible] = useState(false);
+  const [undoCountdown, setUndoCountdown] = useState(5);
+  const [lastAssignment, setLastAssignment] = useState<UndoSnapshot | null>(
+    null,
+  );
+  const undoTimerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Panel drag
+  const [draggedSubject, setDraggedSubject] = useState<string | null>(null);
+  const [dragOverCell, setDragOverCell] = useState<string | null>(null);
+
+  // Touch device detection
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
+
+  useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window);
+  }, []);
+
+  // ── Document-level event listeners ────────────────────────────────────────
+
+  // mouseup → end drag, open bulk assign if cells selected
+  useEffect(() => {
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        // Use functional update to read current selectedCells at event time
+        setSelectedCells((prev) => {
+          if (prev.size > 0) {
+            // Delay opening modal slightly to ensure state is settled
+            setTimeout(() => setBulkAssignOpen(true), 0);
+          }
+          return prev;
+        });
+      }
+    };
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => document.removeEventListener("mouseup", handleMouseUp);
+  }, [isDragging]);
+
+  // Escape key → clear selection
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedCells(new Set());
+        setFirstSelected(null);
+        if (bulkAssignOpen) setBulkAssignOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [bulkAssignOpen]);
+
+  // ── Undo countdown ─────────────────────────────────────────────────────────
+
+  useEffect(() => {
+    if (undoVisible) {
+      setUndoCountdown(5);
+      if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+      undoTimerRef.current = setInterval(() => {
+        setUndoCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(undoTimerRef.current!);
+            setUndoVisible(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+    };
+  }, [undoVisible]);
+
   // ── Derived ──────────────────────────────────────────────────────────────────
 
   const currentKey = `${selectedClass}-${selectedSection}`;
@@ -371,6 +481,22 @@ export function TimetablePage() {
     };
   }, [teacherSchedule]);
 
+  // ── Undo helpers ──────────────────────────────────────────────────────────────
+
+  function showUndoSnackbar(snapshot: UndoSnapshot) {
+    setLastAssignment(snapshot);
+    setUndoVisible(true);
+  }
+
+  function handleUndo() {
+    if (lastAssignment) {
+      setTimetables(lastAssignment.prev);
+      toast.success("Assignment undone");
+    }
+    setUndoVisible(false);
+    if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+  }
+
   // ── Edit helpers ──────────────────────────────────────────────────────────────
 
   const startEdit = (pi: number, di: number) => {
@@ -411,6 +537,40 @@ export function TimetablePage() {
     setPendingSave(null);
   };
 
+  // ── Bulk assign ───────────────────────────────────────────────────────────────
+
+  function handleBulkAssign() {
+    if (!bulkDraft.subject || !bulkDraft.teacher) {
+      toast.error("Please select both subject and teacher");
+      return;
+    }
+    const cells = Array.from(selectedCells).map((k) => {
+      const [pi, di] = k.split("-").map(Number);
+      return { pi, di };
+    });
+    // Snapshot before change
+    const prevSnapshot = timetables;
+    setTimetables((prev) => {
+      const grid = (prev[currentKey] ?? initEmptyGrid()).map((row) =>
+        row.map((c) => ({ ...c })),
+      );
+      for (const { pi, di } of cells) {
+        if (grid[pi]?.[di] !== undefined) {
+          grid[pi][di] = { ...bulkDraft };
+        }
+      }
+      return { ...prev, [currentKey]: grid };
+    });
+    showUndoSnackbar({ key: currentKey, cells, prev: prevSnapshot });
+    toast.success(
+      `Assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`,
+    );
+    setSelectedCells(new Set());
+    setFirstSelected(null);
+    setBulkAssignOpen(false);
+    setBulkDraft({ subject: "", teacher: "" });
+  }
+
   // ── Auto-generate ─────────────────────────────────────────────────────────────
 
   function handleAutoGenerate() {
@@ -435,13 +595,53 @@ export function TimetablePage() {
     });
 
     const key = `${targetClass}-${targetSection}`;
-    setTimetables((prev) => ({ ...prev, [key]: generated }));
-    setActiveDays(days);
-    setActivePeriods(periodLabels);
+
+    // If selectedCells is non-empty, only fill those specific cells
+    if (selectedCells.size > 0) {
+      const cells = Array.from(selectedCells).map((k) => {
+        const [pi, di] = k.split("-").map(Number);
+        return { pi, di };
+      });
+      const prevSnapshot = timetables;
+      setTimetables((prev) => {
+        const existingGrid = (prev[key] ?? initEmptyGrid()).map((row) =>
+          row.map((c) => ({ ...c })),
+        );
+        for (const { pi, di } of cells) {
+          if (
+            generated[pi]?.[di] !== undefined &&
+            existingGrid[pi]?.[di] !== undefined
+          ) {
+            existingGrid[pi][di] = generated[pi][di];
+          }
+        }
+        return { ...prev, [key]: existingGrid };
+      });
+      showUndoSnackbar({ key, cells, prev: prevSnapshot });
+      setSelectedCells(new Set());
+      setFirstSelected(null);
+      toast.success(
+        `Auto-assigned ${cells.length} selected slot${cells.length !== 1 ? "s" : ""} for Class ${targetClass}-${targetSection}`,
+      );
+    } else {
+      // Fill all (existing behavior)
+      const prevSnapshot = timetables;
+      const allCells: Array<{ pi: number; di: number }> = [];
+      for (let pi = 0; pi < periodsCount; pi++) {
+        for (let di = 0; di < days.length; di++) {
+          allCells.push({ pi, di });
+        }
+      }
+      setTimetables((prev) => ({ ...prev, [key]: generated }));
+      showUndoSnackbar({ key, cells: allCells, prev: prevSnapshot });
+      setActiveDays(days);
+      setActivePeriods(periodLabels);
+      toast.success(
+        `Timetable generated for Class ${targetClass}-${targetSection}`,
+      );
+    }
+
     setAutoOpen(false);
-    toast.success(
-      `Timetable generated for Class ${targetClass}-${targetSection}`,
-    );
   }
 
   // ── Substitutes ───────────────────────────────────────────────────────────────
@@ -476,11 +676,191 @@ export function TimetablePage() {
     );
   }
 
+  // ── Cell selection helpers ────────────────────────────────────────────────────
+
+  function getCellKey(pi: number, di: number): string {
+    return `${pi}-${di}`;
+  }
+
+  function isCellSelected(pi: number, di: number): boolean {
+    return selectedCells.has(getCellKey(pi, di));
+  }
+
+  function handleCellMouseDown(e: React.MouseEvent, pi: number, di: number) {
+    // Only in section view (editable, non-readonly)
+    if (viewMode === "teacher") return;
+    if (e.button !== 0) return; // left click only
+
+    // Don't start drag if clicking inside an editing cell's controls
+    if (editing !== null) return;
+
+    if (e.shiftKey && firstSelected) {
+      // Shift+click range select
+      const minPi = Math.min(firstSelected.pi, pi);
+      const maxPi = Math.max(firstSelected.pi, pi);
+      const minDi = Math.min(firstSelected.di, di);
+      const maxDi = Math.max(firstSelected.di, di);
+      const newSelected = new Set(selectedCells);
+      for (let r = minPi; r <= maxPi; r++) {
+        for (let c = minDi; c <= maxDi; c++) {
+          newSelected.add(getCellKey(r, c));
+        }
+      }
+      setSelectedCells(newSelected);
+    } else {
+      // Start drag selection
+      setSelectedCells(new Set([getCellKey(pi, di)]));
+      setFirstSelected({ pi, di });
+      setIsDragging(true);
+    }
+    e.preventDefault();
+  }
+
+  function handleCellMouseEnter(pi: number, di: number) {
+    if (!isDragging) return;
+    if (viewMode === "teacher") return;
+    // Add to selection
+    setSelectedCells((prev) => {
+      const next = new Set(prev);
+      next.add(getCellKey(pi, di));
+      return next;
+    });
+  }
+
+  function handleCellClick(e: React.MouseEvent, pi: number, di: number) {
+    if (viewMode === "teacher") return;
+
+    // Touch-device tap-to-toggle
+    if (isTouchDevice) {
+      setSelectedCells((prev) => {
+        const next = new Set(prev);
+        const key = getCellKey(pi, di);
+        if (next.has(key)) {
+          next.delete(key);
+        } else {
+          next.add(key);
+        }
+        return next;
+      });
+      return;
+    }
+
+    // editMode single-cell edit (existing behavior) - only when no selection active
+    if (editMode && selectedCells.size === 0 && !e.shiftKey) {
+      startEdit(pi, di);
+    }
+  }
+
+  // ── Drag from panel ───────────────────────────────────────────────────────────
+
+  function handlePanelDragStart(subject: string) {
+    setDraggedSubject(subject);
+  }
+
+  function handleCellDragOver(e: React.DragEvent, pi: number, di: number) {
+    if (!draggedSubject) return;
+    e.preventDefault();
+    setDragOverCell(getCellKey(pi, di));
+  }
+
+  function handleCellDrop(e: React.DragEvent, pi: number, di: number) {
+    e.preventDefault();
+    if (!draggedSubject) return;
+    const teacher = ALL_TEACHERS[0]; // default teacher
+
+    if (selectedCells.size > 0) {
+      // Assign to all selected cells
+      const cells = Array.from(selectedCells).map((k) => {
+        const [r, c] = k.split("-").map(Number);
+        return { pi: r, di: c };
+      });
+      const prevSnapshot = timetables;
+      setTimetables((prev) => {
+        const grid = (prev[currentKey] ?? initEmptyGrid()).map((row) =>
+          row.map((c_) => ({ ...c_ })),
+        );
+        for (const { pi: r, di: c } of cells) {
+          if (grid[r]?.[c] !== undefined) {
+            grid[r][c] = { subject: draggedSubject, teacher };
+          }
+        }
+        return { ...prev, [currentKey]: grid };
+      });
+      showUndoSnackbar({ key: currentKey, cells, prev: prevSnapshot });
+      toast.success(
+        `${draggedSubject} assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`,
+      );
+      setSelectedCells(new Set());
+      setFirstSelected(null);
+    } else {
+      // Assign to single dropped cell
+      const prevSnapshot = timetables;
+      setTimetables((prev) => {
+        const grid = (prev[currentKey] ?? initEmptyGrid()).map((row) =>
+          row.map((c_) => ({ ...c_ })),
+        );
+        if (grid[pi]?.[di] !== undefined) {
+          grid[pi][di] = { subject: draggedSubject, teacher };
+        }
+        return { ...prev, [currentKey]: grid };
+      });
+      showUndoSnackbar({
+        key: currentKey,
+        cells: [{ pi, di }],
+        prev: prevSnapshot,
+      });
+      toast.success(`${draggedSubject} assigned`);
+    }
+    setDraggedSubject(null);
+    setDragOverCell(null);
+  }
+
+  function handleGridDragLeave() {
+    setDragOverCell(null);
+  }
+
   // ── Render helpers ────────────────────────────────────────────────────────────
+
+  function getCellClassName(pi: number, di: number, readonly: boolean): string {
+    if (readonly) return "px-4 py-2 min-w-[130px]";
+    const key = getCellKey(pi, di);
+    const isSelected = selectedCells.has(key);
+    const isDragOver = dragOverCell === key;
+
+    let base =
+      "px-4 py-2 min-w-[130px] transition-colors duration-100 select-none";
+
+    if (isDragOver && draggedSubject) {
+      base += " bg-amber-100";
+    } else if (isSelected) {
+      // Selected: light blue bg + blue border
+      base += " bg-[#E6F1FB]";
+    } else if (isDragging) {
+      base += " hover:bg-[#E6F1FB]/60";
+    }
+
+    return base;
+  }
+
+  function getCellStyle(
+    pi: number,
+    di: number,
+    readonly: boolean,
+  ): React.CSSProperties {
+    if (readonly) return {};
+    const key = getCellKey(pi, di);
+    const isSelected = selectedCells.has(key);
+    if (isSelected) {
+      return { outline: "1.5px solid #378ADD", outlineOffset: "-1.5px" };
+    }
+    return {};
+  }
 
   function renderGridCell(pi: number, di: number) {
     const isEditing = editMode && editing?.pi === pi && editing?.di === di;
     const cell = currentGrid[pi]?.[di] ?? { subject: "-", teacher: "-" };
+    const hasContent = !!(cell.subject && cell.teacher && cell.subject !== "-");
+    const isSelected = isCellSelected(pi, di);
 
     if (isEditing) {
       return (
@@ -540,12 +920,28 @@ export function TimetablePage() {
     return (
       <button
         type="button"
+        tabIndex={editMode ? 0 : -1}
         className={`text-left w-full group ${
-          editMode
-            ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1"
-            : ""
+          isDragging && hasContent
+            ? "cursor-not-allowed"
+            : isDragging
+              ? "cursor-crosshair"
+              : editMode && selectedCells.size === 0
+                ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1"
+                : isSelected
+                  ? "cursor-pointer"
+                  : "cursor-default"
         }`}
-        onClick={() => editMode && startEdit(pi, di)}
+        onClick={(e) => {
+          if (
+            editMode &&
+            selectedCells.size === 0 &&
+            !e.shiftKey &&
+            !isDragging
+          ) {
+            startEdit(pi, di);
+          }
+        }}
         data-ocid={editMode ? "timetable.edit_button" : undefined}
       >
         <span className="text-sm text-foreground block">{cell.subject}</span>
@@ -557,55 +953,151 @@ export function TimetablePage() {
   }
 
   function renderTimetableGrid(readonly = false) {
+    const isSelectable = !readonly && viewMode !== "teacher";
+
     return (
-      <div className="bg-card border border-border rounded-2xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="bg-secondary/50 border-b border-border">
-                <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
-                  Period
-                </th>
-                {activeDays.map((d) => (
-                  <th
-                    key={d}
-                    className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground"
-                  >
-                    {d}
+      <div className="flex gap-4 items-start">
+        {/* Main timetable grid */}
+        <div
+          className="flex-1 bg-card border border-border rounded-2xl overflow-hidden"
+          onMouseMove={(e) => {
+            if (isDragging) {
+              setCursorPos({ x: e.clientX, y: e.clientY });
+            }
+          }}
+        >
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="bg-secondary/50 border-b border-border">
+                  <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
+                    Period
                   </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {activePeriods.map((p, pi) => (
-                <tr
-                  key={p}
-                  className="border-b border-border hover:bg-secondary/20"
-                >
-                  <td className="px-4 py-3 text-xs text-muted-foreground font-medium whitespace-nowrap">
-                    {p}
-                  </td>
-                  {activeDays.map((d, di) => (
-                    <td key={d} className="px-4 py-2 min-w-[130px]">
-                      {readonly ? (
-                        <div>
-                          <span className="text-sm text-foreground block">
-                            {currentGrid[pi]?.[di]?.subject ?? "-"}
-                          </span>
-                          <span className="text-xs text-muted-foreground block">
-                            {currentGrid[pi]?.[di]?.teacher ?? ""}
-                          </span>
-                        </div>
-                      ) : (
-                        renderGridCell(pi, di)
-                      )}
-                    </td>
+                  {activeDays.map((d) => (
+                    <th
+                      key={d}
+                      className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground"
+                    >
+                      {d}
+                    </th>
                   ))}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {activePeriods.map((p, pi) => (
+                  <tr
+                    key={p}
+                    className="border-b border-border hover:bg-secondary/20"
+                  >
+                    <td className="px-4 py-3 text-xs text-muted-foreground font-medium whitespace-nowrap">
+                      {p}
+                    </td>
+                    {activeDays.map((d, di) => (
+                      <td
+                        key={d}
+                        className={getCellClassName(pi, di, readonly)}
+                        style={getCellStyle(pi, di, readonly)}
+                        onMouseDown={
+                          isSelectable
+                            ? (e) => handleCellMouseDown(e, pi, di)
+                            : undefined
+                        }
+                        onMouseEnter={
+                          isSelectable
+                            ? () => handleCellMouseEnter(pi, di)
+                            : undefined
+                        }
+                        onClick={
+                          isSelectable
+                            ? (e) => handleCellClick(e, pi, di)
+                            : undefined
+                        }
+                        onKeyDown={
+                          isSelectable
+                            ? (e) => {
+                                if (e.key === "Enter" || e.key === " ") {
+                                  handleCellClick(
+                                    e as unknown as React.MouseEvent,
+                                    pi,
+                                    di,
+                                  );
+                                }
+                              }
+                            : undefined
+                        }
+                        onDragOver={
+                          !readonly
+                            ? (e) => handleCellDragOver(e, pi, di)
+                            : undefined
+                        }
+                        onDrop={
+                          !readonly
+                            ? (e) => handleCellDrop(e, pi, di)
+                            : undefined
+                        }
+                        onDragLeave={
+                          !readonly ? handleGridDragLeave : undefined
+                        }
+                        data-ocid={`timetable.cell.${pi}.${di}`}
+                      >
+                        {readonly ? (
+                          <div>
+                            <span className="text-sm text-foreground block">
+                              {currentGrid[pi]?.[di]?.subject ?? "-"}
+                            </span>
+                            <span className="text-xs text-muted-foreground block">
+                              {currentGrid[pi]?.[di]?.teacher ?? ""}
+                            </span>
+                          </div>
+                        ) : (
+                          renderGridCell(pi, di)
+                        )}
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        {/* Subjects & Teachers panel (right side, only for editable views) */}
+        {isSelectable && (
+          <div
+            className="w-44 shrink-0 bg-card border border-border rounded-2xl p-3 space-y-2"
+            data-ocid="timetable.subjects_panel"
+          >
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide pb-1 border-b border-border">
+              Drag Subjects
+            </p>
+            {SUBJECTS.map((subject, idx) => {
+              const color = SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
+              return (
+                <div
+                  key={subject}
+                  draggable
+                  onDragStart={() => handlePanelDragStart(subject)}
+                  onDragEnd={() => {
+                    setDraggedSubject(null);
+                    setDragOverCell(null);
+                  }}
+                  style={{
+                    backgroundColor: color.bg,
+                    borderColor: color.border,
+                    color: color.text,
+                  }}
+                  className="px-2.5 py-2 rounded-lg border text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80"
+                  data-ocid={`timetable.subject_card.${idx + 1}`}
+                >
+                  {subject}
+                </div>
+              );
+            })}
+            <p className="text-xs text-muted-foreground/70 pt-1 leading-tight">
+              Drag onto a cell or selected cells to assign
+            </p>
+          </div>
+        )}
       </div>
     );
   }
@@ -718,15 +1210,52 @@ export function TimetablePage() {
     <div className="space-y-5" data-ocid="timetable.page">
       {/* Page header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
-        <h1 className="text-2xl font-bold text-foreground">Timetable</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold text-foreground">Timetable</h1>
+          {selectedCells.size > 0 && (
+            <Badge
+              className="bg-[#E6F1FB] text-[#378ADD] border-[#378ADD]/40 font-medium"
+              data-ocid="timetable.selection_badge"
+            >
+              {selectedCells.size} slot{selectedCells.size !== 1 ? "s" : ""}{" "}
+              selected
+            </Badge>
+          )}
+        </div>
         <div className="flex gap-2">
+          {selectedCells.size > 0 && (
+            <>
+              <Button
+                size="sm"
+                onClick={() => setBulkAssignOpen(true)}
+                className="bg-[#378ADD] hover:bg-[#2d6bb5] text-white"
+                data-ocid="timetable.assign_selected_button"
+              >
+                Assign {selectedCells.size} Selected
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setSelectedCells(new Set());
+                  setFirstSelected(null);
+                }}
+                data-ocid="timetable.clear_selection_button"
+              >
+                <X className="h-3.5 w-3.5 mr-1" /> Clear
+              </Button>
+            </>
+          )}
           <Button
             variant="outline"
             size="sm"
             onClick={() => setAutoOpen(true)}
             data-ocid="timetable.auto_generate.button"
           >
-            <Shuffle size={14} className="mr-2" /> Auto Generate
+            <Shuffle size={14} className="mr-2" />
+            {selectedCells.size > 0
+              ? `Auto Assign ${selectedCells.size} Slots`
+              : "Auto Generate"}
           </Button>
           {viewMode !== "teacher" && (
             <Button
@@ -735,6 +1264,8 @@ export function TimetablePage() {
               onClick={() => {
                 setEditMode((v) => !v);
                 cancelEdit();
+                setSelectedCells(new Set());
+                setFirstSelected(null);
               }}
               data-ocid="timetable.toggle"
             >
@@ -751,6 +1282,18 @@ export function TimetablePage() {
           )}
         </div>
       </div>
+
+      {/* Selection hint bar */}
+      {viewMode !== "teacher" && selectedCells.size === 0 && (
+        <div className="flex items-center gap-2 text-xs text-muted-foreground bg-secondary/30 border border-border rounded-lg px-3 py-2">
+          <span>💡</span>
+          <span>
+            <strong>Click &amp; drag</strong> to select multiple cells ·
+            <strong className="ml-1">Shift+click</strong> for range select ·
+            Drag subjects from the panel on the right
+          </span>
+        </div>
+      )}
 
       {/* Page-level tabs: Timetable | Substitutes */}
       <Tabs defaultValue="timetable">
@@ -791,6 +1334,8 @@ export function TimetablePage() {
                 onClick={() => {
                   setViewMode(key);
                   cancelEdit();
+                  setSelectedCells(new Set());
+                  setFirstSelected(null);
                 }}
                 data-ocid={`timetable.mode.${key}`}
                 className={`flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-colors duration-150 ${
@@ -817,6 +1362,8 @@ export function TimetablePage() {
                     const secs = getSectionsForClass(v);
                     setSelectedSection(secs[0]);
                     cancelEdit();
+                    setSelectedCells(new Set());
+                    setFirstSelected(null);
                   }}
                 >
                   <SelectTrigger
@@ -845,6 +1392,8 @@ export function TimetablePage() {
                     onValueChange={(v) => {
                       setSelectedSection(v);
                       cancelEdit();
+                      setSelectedCells(new Set());
+                      setFirstSelected(null);
                     }}
                   >
                     <SelectTrigger
@@ -1123,9 +1672,23 @@ export function TimetablePage() {
       <Dialog open={autoOpen} onOpenChange={setAutoOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>Auto Generate Timetable</DialogTitle>
+            <DialogTitle>
+              {selectedCells.size > 0
+                ? `Auto Assign ${selectedCells.size} Selected Slot${selectedCells.size !== 1 ? "s" : ""}`
+                : "Auto Generate Timetable"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 pt-2">
+            {selectedCells.size > 0 && (
+              <div className="bg-[#E6F1FB] border border-[#378ADD]/30 rounded-lg px-3 py-2 text-sm text-[#378ADD]">
+                Will auto-fill only the{" "}
+                <strong>
+                  {selectedCells.size} selected slot
+                  {selectedCells.size !== 1 ? "s" : ""}
+                </strong>{" "}
+                using round-robin assignment.
+              </div>
+            )}
             <div className="grid grid-cols-2 gap-3">
               <div className="space-y-1.5">
                 <Label>Class *</Label>
@@ -1246,6 +1809,166 @@ export function TimetablePage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      {/* ── BULK ASSIGN DIALOG ───────────────────────────────────────────── */}
+      <Dialog
+        open={bulkAssignOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setBulkAssignOpen(false);
+            setSelectedCells(new Set());
+            setFirstSelected(null);
+            setBulkDraft({ subject: "", teacher: "" });
+          }
+        }}
+      >
+        <DialogContent
+          className="max-w-sm"
+          data-ocid="timetable.bulk_assign.dialog"
+        >
+          <DialogHeader>
+            <DialogTitle>
+              Assign to all {selectedCells.size} selected slot
+              {selectedCells.size !== 1 ? "s" : ""}?
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="bg-[#E6F1FB] border border-[#378ADD]/30 rounded-lg px-3 py-2 text-sm text-[#378ADD]">
+              <strong>
+                {selectedCells.size} slot{selectedCells.size !== 1 ? "s" : ""}
+              </strong>{" "}
+              will be assigned the same subject and teacher.
+            </div>
+            <div className="space-y-1.5">
+              <Label>Subject</Label>
+              <Select
+                value={bulkDraft.subject}
+                onValueChange={(v) =>
+                  setBulkDraft((p) => ({ ...p, subject: v }))
+                }
+              >
+                <SelectTrigger data-ocid="timetable.bulk.subject_select">
+                  <SelectValue placeholder="Select subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SUBJECTS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Teacher</Label>
+              <Select
+                value={bulkDraft.teacher}
+                onValueChange={(v) =>
+                  setBulkDraft((p) => ({ ...p, teacher: v }))
+                }
+              >
+                <SelectTrigger data-ocid="timetable.bulk.teacher_select">
+                  <SelectValue placeholder="Select teacher" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ALL_TEACHERS.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex gap-2 pt-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setBulkAssignOpen(false);
+                  setSelectedCells(new Set());
+                  setFirstSelected(null);
+                  setBulkDraft({ subject: "", teacher: "" });
+                }}
+                data-ocid="timetable.bulk.cancel_button"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleBulkAssign}
+                data-ocid="timetable.bulk.assign_button"
+              >
+                <Check className="h-4 w-4 mr-1.5" /> Assign All
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── FLOATING CURSOR TOOLTIP (drag selection count) ───────────────── */}
+      {isDragging && selectedCells.size > 0 && (
+        <div
+          className="fixed z-50 pointer-events-none px-2 py-1 rounded-md text-xs font-medium text-white shadow-lg"
+          style={{
+            left: cursorPos.x + 12,
+            top: cursorPos.y - 10,
+            background: "#378ADD",
+          }}
+          data-ocid="timetable.drag_tooltip"
+        >
+          {selectedCells.size} slot{selectedCells.size !== 1 ? "s" : ""}{" "}
+          selected
+        </div>
+      )}
+
+      {/* ── MOBILE: Floating "Assign Selected" button ─────────────────────── */}
+      {isTouchDevice && selectedCells.size > 0 && (
+        <div
+          className="fixed bottom-6 right-6 z-50"
+          data-ocid="timetable.mobile_assign_button"
+        >
+          <Button
+            onClick={() => setBulkAssignOpen(true)}
+            className="shadow-xl px-5 py-2.5 rounded-full text-sm font-semibold"
+            style={{ background: "#378ADD" }}
+          >
+            Assign Selected ({selectedCells.size})
+          </Button>
+        </div>
+      )}
+
+      {/* ── UNDO SNACKBAR ────────────────────────────────────────────────── */}
+      {undoVisible && lastAssignment && (
+        <div
+          className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl border border-white/10"
+          style={{ background: "#1E293B", color: "#F1F5F9", minWidth: 320 }}
+          data-ocid="timetable.undo_snackbar"
+        >
+          <span className="text-sm flex-1">
+            Assigned <strong>{lastAssignment.cells.length}</strong> slot
+            {lastAssignment.cells.length !== 1 ? "s" : ""}
+            {" · "}
+            <span className="opacity-60">auto-dismiss in {undoCountdown}s</span>
+          </span>
+          <button
+            type="button"
+            onClick={handleUndo}
+            className="text-sm font-semibold px-3 py-1 rounded-lg transition-colors hover:bg-white/10"
+            style={{ color: "#60A5FA" }}
+            data-ocid="timetable.undo_button"
+          >
+            Undo
+          </button>
+          <button
+            type="button"
+            onClick={() => setUndoVisible(false)}
+            className="opacity-50 hover:opacity-100 transition-opacity ml-1"
+            data-ocid="timetable.undo_dismiss_button"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }
