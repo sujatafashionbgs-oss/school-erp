@@ -2406,7 +2406,7 @@ var IdlTypeName;
   IdlTypeName2["FuncClass"] = "__IDL_FuncClass__";
   IdlTypeName2["ServiceClass"] = "__IDL_ServiceClass__";
 })(IdlTypeName || (IdlTypeName = {}));
-class Type {
+let Type$1 = class Type {
   /* Display type name */
   display() {
     return this.name;
@@ -2420,8 +2420,8 @@ class Type {
       this._buildTypeTableImpl(typeTable);
     }
   }
-}
-class PrimitiveType extends Type {
+};
+class PrimitiveType extends Type$1 {
   checkType(t2) {
     if (this.name !== t2.name) {
       throw new Error(`type mismatch: type on the wire ${t2.name}, expect type ${this.name}`);
@@ -2432,7 +2432,7 @@ class PrimitiveType extends Type {
     return;
   }
 }
-class ConstructType extends Type {
+class ConstructType extends Type$1 {
   checkType(t2) {
     if (t2 instanceof RecClass) {
       const ty = t2.getType();
@@ -2476,7 +2476,7 @@ class EmptyClass extends PrimitiveType {
     return "empty";
   }
 }
-class UnknownClass extends Type {
+class UnknownClass extends Type$1 {
   get typeName() {
     return IdlTypeName.UnknownClass;
   }
@@ -4190,7 +4190,7 @@ const IDL = /* @__PURE__ */ Object.freeze(/* @__PURE__ */ Object.defineProperty(
   TextClass,
   Tuple,
   TupleClass,
-  Type,
+  Type: Type$1,
   Unknown,
   UnknownClass,
   Variant,
@@ -15587,7 +15587,7 @@ function mergeLoginOptions(loginOptions, otherLoginOptions) {
   };
 }
 const ONE_HOUR_IN_NANOSECONDS = BigInt(36e11);
-const DEFAULT_IDENTITY_PROVIDER = "https://id.ai";
+const DEFAULT_IDENTITY_PROVIDER = "https://id.ai/authorize";
 const InternetIdentityReactContext = reactExports.createContext(void 0);
 async function createAuthClient(createOptions) {
   const config2 = await loadConfig();
@@ -30151,7 +30151,7 @@ function AuthProvider({ children }) {
   const login = async (credentials) => {
     await new Promise((r2) => setTimeout(r2, 500));
     const { DEMO_PASSWORDS } = await __vitePreload(async () => {
-      const { DEMO_PASSWORDS: DEMO_PASSWORDS2 } = await import("./demoCredentials-UYExDLVu.js");
+      const { DEMO_PASSWORDS: DEMO_PASSWORDS2 } = await import("./demoCredentials-DqEA7KgX.js");
       return { DEMO_PASSWORDS: DEMO_PASSWORDS2 };
     }, true ? [] : void 0);
     const demoPasswords = {
@@ -30189,7 +30189,7 @@ function AuthProvider({ children }) {
   const changePassword = async (currentPassword, newPassword) => {
     if (!user) return { success: false, error: "Not authenticated" };
     const { DEMO_PASSWORDS } = await __vitePreload(async () => {
-      const { DEMO_PASSWORDS: DEMO_PASSWORDS2 } = await import("./demoCredentials-UYExDLVu.js");
+      const { DEMO_PASSWORDS: DEMO_PASSWORDS2 } = await import("./demoCredentials-DqEA7KgX.js");
       return { DEMO_PASSWORDS: DEMO_PASSWORDS2 };
     }, true ? [] : void 0);
     const effectivePasswords = {
@@ -30338,7 +30338,7 @@ const createLucideIcon = (iconName, iconNode) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1U = [
+const __iconNode$22 = [
   [
     "path",
     {
@@ -30347,63 +30347,96 @@ const __iconNode$1U = [
     }
   ]
 ];
-const Activity = createLucideIcon("activity", __iconNode$1U);
+const Activity = createLucideIcon("activity", __iconNode$22);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1T = [
+const __iconNode$21 = [
   ["rect", { width: "20", height: "5", x: "2", y: "3", rx: "1", key: "1wp1u1" }],
   ["path", { d: "M4 8v11a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8", key: "1s80jp" }],
   ["path", { d: "M10 12h4", key: "a56b0p" }]
 ];
-const Archive = createLucideIcon("archive", __iconNode$1T);
+const Archive = createLucideIcon("archive", __iconNode$21);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1S = [
+const __iconNode$20 = [
+  ["path", { d: "M12 5v14", key: "s699le" }],
+  ["path", { d: "m19 12-7 7-7-7", key: "1idqje" }]
+];
+const ArrowDown = createLucideIcon("arrow-down", __iconNode$20);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1$ = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
 ];
-const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1S);
+const ArrowLeft = createLucideIcon("arrow-left", __iconNode$1$);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1R = [
+const __iconNode$1_ = [
   ["path", { d: "m16 3 4 4-4 4", key: "1x1c3m" }],
   ["path", { d: "M20 7H4", key: "zbl0bi" }],
   ["path", { d: "m8 21-4-4 4-4", key: "h9nckh" }],
   ["path", { d: "M4 17h16", key: "g4d7ey" }]
 ];
-const ArrowRightLeft = createLucideIcon("arrow-right-left", __iconNode$1R);
+const ArrowRightLeft = createLucideIcon("arrow-right-left", __iconNode$1_);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1Q = [
+const __iconNode$1Z = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
+];
+const ArrowRight = createLucideIcon("arrow-right", __iconNode$1Z);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1Y = [
   ["path", { d: "m21 16-4 4-4-4", key: "f6ql7i" }],
   ["path", { d: "M17 20V4", key: "1ejh1v" }],
   ["path", { d: "m3 8 4-4 4 4", key: "11wl7u" }],
   ["path", { d: "M7 4v16", key: "1glfcx" }]
 ];
-const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1Q);
+const ArrowUpDown = createLucideIcon("arrow-up-down", __iconNode$1Y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1P = [
+const __iconNode$1X = [
+  ["path", { d: "m5 12 7-7 7 7", key: "hav0vg" }],
+  ["path", { d: "M12 19V5", key: "x0mq9r" }]
+];
+const ArrowUp = createLucideIcon("arrow-up", __iconNode$1X);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1W = [
   [
     "path",
     {
@@ -30413,14 +30446,14 @@ const __iconNode$1P = [
   ],
   ["circle", { cx: "12", cy: "8", r: "6", key: "1vp47v" }]
 ];
-const Award = createLucideIcon("award", __iconNode$1P);
+const Award = createLucideIcon("award", __iconNode$1W);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1O = [
+const __iconNode$1V = [
   ["path", { d: "M10 16c.5.3 1.2.5 2 .5s1.5-.2 2-.5", key: "1u7htd" }],
   ["path", { d: "M15 12h.01", key: "1k8ypt" }],
   [
@@ -30432,14 +30465,26 @@ const __iconNode$1O = [
   ],
   ["path", { d: "M9 12h.01", key: "157uk2" }]
 ];
-const Baby = createLucideIcon("baby", __iconNode$1O);
+const Baby = createLucideIcon("baby", __iconNode$1V);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1N = [
+const __iconNode$1U = [
+  ["rect", { width: "20", height: "12", x: "2", y: "6", rx: "2", key: "9lu3g6" }],
+  ["circle", { cx: "12", cy: "12", r: "2", key: "1c9p78" }],
+  ["path", { d: "M6 12h.01M18 12h.01", key: "113zkx" }]
+];
+const Banknote = createLucideIcon("banknote", __iconNode$1U);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1T = [
   ["path", { d: "M10.268 21a2 2 0 0 0 3.464 0", key: "vwvbt9" }],
   [
     "path",
@@ -30449,14 +30494,14 @@ const __iconNode$1N = [
     }
   ]
 ];
-const Bell = createLucideIcon("bell", __iconNode$1N);
+const Bell = createLucideIcon("bell", __iconNode$1T);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1M = [
+const __iconNode$1S = [
   ["path", { d: "M10 2v8l3-3 3 3V2", key: "sqw3rj" }],
   [
     "path",
@@ -30466,14 +30511,14 @@ const __iconNode$1M = [
     }
   ]
 ];
-const BookMarked = createLucideIcon("book-marked", __iconNode$1M);
+const BookMarked = createLucideIcon("book-marked", __iconNode$1S);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1L = [
+const __iconNode$1R = [
   ["path", { d: "M12 21V7", key: "gj6g52" }],
   ["path", { d: "m16 12 2 2 4-4", key: "mdajum" }],
   [
@@ -30484,14 +30529,14 @@ const __iconNode$1L = [
     }
   ]
 ];
-const BookOpenCheck = createLucideIcon("book-open-check", __iconNode$1L);
+const BookOpenCheck = createLucideIcon("book-open-check", __iconNode$1R);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1K = [
+const __iconNode$1Q = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -30501,14 +30546,14 @@ const __iconNode$1K = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$1K);
+const BookOpen = createLucideIcon("book-open", __iconNode$1Q);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1J = [
+const __iconNode$1P = [
   [
     "path",
     {
@@ -30531,14 +30576,14 @@ const __iconNode$1J = [
   ["path", { d: "M6 18a4 4 0 0 1-1.967-.516", key: "2e4loj" }],
   ["path", { d: "M19.967 17.484A4 4 0 0 1 18 18", key: "159ez6" }]
 ];
-const Brain = createLucideIcon("brain", __iconNode$1J);
+const Brain = createLucideIcon("brain", __iconNode$1P);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1I = [
+const __iconNode$1O = [
   ["path", { d: "M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z", key: "1b4qmf" }],
   ["path", { d: "M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2", key: "i71pzd" }],
   ["path", { d: "M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2", key: "10jefs" }],
@@ -30547,14 +30592,14 @@ const __iconNode$1I = [
   ["path", { d: "M10 14h4", key: "kelpxr" }],
   ["path", { d: "M10 18h4", key: "1ulq68" }]
 ];
-const Building2 = createLucideIcon("building-2", __iconNode$1I);
+const Building2 = createLucideIcon("building-2", __iconNode$1O);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1H = [
+const __iconNode$1N = [
   ["path", { d: "M8 6v6", key: "18i7km" }],
   ["path", { d: "M15 6v6", key: "1sg6z9" }],
   ["path", { d: "M2 12h19.6", key: "de5uta" }],
@@ -30569,14 +30614,14 @@ const __iconNode$1H = [
   ["path", { d: "M9 18h5", key: "lrx6i" }],
   ["circle", { cx: "16", cy: "18", r: "2", key: "1v4tcr" }]
 ];
-const Bus = createLucideIcon("bus", __iconNode$1H);
+const Bus = createLucideIcon("bus", __iconNode$1N);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1G = [
+const __iconNode$1M = [
   ["rect", { width: "16", height: "20", x: "4", y: "2", rx: "2", key: "1nb95v" }],
   ["line", { x1: "8", x2: "16", y1: "6", y2: "6", key: "x4nwl0" }],
   ["line", { x1: "16", x2: "16", y1: "14", y2: "18", key: "wjye3r" }],
@@ -30588,28 +30633,28 @@ const __iconNode$1G = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M8 18h.01", key: "lrp35t" }]
 ];
-const Calculator = createLucideIcon("calculator", __iconNode$1G);
+const Calculator = createLucideIcon("calculator", __iconNode$1M);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1F = [
+const __iconNode$1L = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }],
   ["path", { d: "m9 16 2 2 4-4", key: "19s6y9" }]
 ];
-const CalendarCheck = createLucideIcon("calendar-check", __iconNode$1F);
+const CalendarCheck = createLucideIcon("calendar-check", __iconNode$1L);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1E = [
+const __iconNode$1K = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -30621,14 +30666,14 @@ const __iconNode$1E = [
   ["path", { d: "M12 18h.01", key: "mhygvu" }],
   ["path", { d: "M16 18h.01", key: "kzsmim" }]
 ];
-const CalendarDays = createLucideIcon("calendar-days", __iconNode$1E);
+const CalendarDays = createLucideIcon("calendar-days", __iconNode$1K);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1D = [
+const __iconNode$1J = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
@@ -30636,27 +30681,27 @@ const __iconNode$1D = [
   ["path", { d: "m14 14-4 4", key: "rymu2i" }],
   ["path", { d: "m10 14 4 4", key: "3sz06r" }]
 ];
-const CalendarX = createLucideIcon("calendar-x", __iconNode$1D);
+const CalendarX = createLucideIcon("calendar-x", __iconNode$1J);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1C = [
+const __iconNode$1I = [
   ["path", { d: "M8 2v4", key: "1cmpym" }],
   ["path", { d: "M16 2v4", key: "4m81vk" }],
   ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
   ["path", { d: "M3 10h18", key: "8toen8" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$1C);
+const Calendar = createLucideIcon("calendar", __iconNode$1I);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1B = [
+const __iconNode$1H = [
   [
     "path",
     {
@@ -30666,7 +30711,59 @@ const __iconNode$1B = [
   ],
   ["circle", { cx: "12", cy: "13", r: "3", key: "1vg3eu" }]
 ];
-const Camera = createLucideIcon("camera", __iconNode$1B);
+const Camera = createLucideIcon("camera", __iconNode$1H);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1G = [
+  ["line", { x1: "18", x2: "18", y1: "20", y2: "10", key: "1xfpm4" }],
+  ["line", { x1: "12", x2: "12", y1: "20", y2: "4", key: "be30l9" }],
+  ["line", { x1: "6", x2: "6", y1: "20", y2: "14", key: "1r4le6" }]
+];
+const ChartNoAxesColumn = createLucideIcon("chart-no-axes-column", __iconNode$1G);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1F = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
+const Check = createLucideIcon("check", __iconNode$1F);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1E = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
+const ChevronDown = createLucideIcon("chevron-down", __iconNode$1E);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1D = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
+const ChevronLeft = createLucideIcon("chevron-left", __iconNode$1D);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1C = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
+const ChevronRight = createLucideIcon("chevron-right", __iconNode$1C);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1B = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
+const ChevronUp = createLucideIcon("chevron-up", __iconNode$1B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30674,51 +30771,65 @@ const Camera = createLucideIcon("camera", __iconNode$1B);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1A = [
-  ["line", { x1: "18", x2: "18", y1: "20", y2: "10", key: "1xfpm4" }],
-  ["line", { x1: "12", x2: "12", y1: "20", y2: "4", key: "be30l9" }],
-  ["line", { x1: "6", x2: "6", y1: "20", y2: "14", key: "1r4le6" }]
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
+  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
 ];
-const ChartNoAxesColumn = createLucideIcon("chart-no-axes-column", __iconNode$1A);
+const CircleAlert = createLucideIcon("circle-alert", __iconNode$1A);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1z = [["path", { d: "M20 6 9 17l-5-5", key: "1gmf2c" }]];
-const Check = createLucideIcon("check", __iconNode$1z);
+const __iconNode$1z = [
+  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$1z);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1y = [["path", { d: "m6 9 6 6 6-6", key: "qrunsl" }]];
-const ChevronDown = createLucideIcon("chevron-down", __iconNode$1y);
+const __iconNode$1y = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
+];
+const CircleCheck = createLucideIcon("circle-check", __iconNode$1y);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1x = [["path", { d: "m15 18-6-6 6-6", key: "1wnfg3" }]];
-const ChevronLeft = createLucideIcon("chevron-left", __iconNode$1x);
+const __iconNode$1x = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M8 12h8", key: "1wcyev" }],
+  ["path", { d: "M12 8v8", key: "napkw2" }]
+];
+const CirclePlus = createLucideIcon("circle-plus", __iconNode$1x);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1w = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]];
-const ChevronRight = createLucideIcon("chevron-right", __iconNode$1w);
+const __iconNode$1w = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
+  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
+];
+const CircleX = createLucideIcon("circle-x", __iconNode$1w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1v = [["path", { d: "m18 15-6-6-6 6", key: "153udz" }]];
-const ChevronUp = createLucideIcon("chevron-up", __iconNode$1v);
+const __iconNode$1v = [["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]];
+const Circle = createLucideIcon("circle", __iconNode$1v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30726,64 +30837,6 @@ const ChevronUp = createLucideIcon("chevron-up", __iconNode$1v);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1u = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
-  ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
-];
-const CircleAlert = createLucideIcon("circle-alert", __iconNode$1u);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1t = [
-  ["path", { d: "M21.801 10A10 10 0 1 1 17 3.335", key: "yps3ct" }],
-  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
-];
-const CircleCheckBig = createLucideIcon("circle-check-big", __iconNode$1t);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1s = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-];
-const CircleCheck = createLucideIcon("circle-check", __iconNode$1s);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1r = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M8 12h8", key: "1wcyev" }],
-  ["path", { d: "M12 8v8", key: "napkw2" }]
-];
-const CirclePlus = createLucideIcon("circle-plus", __iconNode$1r);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1q = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "m15 9-6 6", key: "1uzhvr" }],
-  ["path", { d: "m9 9 6 6", key: "z0biqf" }]
-];
-const CircleX = createLucideIcon("circle-x", __iconNode$1q);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1p = [
   ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
   [
     "path",
@@ -30794,14 +30847,14 @@ const __iconNode$1p = [
   ],
   ["path", { d: "m9 14 2 2 4-4", key: "df797q" }]
 ];
-const ClipboardCheck = createLucideIcon("clipboard-check", __iconNode$1p);
+const ClipboardCheck = createLucideIcon("clipboard-check", __iconNode$1u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1o = [
+const __iconNode$1t = [
   ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
   [
     "path",
@@ -30815,7 +30868,63 @@ const __iconNode$1o = [
   ["path", { d: "M8 11h.01", key: "1dfujw" }],
   ["path", { d: "M8 16h.01", key: "18s6g9" }]
 ];
-const ClipboardList = createLucideIcon("clipboard-list", __iconNode$1o);
+const ClipboardList = createLucideIcon("clipboard-list", __iconNode$1t);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1s = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$1s);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1r = [
+  ["path", { d: "M12 13v8", key: "1l5pq0" }],
+  ["path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242", key: "1pljnt" }],
+  ["path", { d: "m8 17 4-4 4 4", key: "1quai1" }]
+];
+const CloudUpload = createLucideIcon("cloud-upload", __iconNode$1r);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1q = [
+  ["path", { d: "m16 18 6-6-6-6", key: "eg8j8" }],
+  ["path", { d: "m8 6-6 6 6 6", key: "ppft3o" }]
+];
+const Code = createLucideIcon("code", __iconNode$1q);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1p = [
+  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
+  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
+];
+const Copy = createLucideIcon("copy", __iconNode$1p);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$1o = [
+  ["rect", { width: "20", height: "14", x: "2", y: "5", rx: "2", key: "ynyp8z" }],
+  ["line", { x1: "2", x2: "22", y1: "10", y2: "10", key: "1b3vmo" }]
+];
+const CreditCard = createLucideIcon("credit-card", __iconNode$1o);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30823,10 +30932,11 @@ const ClipboardList = createLucideIcon("clipboard-list", __iconNode$1o);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1n = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["polyline", { points: "12 6 12 12 16 14", key: "68esgv" }]
+  ["ellipse", { cx: "12", cy: "5", rx: "9", ry: "3", key: "msslwz" }],
+  ["path", { d: "M3 5V19A9 3 0 0 0 21 19V5", key: "1wlel7" }],
+  ["path", { d: "M3 12A9 3 0 0 0 21 12", key: "mv7ke4" }]
 ];
-const Clock = createLucideIcon("clock", __iconNode$1n);
+const Database = createLucideIcon("database", __iconNode$1n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30834,11 +30944,11 @@ const Clock = createLucideIcon("clock", __iconNode$1n);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1m = [
-  ["path", { d: "M12 13v8", key: "1l5pq0" }],
-  ["path", { d: "M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242", key: "1pljnt" }],
-  ["path", { d: "m8 17 4-4 4 4", key: "1quai1" }]
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
 ];
-const CloudUpload = createLucideIcon("cloud-upload", __iconNode$1m);
+const Download = createLucideIcon("download", __iconNode$1m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30846,10 +30956,11 @@ const CloudUpload = createLucideIcon("cloud-upload", __iconNode$1m);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1l = [
-  ["path", { d: "m16 18 6-6-6-6", key: "eg8j8" }],
-  ["path", { d: "m8 6-6 6 6 6", key: "ppft3o" }]
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
 ];
-const Code = createLucideIcon("code", __iconNode$1l);
+const ExternalLink = createLucideIcon("external-link", __iconNode$1l);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -30857,64 +30968,6 @@ const Code = createLucideIcon("code", __iconNode$1l);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$1k = [
-  ["rect", { width: "14", height: "14", x: "8", y: "8", rx: "2", ry: "2", key: "17jyea" }],
-  ["path", { d: "M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2", key: "zix9uf" }]
-];
-const Copy = createLucideIcon("copy", __iconNode$1k);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1j = [
-  ["rect", { width: "20", height: "14", x: "2", y: "5", rx: "2", key: "ynyp8z" }],
-  ["line", { x1: "2", x2: "22", y1: "10", y2: "10", key: "1b3vmo" }]
-];
-const CreditCard = createLucideIcon("credit-card", __iconNode$1j);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1i = [
-  ["ellipse", { cx: "12", cy: "5", rx: "9", ry: "3", key: "msslwz" }],
-  ["path", { d: "M3 5V19A9 3 0 0 0 21 19V5", key: "1wlel7" }],
-  ["path", { d: "M3 12A9 3 0 0 0 21 12", key: "mv7ke4" }]
-];
-const Database = createLucideIcon("database", __iconNode$1i);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1h = [
-  ["path", { d: "M12 15V3", key: "m9g1x1" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
-];
-const Download = createLucideIcon("download", __iconNode$1h);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1g = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
-];
-const ExternalLink = createLucideIcon("external-link", __iconNode$1g);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$1f = [
   [
     "path",
     {
@@ -30932,14 +30985,14 @@ const __iconNode$1f = [
   ],
   ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const EyeOff = createLucideIcon("eye-off", __iconNode$1f);
+const EyeOff = createLucideIcon("eye-off", __iconNode$1k);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1e = [
+const __iconNode$1j = [
   [
     "path",
     {
@@ -30949,40 +31002,40 @@ const __iconNode$1e = [
   ],
   ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Eye = createLucideIcon("eye", __iconNode$1e);
+const Eye = createLucideIcon("eye", __iconNode$1j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1d = [
+const __iconNode$1i = [
   ["path", { d: "M10 12.5 8 15l2 2.5", key: "1tg20x" }],
   ["path", { d: "m14 12.5 2 2.5-2 2.5", key: "yinavb" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7z", key: "1mlx9k" }]
 ];
-const FileCode = createLucideIcon("file-code", __iconNode$1d);
+const FileCode = createLucideIcon("file-code", __iconNode$1i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1c = [
+const __iconNode$1h = [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M12 18v-6", key: "17g6i2" }],
   ["path", { d: "m9 15 3 3 3-3", key: "1npd3o" }]
 ];
-const FileDown = createLucideIcon("file-down", __iconNode$1c);
+const FileDown = createLucideIcon("file-down", __iconNode$1h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1b = [
+const __iconNode$1g = [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M8 13h2", key: "yr2amv" }],
@@ -30990,39 +31043,39 @@ const __iconNode$1b = [
   ["path", { d: "M8 17h2", key: "2yhykz" }],
   ["path", { d: "M14 17h2", key: "10kma7" }]
 ];
-const FileSpreadsheet = createLucideIcon("file-spreadsheet", __iconNode$1b);
+const FileSpreadsheet = createLucideIcon("file-spreadsheet", __iconNode$1g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$1a = [
+const __iconNode$1f = [
   ["path", { d: "M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z", key: "1rqfz7" }],
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   ["path", { d: "M10 9H8", key: "b1mrlr" }],
   ["path", { d: "M16 13H8", key: "t4e002" }],
   ["path", { d: "M16 17H8", key: "z1uh3a" }]
 ];
-const FileText = createLucideIcon("file-text", __iconNode$1a);
+const FileText = createLucideIcon("file-text", __iconNode$1f);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$19 = [
+const __iconNode$1e = [
   ["path", { d: "M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z", key: "i9b6wo" }],
   ["line", { x1: "4", x2: "4", y1: "22", y2: "15", key: "1cm3nv" }]
 ];
-const Flag = createLucideIcon("flag", __iconNode$19);
+const Flag = createLucideIcon("flag", __iconNode$1e);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$18 = [
+const __iconNode$1d = [
   [
     "path",
     {
@@ -31033,14 +31086,14 @@ const __iconNode$18 = [
   ["path", { d: "M6.453 15h11.094", key: "3shlmq" }],
   ["path", { d: "M8.5 2h7", key: "csnxdl" }]
 ];
-const FlaskConical = createLucideIcon("flask-conical", __iconNode$18);
+const FlaskConical = createLucideIcon("flask-conical", __iconNode$1d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$17 = [
+const __iconNode$1c = [
   [
     "path",
     {
@@ -31049,27 +31102,27 @@ const __iconNode$17 = [
     }
   ]
 ];
-const Funnel = createLucideIcon("funnel", __iconNode$17);
+const Funnel = createLucideIcon("funnel", __iconNode$1c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$16 = [
+const __iconNode$1b = [
   ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
   ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
   ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
   ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
 ];
-const GitBranch = createLucideIcon("git-branch", __iconNode$16);
+const GitBranch = createLucideIcon("git-branch", __iconNode$1b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$15 = [
+const __iconNode$1a = [
   [
     "path",
     {
@@ -31080,41 +31133,41 @@ const __iconNode$15 = [
   ["path", { d: "M22 10v6", key: "1lu8f3" }],
   ["path", { d: "M6 12.5V16a6 3 0 0 0 12 0v-3.5", key: "1r8lef" }]
 ];
-const GraduationCap = createLucideIcon("graduation-cap", __iconNode$15);
+const GraduationCap = createLucideIcon("graduation-cap", __iconNode$1a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$14 = [
+const __iconNode$19 = [
   ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
   ["path", { d: "M3 9h18", key: "1pudct" }],
   ["path", { d: "M3 15h18", key: "5xshup" }],
   ["path", { d: "M9 3v18", key: "fh3hqa" }],
   ["path", { d: "M15 3v18", key: "14nvp0" }]
 ];
-const Grid3x3 = createLucideIcon("grid-3x3", __iconNode$14);
+const Grid3x3 = createLucideIcon("grid-3x3", __iconNode$19);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$13 = [
+const __iconNode$18 = [
   ["line", { x1: "4", x2: "20", y1: "9", y2: "9", key: "4lhtct" }],
   ["line", { x1: "4", x2: "20", y1: "15", y2: "15", key: "vyu0kd" }],
   ["line", { x1: "10", x2: "8", y1: "3", y2: "21", key: "1ggp8o" }],
   ["line", { x1: "16", x2: "14", y1: "3", y2: "21", key: "weycgp" }]
 ];
-const Hash$2 = createLucideIcon("hash", __iconNode$13);
+const Hash$2 = createLucideIcon("hash", __iconNode$18);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$12 = [
+const __iconNode$17 = [
   [
     "path",
     {
@@ -31123,52 +31176,52 @@ const __iconNode$12 = [
     }
   ]
 ];
-const Heart = createLucideIcon("heart", __iconNode$12);
+const Heart = createLucideIcon("heart", __iconNode$17);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$11 = [
+const __iconNode$16 = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
   ["path", { d: "M12 7v5l4 2", key: "1fdv2h" }]
 ];
-const History = createLucideIcon("history", __iconNode$11);
+const History = createLucideIcon("history", __iconNode$16);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$10 = [
+const __iconNode$15 = [
   ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", ry: "2", key: "1m3agn" }],
   ["circle", { cx: "9", cy: "9", r: "2", key: "af1f0g" }],
   ["path", { d: "m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21", key: "1xmnt7" }]
 ];
-const Image = createLucideIcon("image", __iconNode$10);
+const Image = createLucideIcon("image", __iconNode$15);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$$ = [
+const __iconNode$14 = [
   ["path", { d: "M6 3h12", key: "ggurg9" }],
   ["path", { d: "M6 8h12", key: "6g4wlu" }],
   ["path", { d: "m6 13 8.5 8", key: "u1kupk" }],
   ["path", { d: "M6 13h3", key: "wdp6ag" }],
   ["path", { d: "M9 13c6.667 0 6.667-10 0-10", key: "1nkvk2" }]
 ];
-const IndianRupee = createLucideIcon("indian-rupee", __iconNode$$);
+const IndianRupee = createLucideIcon("indian-rupee", __iconNode$14);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$_ = [
+const __iconNode$13 = [
   [
     "path",
     {
@@ -31178,26 +31231,26 @@ const __iconNode$_ = [
   ],
   ["circle", { cx: "16.5", cy: "7.5", r: ".5", fill: "currentColor", key: "w0ekpg" }]
 ];
-const KeyRound = createLucideIcon("key-round", __iconNode$_);
+const KeyRound = createLucideIcon("key-round", __iconNode$13);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Z = [
+const __iconNode$12 = [
   ["path", { d: "m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4", key: "g0fldk" }],
   ["path", { d: "m21 2-9.6 9.6", key: "1j0ho8" }],
   ["circle", { cx: "7.5", cy: "15.5", r: "5.5", key: "yqb3hr" }]
 ];
-const Key = createLucideIcon("key", __iconNode$Z);
+const Key = createLucideIcon("key", __iconNode$12);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$Y = [
+const __iconNode$11 = [
   [
     "path",
     {
@@ -31220,40 +31273,40 @@ const __iconNode$Y = [
     }
   ]
 ];
-const Layers = createLucideIcon("layers", __iconNode$Y);
+const Layers = createLucideIcon("layers", __iconNode$11);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$X = [
+const __iconNode$10 = [
   ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
   ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
   ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
   ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
 ];
-const LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode$X);
+const LayoutDashboard = createLucideIcon("layout-dashboard", __iconNode$10);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$W = [
+const __iconNode$$ = [
   ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
   ["rect", { width: "7", height: "7", x: "14", y: "3", rx: "1", key: "6d4xhi" }],
   ["rect", { width: "7", height: "7", x: "14", y: "14", rx: "1", key: "nxv5o0" }],
   ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }]
 ];
-const LayoutGrid = createLucideIcon("layout-grid", __iconNode$W);
+const LayoutGrid = createLucideIcon("layout-grid", __iconNode$$);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$V = [
+const __iconNode$_ = [
   ["rect", { width: "7", height: "7", x: "3", y: "3", rx: "1", key: "1g98yp" }],
   ["rect", { width: "7", height: "7", x: "3", y: "14", rx: "1", key: "1bb6yr" }],
   ["path", { d: "M14 4h7", key: "3xa0d5" }],
@@ -31261,7 +31314,68 @@ const __iconNode$V = [
   ["path", { d: "M14 15h7", key: "1mj8o2" }],
   ["path", { d: "M14 20h7", key: "11slyb" }]
 ];
-const LayoutList = createLucideIcon("layout-list", __iconNode$V);
+const LayoutList = createLucideIcon("layout-list", __iconNode$_);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$Z = [
+  ["path", { d: "m16 6 4 14", key: "ji33uf" }],
+  ["path", { d: "M12 6v14", key: "1n7gus" }],
+  ["path", { d: "M8 8v12", key: "1gg7y9" }],
+  ["path", { d: "M4 4v16", key: "6qkkli" }]
+];
+const Library = createLucideIcon("library", __iconNode$Z);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$Y = [
+  ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
+  ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
+  ["path", { d: "M13 6h8", key: "15sg57" }],
+  ["path", { d: "M13 12h8", key: "h98zly" }],
+  ["path", { d: "M13 18h8", key: "oe0vm4" }]
+];
+const ListChecks = createLucideIcon("list-checks", __iconNode$Y);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$X = [
+  ["path", { d: "M3 12h.01", key: "nlz23k" }],
+  ["path", { d: "M3 18h.01", key: "1tta3j" }],
+  ["path", { d: "M3 6h.01", key: "1rqtza" }],
+  ["path", { d: "M8 12h13", key: "1za7za" }],
+  ["path", { d: "M8 18h13", key: "1lx6n3" }],
+  ["path", { d: "M8 6h13", key: "ik3vkj" }]
+];
+const List$1 = createLucideIcon("list", __iconNode$X);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$W = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
+const LoaderCircle = createLucideIcon("loader-circle", __iconNode$W);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$V = [
+  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
+  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
+];
+const Lock = createLucideIcon("lock", __iconNode$V);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31269,12 +31383,11 @@ const LayoutList = createLucideIcon("layout-list", __iconNode$V);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$U = [
-  ["path", { d: "m16 6 4 14", key: "ji33uf" }],
-  ["path", { d: "M12 6v14", key: "1n7gus" }],
-  ["path", { d: "M8 8v12", key: "1gg7y9" }],
-  ["path", { d: "M4 4v16", key: "6qkkli" }]
+  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
+  ["path", { d: "M21 12H9", key: "dn1m92" }],
+  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
 ];
-const Library = createLucideIcon("library", __iconNode$U);
+const LogOut = createLucideIcon("log-out", __iconNode$U);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31282,62 +31395,17 @@ const Library = createLucideIcon("library", __iconNode$U);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$T = [
-  ["path", { d: "m3 17 2 2 4-4", key: "1jhpwq" }],
-  ["path", { d: "m3 7 2 2 4-4", key: "1obspn" }],
-  ["path", { d: "M13 6h8", key: "15sg57" }],
-  ["path", { d: "M13 12h8", key: "h98zly" }],
-  ["path", { d: "M13 18h8", key: "oe0vm4" }]
-];
-const ListChecks = createLucideIcon("list-checks", __iconNode$T);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$S = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]];
-const LoaderCircle = createLucideIcon("loader-circle", __iconNode$S);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$R = [
-  ["rect", { width: "18", height: "11", x: "3", y: "11", rx: "2", ry: "2", key: "1w4ew1" }],
-  ["path", { d: "M7 11V7a5 5 0 0 1 10 0v4", key: "fwvmzm" }]
-];
-const Lock = createLucideIcon("lock", __iconNode$R);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$Q = [
-  ["path", { d: "m16 17 5-5-5-5", key: "1bji2h" }],
-  ["path", { d: "M21 12H9", key: "dn1m92" }],
-  ["path", { d: "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4", key: "1uf3rs" }]
-];
-const LogOut = createLucideIcon("log-out", __iconNode$Q);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$P = [
   ["path", { d: "m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7", key: "132q7q" }],
   ["rect", { x: "2", y: "4", width: "20", height: "16", rx: "2", key: "izxlao" }]
 ];
-const Mail = createLucideIcon("mail", __iconNode$P);
+const Mail = createLucideIcon("mail", __iconNode$T);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$O = [
+const __iconNode$S = [
   [
     "path",
     {
@@ -31347,7 +31415,51 @@ const __iconNode$O = [
   ],
   ["circle", { cx: "12", cy: "10", r: "3", key: "ilqhr7" }]
 ];
-const MapPin = createLucideIcon("map-pin", __iconNode$O);
+const MapPin = createLucideIcon("map-pin", __iconNode$S);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$R = [
+  ["path", { d: "M4 12h16", key: "1lakjw" }],
+  ["path", { d: "M4 18h16", key: "19g7jn" }],
+  ["path", { d: "M4 6h16", key: "1o0s65" }]
+];
+const Menu = createLucideIcon("menu", __iconNode$R);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$Q = [
+  ["path", { d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", key: "vv11sd" }]
+];
+const MessageCircle = createLucideIcon("message-circle", __iconNode$Q);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$P = [
+  ["path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", key: "1lielz" }]
+];
+const MessageSquare = createLucideIcon("message-square", __iconNode$P);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$O = [
+  ["rect", { width: "20", height: "14", x: "2", y: "3", rx: "2", key: "48i651" }],
+  ["line", { x1: "8", x2: "16", y1: "21", y2: "21", key: "1svkeh" }],
+  ["line", { x1: "12", x2: "12", y1: "17", y2: "21", key: "vw1qmm" }]
+];
+const Monitor = createLucideIcon("monitor", __iconNode$O);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31355,11 +31467,9 @@ const MapPin = createLucideIcon("map-pin", __iconNode$O);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$N = [
-  ["path", { d: "M4 12h16", key: "1lakjw" }],
-  ["path", { d: "M4 18h16", key: "19g7jn" }],
-  ["path", { d: "M4 6h16", key: "1o0s65" }]
+  ["polygon", { points: "3 11 22 2 13 21 11 13 3 11", key: "1ltx0t" }]
 ];
-const Menu = createLucideIcon("menu", __iconNode$N);
+const Navigation = createLucideIcon("navigation", __iconNode$N);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31367,48 +31477,6 @@ const Menu = createLucideIcon("menu", __iconNode$N);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$M = [
-  ["path", { d: "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", key: "vv11sd" }]
-];
-const MessageCircle = createLucideIcon("message-circle", __iconNode$M);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$L = [
-  ["path", { d: "M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z", key: "1lielz" }]
-];
-const MessageSquare = createLucideIcon("message-square", __iconNode$L);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$K = [
-  ["rect", { width: "20", height: "14", x: "2", y: "3", rx: "2", key: "48i651" }],
-  ["line", { x1: "8", x2: "16", y1: "21", y2: "21", key: "1svkeh" }],
-  ["line", { x1: "12", x2: "12", y1: "17", y2: "21", key: "vw1qmm" }]
-];
-const Monitor = createLucideIcon("monitor", __iconNode$K);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$J = [
-  ["polygon", { points: "3 11 22 2 13 21 11 13 3 11", key: "1ltx0t" }]
-];
-const Navigation = createLucideIcon("navigation", __iconNode$J);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$I = [
   [
     "path",
     {
@@ -31420,14 +31488,14 @@ const __iconNode$I = [
   ["polyline", { points: "3.29 7 12 12 20.71 7", key: "ousv84" }],
   ["path", { d: "m7.5 4.27 9 5.15", key: "1c824w" }]
 ];
-const Package = createLucideIcon("package", __iconNode$I);
+const Package = createLucideIcon("package", __iconNode$M);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$H = [
+const __iconNode$L = [
   [
     "path",
     {
@@ -31440,14 +31508,14 @@ const __iconNode$H = [
   ["circle", { cx: "6.5", cy: "12.5", r: ".5", fill: "currentColor", key: "qy21gx" }],
   ["circle", { cx: "8.5", cy: "7.5", r: ".5", fill: "currentColor", key: "fotxhn" }]
 ];
-const Palette = createLucideIcon("palette", __iconNode$H);
+const Palette = createLucideIcon("palette", __iconNode$L);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$G = [
+const __iconNode$K = [
   ["path", { d: "M13.234 20.252 21 12.3", key: "1cbrk9" }],
   [
     "path",
@@ -31457,14 +31525,14 @@ const __iconNode$G = [
     }
   ]
 ];
-const Paperclip = createLucideIcon("paperclip", __iconNode$G);
+const Paperclip = createLucideIcon("paperclip", __iconNode$K);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$F = [
+const __iconNode$J = [
   [
     "path",
     {
@@ -31473,7 +31541,65 @@ const __iconNode$F = [
     }
   ]
 ];
-const Pen = createLucideIcon("pen", __iconNode$F);
+const Pen = createLucideIcon("pen", __iconNode$J);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$I = [
+  [
+    "path",
+    {
+      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
+      key: "1a8usu"
+    }
+  ],
+  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
+];
+const Pencil = createLucideIcon("pencil", __iconNode$I);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$H = [
+  [
+    "path",
+    {
+      d: "M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384",
+      key: "9njp5v"
+    }
+  ]
+];
+const Phone = createLucideIcon("phone", __iconNode$H);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$G = [
+  [
+    "path",
+    { d: "m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z", key: "wa1lgi" }
+  ],
+  ["path", { d: "m8.5 8.5 7 7", key: "rvfmvr" }]
+];
+const Pill = createLucideIcon("pill", __iconNode$G);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$F = [
+  ["path", { d: "M5 12h14", key: "1ays0h" }],
+  ["path", { d: "M12 5v14", key: "s699le" }]
+];
+const Plus = createLucideIcon("plus", __iconNode$F);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31484,64 +31610,6 @@ const __iconNode$E = [
   [
     "path",
     {
-      d: "M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z",
-      key: "1a8usu"
-    }
-  ],
-  ["path", { d: "m15 5 4 4", key: "1mk7zo" }]
-];
-const Pencil = createLucideIcon("pencil", __iconNode$E);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$D = [
-  [
-    "path",
-    {
-      d: "M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384",
-      key: "9njp5v"
-    }
-  ]
-];
-const Phone = createLucideIcon("phone", __iconNode$D);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$C = [
-  [
-    "path",
-    { d: "m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z", key: "wa1lgi" }
-  ],
-  ["path", { d: "m8.5 8.5 7 7", key: "rvfmvr" }]
-];
-const Pill = createLucideIcon("pill", __iconNode$C);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$B = [
-  ["path", { d: "M5 12h14", key: "1ays0h" }],
-  ["path", { d: "M12 5v14", key: "s699le" }]
-];
-const Plus = createLucideIcon("plus", __iconNode$B);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$A = [
-  [
-    "path",
-    {
       d: "M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2",
       key: "143wyd"
     }
@@ -31549,14 +31617,14 @@ const __iconNode$A = [
   ["path", { d: "M6 9V3a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v6", key: "1itne7" }],
   ["rect", { x: "6", y: "14", width: "12", height: "8", rx: "1", key: "1ue0tg" }]
 ];
-const Printer = createLucideIcon("printer", __iconNode$A);
+const Printer = createLucideIcon("printer", __iconNode$E);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$z = [
+const __iconNode$D = [
   ["rect", { width: "5", height: "5", x: "3", y: "3", rx: "1", key: "1tu5fj" }],
   ["rect", { width: "5", height: "5", x: "16", y: "3", rx: "1", key: "1v8r4q" }],
   ["rect", { width: "5", height: "5", x: "3", y: "16", rx: "1", key: "1x03jg" }],
@@ -31570,14 +31638,14 @@ const __iconNode$z = [
   ["path", { d: "M21 12v.01", key: "1lwtk9" }],
   ["path", { d: "M12 21v-1", key: "1880an" }]
 ];
-const QrCode = createLucideIcon("qr-code", __iconNode$z);
+const QrCode = createLucideIcon("qr-code", __iconNode$D);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$y = [
+const __iconNode$C = [
   [
     "path",
     { d: "M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1Z", key: "q3az6g" }
@@ -31585,27 +31653,27 @@ const __iconNode$y = [
   ["path", { d: "M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8", key: "1h4pet" }],
   ["path", { d: "M12 17.5v-11", key: "1jc1ny" }]
 ];
-const Receipt = createLucideIcon("receipt", __iconNode$y);
+const Receipt = createLucideIcon("receipt", __iconNode$C);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$x = [
+const __iconNode$B = [
   ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
   ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
   ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
   ["path", { d: "M8 16H3v5", key: "1cv678" }]
 ];
-const RefreshCw = createLucideIcon("refresh-cw", __iconNode$x);
+const RefreshCw = createLucideIcon("refresh-cw", __iconNode$B);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$w = [
+const __iconNode$A = [
   [
     "path",
     {
@@ -31616,7 +31684,61 @@ const __iconNode$w = [
   ["path", { d: "M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7", key: "1ydtos" }],
   ["path", { d: "M7 3v4a1 1 0 0 0 1 1h7", key: "t51u73" }]
 ];
-const Save = createLucideIcon("save", __iconNode$w);
+const Save = createLucideIcon("save", __iconNode$A);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$z = [
+  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
+  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+];
+const Search = createLucideIcon("search", __iconNode$z);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$y = [
+  [
+    "path",
+    {
+      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
+      key: "1ffxy3"
+    }
+  ],
+  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
+];
+const Send = createLucideIcon("send", __iconNode$y);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$x = [
+  ["path", { d: "M20 7h-9", key: "3s1dr2" }],
+  ["path", { d: "M14 17H5", key: "gfn3mx" }],
+  ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
+  ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
+];
+const Settings2 = createLucideIcon("settings-2", __iconNode$x);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$w = [
+  ["rect", { width: "20", height: "8", x: "2", y: "2", rx: "2", ry: "2", key: "ngkwjq" }],
+  ["rect", { width: "20", height: "8", x: "2", y: "14", rx: "2", ry: "2", key: "iecqi9" }],
+  ["line", { x1: "6", x2: "6.01", y1: "6", y2: "6", key: "16zg32" }],
+  ["line", { x1: "6", x2: "6.01", y1: "18", y2: "18", key: "nzw8ys" }]
+];
+const Server = createLucideIcon("server", __iconNode$w);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31624,10 +31746,16 @@ const Save = createLucideIcon("save", __iconNode$w);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$v = [
-  ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
-  ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
+  [
+    "path",
+    {
+      d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z",
+      key: "1qme2f"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const Search = createLucideIcon("search", __iconNode$v);
+const Settings = createLucideIcon("settings", __iconNode$v);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31638,66 +31766,6 @@ const __iconNode$u = [
   [
     "path",
     {
-      d: "M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z",
-      key: "1ffxy3"
-    }
-  ],
-  ["path", { d: "m21.854 2.147-10.94 10.939", key: "12cjpa" }]
-];
-const Send = createLucideIcon("send", __iconNode$u);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$t = [
-  ["path", { d: "M20 7h-9", key: "3s1dr2" }],
-  ["path", { d: "M14 17H5", key: "gfn3mx" }],
-  ["circle", { cx: "17", cy: "17", r: "3", key: "18b49y" }],
-  ["circle", { cx: "7", cy: "7", r: "3", key: "dfmy0x" }]
-];
-const Settings2 = createLucideIcon("settings-2", __iconNode$t);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$s = [
-  ["rect", { width: "20", height: "8", x: "2", y: "2", rx: "2", ry: "2", key: "ngkwjq" }],
-  ["rect", { width: "20", height: "8", x: "2", y: "14", rx: "2", ry: "2", key: "iecqi9" }],
-  ["line", { x1: "6", x2: "6.01", y1: "6", y2: "6", key: "16zg32" }],
-  ["line", { x1: "6", x2: "6.01", y1: "18", y2: "18", key: "nzw8ys" }]
-];
-const Server = createLucideIcon("server", __iconNode$s);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$r = [
-  [
-    "path",
-    {
-      d: "M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z",
-      key: "1qme2f"
-    }
-  ],
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
-];
-const Settings = createLucideIcon("settings", __iconNode$r);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$q = [
-  [
-    "path",
-    {
       d: "M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z",
       key: "oel41y"
     }
@@ -31705,14 +31773,14 @@ const __iconNode$q = [
   ["path", { d: "M12 8v4", key: "1got3b" }],
   ["path", { d: "M12 16h.01", key: "1drbdi" }]
 ];
-const ShieldAlert = createLucideIcon("shield-alert", __iconNode$q);
+const ShieldAlert = createLucideIcon("shield-alert", __iconNode$u);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$p = [
+const __iconNode$t = [
   [
     "path",
     {
@@ -31722,14 +31790,14 @@ const __iconNode$p = [
   ],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
 ];
-const ShieldCheck = createLucideIcon("shield-check", __iconNode$p);
+const ShieldCheck = createLucideIcon("shield-check", __iconNode$t);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$o = [
+const __iconNode$s = [
   [
     "path",
     {
@@ -31738,14 +31806,14 @@ const __iconNode$o = [
     }
   ]
 ];
-const Shield = createLucideIcon("shield", __iconNode$o);
+const Shield = createLucideIcon("shield", __iconNode$s);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$n = [
+const __iconNode$r = [
   ["circle", { cx: "8", cy: "21", r: "1", key: "jimo8o" }],
   ["circle", { cx: "19", cy: "21", r: "1", key: "13723u" }],
   [
@@ -31756,7 +31824,56 @@ const __iconNode$n = [
     }
   ]
 ];
-const ShoppingCart = createLucideIcon("shopping-cart", __iconNode$n);
+const ShoppingCart = createLucideIcon("shopping-cart", __iconNode$r);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$q = [
+  ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
+  ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
+  ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
+  ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
+  ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
+];
+const Shuffle = createLucideIcon("shuffle", __iconNode$q);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$p = [
+  ["rect", { width: "14", height: "20", x: "5", y: "2", rx: "2", ry: "2", key: "1yt0o3" }],
+  ["path", { d: "M12 18h.01", key: "mhygvu" }]
+];
+const Smartphone = createLucideIcon("smartphone", __iconNode$p);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$o = [
+  ["path", { d: "M21 10.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h12.5", key: "1uzm8b" }],
+  ["path", { d: "m9 11 3 3L22 4", key: "1pflzl" }]
+];
+const SquareCheckBig = createLucideIcon("square-check-big", __iconNode$o);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$n = [
+  ["rect", { width: "18", height: "18", x: "3", y: "3", rx: "2", key: "afitv7" }],
+  ["path", { d: "M8 7v7", key: "1x2jlm" }],
+  ["path", { d: "M12 7v4", key: "xawao1" }],
+  ["path", { d: "M16 7v9", key: "1hp2iy" }]
+];
+const SquareKanban = createLucideIcon("square-kanban", __iconNode$n);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31764,31 +31881,6 @@ const ShoppingCart = createLucideIcon("shopping-cart", __iconNode$n);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$m = [
-  ["path", { d: "m18 14 4 4-4 4", key: "10pe0f" }],
-  ["path", { d: "m18 2 4 4-4 4", key: "pucp1d" }],
-  ["path", { d: "M2 18h1.973a4 4 0 0 0 3.3-1.7l5.454-8.6a4 4 0 0 1 3.3-1.7H22", key: "1ailkh" }],
-  ["path", { d: "M2 6h1.972a4 4 0 0 1 3.6 2.2", key: "km57vx" }],
-  ["path", { d: "M22 18h-6.041a4 4 0 0 1-3.3-1.8l-.359-.45", key: "os18l9" }]
-];
-const Shuffle = createLucideIcon("shuffle", __iconNode$m);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$l = [
-  ["rect", { width: "14", height: "20", x: "5", y: "2", rx: "2", ry: "2", key: "1yt0o3" }],
-  ["path", { d: "M12 18h.01", key: "mhygvu" }]
-];
-const Smartphone = createLucideIcon("smartphone", __iconNode$l);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$k = [
   ["path", { d: "M12 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7", key: "1m0v6g" }],
   [
     "path",
@@ -31798,14 +31890,14 @@ const __iconNode$k = [
     }
   ]
 ];
-const SquarePen = createLucideIcon("square-pen", __iconNode$k);
+const SquarePen = createLucideIcon("square-pen", __iconNode$m);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$j = [
+const __iconNode$l = [
   [
     "path",
     {
@@ -31814,7 +31906,32 @@ const __iconNode$j = [
     }
   ]
 ];
-const Star = createLucideIcon("star", __iconNode$j);
+const Star = createLucideIcon("star", __iconNode$l);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$k = [
+  ["path", { d: "M12 19h8", key: "baeox8" }],
+  ["path", { d: "m4 17 6-6-6-6", key: "1yngyt" }]
+];
+const Terminal = createLucideIcon("terminal", __iconNode$k);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$j = [
+  ["path", { d: "M3 6h18", key: "d0wm0j" }],
+  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
+  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
+  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
+  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+];
+const Trash2 = createLucideIcon("trash-2", __iconNode$j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31822,10 +31939,10 @@ const Star = createLucideIcon("star", __iconNode$j);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$i = [
-  ["path", { d: "M12 19h8", key: "baeox8" }],
-  ["path", { d: "m4 17 6-6-6-6", key: "1yngyt" }]
+  ["path", { d: "M16 17h6v-6", key: "t6n2it" }],
+  ["path", { d: "m22 17-8.5-8.5-5 5L2 7", key: "x473p" }]
 ];
-const Terminal = createLucideIcon("terminal", __iconNode$i);
+const TrendingDown = createLucideIcon("trending-down", __iconNode$i);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31833,13 +31950,10 @@ const Terminal = createLucideIcon("terminal", __iconNode$i);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$h = [
-  ["path", { d: "M3 6h18", key: "d0wm0j" }],
-  ["path", { d: "M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6", key: "4alrt4" }],
-  ["path", { d: "M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2", key: "v07s0e" }],
-  ["line", { x1: "10", x2: "10", y1: "11", y2: "17", key: "1uufr5" }],
-  ["line", { x1: "14", x2: "14", y1: "11", y2: "17", key: "xtxkd" }]
+  ["path", { d: "M16 7h6v6", key: "box55l" }],
+  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
 ];
-const Trash2 = createLucideIcon("trash-2", __iconNode$h);
+const TrendingUp = createLucideIcon("trending-up", __iconNode$h);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31847,28 +31961,6 @@ const Trash2 = createLucideIcon("trash-2", __iconNode$h);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$g = [
-  ["path", { d: "M16 17h6v-6", key: "t6n2it" }],
-  ["path", { d: "m22 17-8.5-8.5-5 5L2 7", key: "x473p" }]
-];
-const TrendingDown = createLucideIcon("trending-down", __iconNode$g);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$f = [
-  ["path", { d: "M16 7h6v6", key: "box55l" }],
-  ["path", { d: "m22 7-8.5 8.5-5-5L2 17", key: "1t1m79" }]
-];
-const TrendingUp = createLucideIcon("trending-up", __iconNode$f);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const __iconNode$e = [
   [
     "path",
     {
@@ -31879,14 +31971,14 @@ const __iconNode$e = [
   ["path", { d: "M12 9v4", key: "juzpu7" }],
   ["path", { d: "M12 17h.01", key: "p32p05" }]
 ];
-const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$e);
+const TriangleAlert = createLucideIcon("triangle-alert", __iconNode$g);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const __iconNode$d = [
+const __iconNode$f = [
   ["path", { d: "M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2", key: "wrbu53" }],
   ["path", { d: "M15 18H9", key: "1lyqi6" }],
   [
@@ -31899,7 +31991,31 @@ const __iconNode$d = [
   ["circle", { cx: "17", cy: "18", r: "2", key: "332jqn" }],
   ["circle", { cx: "7", cy: "18", r: "2", key: "19iecd" }]
 ];
-const Truck = createLucideIcon("truck", __iconNode$d);
+const Truck = createLucideIcon("truck", __iconNode$f);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$e = [
+  ["path", { d: "M12 4v16", key: "1654pz" }],
+  ["path", { d: "M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2", key: "e0r10z" }],
+  ["path", { d: "M9 20h6", key: "s66wpe" }]
+];
+const Type2 = createLucideIcon("type", __iconNode$e);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const __iconNode$d = [
+  ["path", { d: "M12 3v12", key: "1x0j5s" }],
+  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
+];
+const Upload = createLucideIcon("upload", __iconNode$d);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31907,11 +32023,11 @@ const Truck = createLucideIcon("truck", __iconNode$d);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$c = [
-  ["path", { d: "M12 3v12", key: "1x0j5s" }],
-  ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
+  ["path", { d: "m16 11 2 2 4-4", key: "9rsbq5" }],
+  ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
 ];
-const Upload = createLucideIcon("upload", __iconNode$c);
+const UserCheck = createLucideIcon("user-check", __iconNode$c);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31919,11 +32035,12 @@ const Upload = createLucideIcon("upload", __iconNode$c);
  * See the LICENSE file in the root directory of this source tree.
  */
 const __iconNode$b = [
-  ["path", { d: "m16 11 2 2 4-4", key: "9rsbq5" }],
   ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
-  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
+  ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
+  ["line", { x1: "19", x2: "19", y1: "8", y2: "14", key: "1bvyxn" }],
+  ["line", { x1: "22", x2: "16", y1: "11", y2: "11", key: "1shjgl" }]
 ];
-const UserCheck = createLucideIcon("user-check", __iconNode$b);
+const UserPlus = createLucideIcon("user-plus", __iconNode$b);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -31933,10 +32050,10 @@ const UserCheck = createLucideIcon("user-check", __iconNode$b);
 const __iconNode$a = [
   ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
   ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }],
-  ["line", { x1: "19", x2: "19", y1: "8", y2: "14", key: "1bvyxn" }],
-  ["line", { x1: "22", x2: "16", y1: "11", y2: "11", key: "1shjgl" }]
+  ["line", { x1: "17", x2: "22", y1: "8", y2: "13", key: "3nzzx3" }],
+  ["line", { x1: "22", x2: "17", y1: "8", y2: "13", key: "1swrse" }]
 ];
-const UserPlus = createLucideIcon("user-plus", __iconNode$a);
+const UserX = createLucideIcon("user-x", __iconNode$a);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -37962,6 +38079,11 @@ function getNavGroups(role) {
               label: "ID Cards",
               icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CreditCard, { size: 16 }),
               path: "/admin/id-cards"
+            },
+            {
+              label: "Class Builder",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Layers, { size: 16 }),
+              path: "/admin/class-builder"
             }
           ]
         },
@@ -37978,6 +38100,26 @@ function getNavGroups(role) {
               label: "Collect Fee",
               icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Calculator, { size: 16 }),
               path: "/admin/fees/collect"
+            },
+            {
+              label: "Cash Desk",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Calculator, { size: 16 }),
+              path: "/admin/cash-desk"
+            },
+            {
+              label: "Split Billing",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 16 }),
+              path: "/admin/split-billing"
+            },
+            {
+              label: "Payment Plans",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CalendarCheck, { size: 16 }),
+              path: "/admin/payment-plans"
+            },
+            {
+              label: "Reconciliation",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 16 }),
+              path: "/admin/reconciliation"
             },
             {
               label: "Online Fee Payment",
@@ -38077,6 +38219,16 @@ function getNavGroups(role) {
               label: "Communication",
               icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageCircle, { size: 16 }),
               path: "/admin/communication"
+            },
+            {
+              label: "Digital Forms",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 16 }),
+              path: "/admin/forms"
+            },
+            {
+              label: "Absence Alerts",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { size: 16 }),
+              path: "/admin/absence-workflow"
             },
             {
               label: "Live Chat",
@@ -38182,6 +38334,11 @@ function getNavGroups(role) {
               path: "/admin/online-users"
             },
             {
+              label: "Tasks",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { size: 16 }),
+              path: "/admin/tasks"
+            },
+            {
               label: "Python Reference",
               icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Code, { size: 16 }),
               path: "/admin/python-reference"
@@ -38250,6 +38407,11 @@ function getNavGroups(role) {
               label: "My Appraisal",
               icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Star, { size: 16 }),
               path: "/teacher/appraisal"
+            },
+            {
+              label: "Tasks",
+              icon: /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { size: 16 }),
+              path: "/teacher/tasks"
             },
             {
               label: "Notices",
@@ -68867,6 +69029,473 @@ function AIAnalyticsDashboard({
     ] })
   ] });
 }
+const initialAbsences = [
+  {
+    id: "a1",
+    student: "Arjun Sharma",
+    studentId: "s001",
+    className: "VII-A",
+    parentName: "Ramesh Sharma",
+    parentMobile: "9876543210",
+    date: "2026-10-12",
+    absenceType: "Unexplained",
+    alertSent: true,
+    alertTime: "08:05 AM",
+    reply: "He has fever, will submit medical certificate tomorrow.",
+    status: "Explained"
+  },
+  {
+    id: "a2",
+    student: "Priya Singh",
+    studentId: "s002",
+    className: "VI-B",
+    parentName: "Vikram Singh",
+    parentMobile: "9876543211",
+    date: "2026-10-12",
+    absenceType: "Unexplained",
+    alertSent: true,
+    alertTime: "08:05 AM",
+    reply: "",
+    status: "Pending Reply"
+  },
+  {
+    id: "a3",
+    student: "Rohan Mehta",
+    studentId: "s003",
+    className: "IX-C",
+    parentName: "Suresh Mehta",
+    parentMobile: "9876543212",
+    date: "2026-10-12",
+    absenceType: "Medical",
+    alertSent: true,
+    alertTime: "08:05 AM",
+    reply: "Admitted to hospital, will share documents.",
+    status: "Explained"
+  },
+  {
+    id: "a4",
+    student: "Kavya Patel",
+    studentId: "s004",
+    className: "VIII-B",
+    parentName: "Dilip Patel",
+    parentMobile: "9876543213",
+    date: "2026-10-12",
+    absenceType: "Unexplained",
+    alertSent: false,
+    alertTime: "",
+    reply: "",
+    status: "Pending Reply"
+  },
+  {
+    id: "a5",
+    student: "Aditya Kumar",
+    studentId: "s005",
+    className: "X-A",
+    parentName: "Rajesh Kumar",
+    parentMobile: "9876543214",
+    date: "2026-10-12",
+    absenceType: "Unexplained",
+    alertSent: false,
+    alertTime: "",
+    reply: "",
+    status: "Pending Reply"
+  },
+  {
+    id: "a6",
+    student: "Sneha Joshi",
+    studentId: "s006",
+    className: "XI-Science",
+    parentName: "Prakash Joshi",
+    parentMobile: "9876543215",
+    date: "2026-10-11",
+    absenceType: "Unexplained",
+    alertSent: true,
+    alertTime: "08:10 AM",
+    reply: "",
+    status: "Escalated"
+  },
+  {
+    id: "a7",
+    student: "Rahul Verma",
+    studentId: "s007",
+    className: "VII-B",
+    parentName: "Mohan Verma",
+    parentMobile: "9876543216",
+    date: "2026-10-11",
+    absenceType: "Unexplained",
+    alertSent: true,
+    alertTime: "08:10 AM",
+    reply: "Family emergency, will be back tomorrow.",
+    status: "Explained"
+  },
+  {
+    id: "a8",
+    student: "Ananya Nair",
+    studentId: "s008",
+    className: "VIII-A",
+    parentName: "Sajan Nair",
+    parentMobile: "9876543217",
+    date: "2026-10-11",
+    absenceType: "Unexplained",
+    alertSent: false,
+    alertTime: "",
+    reply: "",
+    status: "Pending Reply"
+  },
+  {
+    id: "a9",
+    student: "Nikhil Das",
+    studentId: "s009",
+    className: "VI-C",
+    parentName: "Biplab Das",
+    parentMobile: "9876543218",
+    date: "2026-10-10",
+    absenceType: "Medical",
+    alertSent: true,
+    alertTime: "08:15 AM",
+    reply: "Doctor's certificate submitted at reception.",
+    status: "Explained"
+  },
+  {
+    id: "a10",
+    student: "Pooja Reddy",
+    studentId: "s010",
+    className: "IX-A",
+    parentName: "Venkat Reddy",
+    parentMobile: "9876543219",
+    date: "2026-10-10",
+    absenceType: "Unexplained",
+    alertSent: true,
+    alertTime: "08:15 AM",
+    reply: "",
+    status: "Escalated"
+  }
+];
+function statusBadge$7(status) {
+  if (status === "Explained")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/15 text-green-700 border-green-300", children: "Explained" });
+  if (status === "Escalated")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-500/15 text-red-700 border-red-300", children: "Escalated" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-yellow-500/15 text-yellow-700 border-yellow-300", children: "Pending Reply" });
+}
+function absenceTypeBadge(type) {
+  if (type === "Medical")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Badge,
+      {
+        variant: "outline",
+        className: "text-blue-600 border-blue-300 text-xs",
+        children: "Medical"
+      }
+    );
+  if (type === "Explained")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Badge,
+      {
+        variant: "outline",
+        className: "text-green-600 border-green-300 text-xs",
+        children: "Explained"
+      }
+    );
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Badge,
+    {
+      variant: "outline",
+      className: "text-orange-600 border-orange-300 text-xs",
+      children: "Unexplained"
+    }
+  );
+}
+const ALERT_MESSAGE_TEMPLATE = (student, parentName) => `Dear ${parentName}, your child ${student} was absent from school today without a prior explanation. Kindly reply with the reason for absence or contact the school office. — SmartSkale School`;
+function AbsenceWorkflowPage() {
+  const [absences, setAbsences] = reactExports.useState(initialAbsences);
+  const [expandedRow, setExpandedRow] = reactExports.useState(null);
+  const unexplainedToday = absences.filter(
+    (a2) => a2.date === "2026-10-12" && a2.absenceType === "Unexplained"
+  ).length;
+  const alertsSent = absences.filter((a2) => a2.alertSent).length;
+  const repliesReceived = absences.filter((a2) => a2.reply).length;
+  const pendingFollowUp = absences.filter(
+    (a2) => a2.status === "Pending Reply"
+  ).length;
+  const stats = [
+    {
+      label: "Unexplained Today",
+      value: unexplainedToday,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 20, className: "text-orange-500" }),
+      color: "text-orange-500"
+    },
+    {
+      label: "SMS/Email Sent",
+      value: alertsSent,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 20, className: "text-blue-600" }),
+      color: "text-blue-600"
+    },
+    {
+      label: "Replies Received",
+      value: repliesReceived,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 20, className: "text-green-600" }),
+      color: "text-green-600"
+    },
+    {
+      label: "Pending Follow-up",
+      value: pendingFollowUp,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Bell, { size: 20, className: "text-yellow-600" }),
+      color: "text-yellow-600"
+    }
+  ];
+  const pendingAlerts = absences.filter((a2) => !a2.alertSent);
+  const sendAlert = (id) => {
+    const record = absences.find((a2) => a2.id === id);
+    if (!record) return;
+    const now2 = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    setAbsences(
+      (prev) => prev.map(
+        (a2) => a2.id === id ? { ...a2, alertSent: true, alertTime: now2 } : a2
+      )
+    );
+    ue.success(
+      `SMS & Email sent to ${record.parentName} (${record.parentMobile})`
+    );
+  };
+  const sendAllPending = () => {
+    if (pendingAlerts.length === 0) {
+      ue.info("No pending alerts to send");
+      return;
+    }
+    const now2 = (/* @__PURE__ */ new Date()).toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    setAbsences(
+      (prev) => prev.map(
+        (a2) => a2.alertSent ? a2 : { ...a2, alertSent: true, alertTime: now2 }
+      )
+    );
+    ue.success(`${pendingAlerts.length} absence alerts sent`);
+  };
+  const markAsExplained = (id) => {
+    setAbsences(
+      (prev) => prev.map(
+        (a2) => a2.id === id ? { ...a2, absenceType: "Explained", status: "Explained" } : a2
+      )
+    );
+    ue.success("Marked as Explained");
+  };
+  const escalate = (id) => {
+    setAbsences(
+      (prev) => prev.map((a2) => a2.id === id ? { ...a2, status: "Escalated" } : a2)
+    );
+    ue.warning("Absence escalated to admin");
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", "data-ocid": "absence-workflow.page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-2xl font-bold text-foreground flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Bell, { className: "text-primary", size: 24 }),
+          "Absence Communication Workflow"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1", children: "Automatically notify parents for unexplained absences and track responses" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: sendAllPending,
+          disabled: pendingAlerts.length === 0,
+          "data-ocid": "absence-workflow.send_all.button",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 15, className: "mr-2" }),
+            "Send All Pending",
+            pendingAlerts.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-1.5 bg-primary-foreground/20 text-primary-foreground text-xs rounded-full px-1.5 py-0.5", children: pendingAlerts.length })
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 lg:grid-cols-4 gap-4", children: stats.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "bg-card border border-border rounded-2xl p-4 flex items-center gap-3",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-muted/40 rounded-xl", children: s2.icon }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-2xl font-bold ${s2.color}`, children: s2.value }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground leading-tight", children: s2.label })
+          ] })
+        ]
+      },
+      s2.label
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-card border border-border rounded-2xl overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-border bg-muted/30", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground w-6" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Student" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Class" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Date" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Type" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Alert Sent" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Parent Reply" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Status" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Actions" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: absences.map((abs, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(React$2.Fragment, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            className: "border-b border-border last:border-0 hover:bg-muted/20 cursor-pointer",
+            onClick: () => setExpandedRow(expandedRow === abs.id ? null : abs.id),
+            onKeyDown: (e3) => e3.key === "Enter" && setExpandedRow(expandedRow === abs.id ? null : abs.id),
+            tabIndex: 0,
+            "data-ocid": `absence-workflow.row.${i + 1}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: expandedRow === abs.id ? /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronRight, { size: 14 }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-medium text-foreground", children: abs.student }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: abs.parentName })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: abs.className }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground text-xs", children: new Date(abs.date).toLocaleDateString("en-IN", {
+                day: "numeric",
+                month: "short"
+              }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: absenceTypeBadge(abs.absenceType) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: abs.alertSent ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 14, className: "text-green-600" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-green-700 font-medium", children: abs.alertTime })
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "flex items-center gap-1.5",
+                  onClick: (e3) => e3.stopPropagation(),
+                  onKeyDown: (e3) => e3.stopPropagation(),
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      size: "sm",
+                      className: "h-7 text-xs",
+                      onClick: () => sendAlert(abs.id),
+                      "data-ocid": `absence-workflow.send_alert.${abs.id}`,
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 11, className: "mr-1" }),
+                        " Send Alert"
+                      ]
+                    }
+                  )
+                }
+              ) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: abs.reply ? /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-green-700 flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(MessageSquare, { size: 12 }),
+                " Reply received"
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground italic", children: "No reply" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$7(abs.status) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "td",
+                {
+                  className: "px-4 py-3",
+                  onClick: (e3) => e3.stopPropagation(),
+                  onKeyDown: (e3) => e3.stopPropagation(),
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1 flex-wrap", children: [
+                    abs.status !== "Explained" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Button,
+                      {
+                        size: "sm",
+                        variant: "outline",
+                        className: "h-7 text-xs text-green-700 border-green-300 hover:bg-green-50",
+                        onClick: () => markAsExplained(abs.id),
+                        "data-ocid": `absence-workflow.explain.${abs.id}`,
+                        children: "Mark Explained"
+                      }
+                    ),
+                    abs.status !== "Escalated" && abs.status !== "Explained" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Button,
+                      {
+                        size: "sm",
+                        variant: "outline",
+                        className: "h-7 text-xs text-red-600 border-red-300 hover:bg-red-50",
+                        onClick: () => escalate(abs.id),
+                        "data-ocid": `absence-workflow.escalate.${abs.id}`,
+                        children: "Escalate"
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      Button,
+                      {
+                        size: "sm",
+                        variant: "ghost",
+                        className: "h-7 text-xs",
+                        onClick: () => {
+                          const msg = encodeURIComponent(
+                            ALERT_MESSAGE_TEMPLATE(
+                              abs.student,
+                              abs.parentName
+                            )
+                          );
+                          window.open(
+                            `https://wa.me/91${abs.parentMobile}?text=${msg}`,
+                            "_blank"
+                          );
+                        },
+                        "data-ocid": `absence-workflow.whatsapp.${abs.id}`,
+                        "aria-label": "Send WhatsApp",
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(Phone, { size: 12 })
+                      }
+                    )
+                  ] })
+                }
+              )
+            ]
+          }
+        ),
+        expandedRow === abs.id && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "tr",
+          {
+            className: "bg-muted/10 border-b border-border",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: 9, className: "px-8 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start gap-6 flex-wrap", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1", children: "Parent Contact" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground", children: abs.parentName }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: abs.parentMobile })
+                ] }),
+                abs.alertSent && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1", children: "Alert Sent At" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground", children: abs.alertTime }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "SMS + Email" })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1", children: "Alert Message Sent" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground bg-background border border-border rounded-lg px-3 py-2 max-w-md", children: ALERT_MESSAGE_TEMPLATE(
+                    abs.student,
+                    abs.parentName
+                  ) })
+                ] })
+              ] }),
+              abs.reply ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide mb-1", children: "Parent Reply" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 rounded-xl px-4 py-3 flex items-start gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    MessageSquare,
+                    {
+                      size: 14,
+                      className: "text-green-600 mt-0.5 shrink-0"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground", children: abs.reply })
+                ] })
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-sm text-muted-foreground", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 14 }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "No parent reply received yet." })
+              ] })
+            ] }) })
+          },
+          `${abs.id}-expanded`
+        )
+      ] }, abs.id)) })
+    ] }) }) })
+  ] });
+}
 function Textarea({ className, ...props }) {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(
     "textarea",
@@ -69132,7 +69761,7 @@ function AcademicPlannerPage() {
     if (!e3.endDate) return e3.date === dateStr;
     return dateStr >= e3.date && dateStr <= e3.endDate;
   });
-  const todayStr = isoDate(
+  const todayStr2 = isoDate(
     today.getFullYear(),
     today.getMonth(),
     today.getDate()
@@ -69213,11 +69842,11 @@ function AcademicPlannerPage() {
     ue.success("Event deleted");
   };
   const upcoming = events2.filter(
-    (e3) => e3.date > todayStr && e3.date <= isoDate(today.getFullYear(), today.getMonth(), today.getDate() + 7)
+    (e3) => e3.date > todayStr2 && e3.date <= isoDate(today.getFullYear(), today.getMonth(), today.getDate() + 7)
   ).sort((a2, b2) => a2.date.localeCompare(b2.date)).slice(0, 5);
   const todayEvents = events2.filter((e3) => {
-    if (!e3.endDate) return e3.date === todayStr;
-    return todayStr >= e3.date && todayStr <= e3.endDate;
+    if (!e3.endDate) return e3.date === todayStr2;
+    return todayStr2 >= e3.date && todayStr2 <= e3.endDate;
   });
   const cells = [
     ...Array.from({ length: firstDay }, (_2, i) => ({
@@ -69307,7 +69936,7 @@ function AcademicPlannerPage() {
           }
           const dateStr = isoDate(viewYear, viewMonth, cell.day);
           const dayEvents = eventsForDay(dateStr);
-          const isToday = dateStr === todayStr;
+          const isToday = dateStr === todayStr2;
           return /* @__PURE__ */ jsxRuntimeExports.jsxs(
             "div",
             {
@@ -76501,6 +77130,895 @@ function AuditLogPage() {
     ] })
   ] });
 }
+var CHECKBOX_NAME = "Checkbox";
+var [createCheckboxContext] = createContextScope$1(CHECKBOX_NAME);
+var [CheckboxProviderImpl, useCheckboxContext] = createCheckboxContext(CHECKBOX_NAME);
+function CheckboxProvider(props) {
+  const {
+    __scopeCheckbox,
+    checked: checkedProp,
+    children,
+    defaultChecked,
+    disabled,
+    form,
+    name,
+    onCheckedChange,
+    required,
+    value = "on",
+    // @ts-expect-error
+    internal_do_not_use_render
+  } = props;
+  const [checked, setChecked] = useControllableState({
+    prop: checkedProp,
+    defaultProp: defaultChecked ?? false,
+    onChange: onCheckedChange,
+    caller: CHECKBOX_NAME
+  });
+  const [control, setControl] = reactExports.useState(null);
+  const [bubbleInput, setBubbleInput] = reactExports.useState(null);
+  const hasConsumerStoppedPropagationRef = reactExports.useRef(false);
+  const isFormControl = control ? !!form || !!control.closest("form") : (
+    // We set this to true by default so that events bubble to forms without JS (SSR)
+    true
+  );
+  const context = {
+    checked,
+    disabled,
+    setChecked,
+    control,
+    setControl,
+    name,
+    form,
+    value,
+    hasConsumerStoppedPropagationRef,
+    required,
+    defaultChecked: isIndeterminate(defaultChecked) ? false : defaultChecked,
+    isFormControl,
+    bubbleInput,
+    setBubbleInput
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    CheckboxProviderImpl,
+    {
+      scope: __scopeCheckbox,
+      ...context,
+      children: isFunction(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
+    }
+  );
+}
+var TRIGGER_NAME$3 = "CheckboxTrigger";
+var CheckboxTrigger = reactExports.forwardRef(
+  ({ __scopeCheckbox, onKeyDown, onClick, ...checkboxProps }, forwardedRef) => {
+    const {
+      control,
+      value,
+      disabled,
+      checked,
+      required,
+      setControl,
+      setChecked,
+      hasConsumerStoppedPropagationRef,
+      isFormControl,
+      bubbleInput
+    } = useCheckboxContext(TRIGGER_NAME$3, __scopeCheckbox);
+    const composedRefs = useComposedRefs(forwardedRef, setControl);
+    const initialCheckedStateRef = reactExports.useRef(checked);
+    reactExports.useEffect(() => {
+      const form = control == null ? void 0 : control.form;
+      if (form) {
+        const reset = () => setChecked(initialCheckedStateRef.current);
+        form.addEventListener("reset", reset);
+        return () => form.removeEventListener("reset", reset);
+      }
+    }, [control, setChecked]);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive$1.button,
+      {
+        type: "button",
+        role: "checkbox",
+        "aria-checked": isIndeterminate(checked) ? "mixed" : checked,
+        "aria-required": required,
+        "data-state": getState$3(checked),
+        "data-disabled": disabled ? "" : void 0,
+        disabled,
+        value,
+        ...checkboxProps,
+        ref: composedRefs,
+        onKeyDown: composeEventHandlers(onKeyDown, (event) => {
+          if (event.key === "Enter") event.preventDefault();
+        }),
+        onClick: composeEventHandlers(onClick, (event) => {
+          setChecked((prevChecked) => isIndeterminate(prevChecked) ? true : !prevChecked);
+          if (bubbleInput && isFormControl) {
+            hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
+            if (!hasConsumerStoppedPropagationRef.current) event.stopPropagation();
+          }
+        })
+      }
+    );
+  }
+);
+CheckboxTrigger.displayName = TRIGGER_NAME$3;
+var Checkbox$1 = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const {
+      __scopeCheckbox,
+      name,
+      checked,
+      defaultChecked,
+      required,
+      disabled,
+      value,
+      onCheckedChange,
+      form,
+      ...checkboxProps
+    } = props;
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      CheckboxProvider,
+      {
+        __scopeCheckbox,
+        checked,
+        defaultChecked,
+        disabled,
+        required,
+        onCheckedChange,
+        name,
+        form,
+        value,
+        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CheckboxTrigger,
+            {
+              ...checkboxProps,
+              ref: forwardedRef,
+              __scopeCheckbox
+            }
+          ),
+          isFormControl && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            CheckboxBubbleInput,
+            {
+              __scopeCheckbox
+            }
+          )
+        ] })
+      }
+    );
+  }
+);
+Checkbox$1.displayName = CHECKBOX_NAME;
+var INDICATOR_NAME = "CheckboxIndicator";
+var CheckboxIndicator = reactExports.forwardRef(
+  (props, forwardedRef) => {
+    const { __scopeCheckbox, forceMount, ...indicatorProps } = props;
+    const context = useCheckboxContext(INDICATOR_NAME, __scopeCheckbox);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Presence,
+      {
+        present: forceMount || isIndeterminate(context.checked) || context.checked === true,
+        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Primitive$1.span,
+          {
+            "data-state": getState$3(context.checked),
+            "data-disabled": context.disabled ? "" : void 0,
+            ...indicatorProps,
+            ref: forwardedRef,
+            style: { pointerEvents: "none", ...props.style }
+          }
+        )
+      }
+    );
+  }
+);
+CheckboxIndicator.displayName = INDICATOR_NAME;
+var BUBBLE_INPUT_NAME$1 = "CheckboxBubbleInput";
+var CheckboxBubbleInput = reactExports.forwardRef(
+  ({ __scopeCheckbox, ...props }, forwardedRef) => {
+    const {
+      control,
+      hasConsumerStoppedPropagationRef,
+      checked,
+      defaultChecked,
+      required,
+      disabled,
+      name,
+      value,
+      form,
+      bubbleInput,
+      setBubbleInput
+    } = useCheckboxContext(BUBBLE_INPUT_NAME$1, __scopeCheckbox);
+    const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
+    const prevChecked = usePrevious(checked);
+    const controlSize = useSize(control);
+    reactExports.useEffect(() => {
+      const input = bubbleInput;
+      if (!input) return;
+      const inputProto = window.HTMLInputElement.prototype;
+      const descriptor = Object.getOwnPropertyDescriptor(
+        inputProto,
+        "checked"
+      );
+      const setChecked = descriptor.set;
+      const bubbles = !hasConsumerStoppedPropagationRef.current;
+      if (prevChecked !== checked && setChecked) {
+        const event = new Event("click", { bubbles });
+        input.indeterminate = isIndeterminate(checked);
+        setChecked.call(input, isIndeterminate(checked) ? false : checked);
+        input.dispatchEvent(event);
+      }
+    }, [bubbleInput, prevChecked, checked, hasConsumerStoppedPropagationRef]);
+    const defaultCheckedRef = reactExports.useRef(isIndeterminate(checked) ? false : checked);
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Primitive$1.input,
+      {
+        type: "checkbox",
+        "aria-hidden": true,
+        defaultChecked: defaultChecked ?? defaultCheckedRef.current,
+        required,
+        disabled,
+        name,
+        value,
+        form,
+        ...props,
+        tabIndex: -1,
+        ref: composedRefs,
+        style: {
+          ...props.style,
+          ...controlSize,
+          position: "absolute",
+          pointerEvents: "none",
+          opacity: 0,
+          margin: 0,
+          // We transform because the input is absolutely positioned but we have
+          // rendered it **after** the button. This pulls it back to sit on top
+          // of the button.
+          transform: "translateX(-100%)"
+        }
+      }
+    );
+  }
+);
+CheckboxBubbleInput.displayName = BUBBLE_INPUT_NAME$1;
+function isFunction(value) {
+  return typeof value === "function";
+}
+function isIndeterminate(checked) {
+  return checked === "indeterminate";
+}
+function getState$3(checked) {
+  return isIndeterminate(checked) ? "indeterminate" : checked ? "checked" : "unchecked";
+}
+function Checkbox({
+  className,
+  ...props
+}) {
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(
+    Checkbox$1,
+    {
+      "data-slot": "checkbox",
+      className: cn(
+        "peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
+        className
+      ),
+      ...props,
+      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        CheckboxIndicator,
+        {
+          "data-slot": "checkbox-indicator",
+          className: "flex items-center justify-center text-current transition-none",
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-3.5" })
+        }
+      )
+    }
+  );
+}
+const FEE_HEADS = [
+  { id: "tuition", label: "Tuition Fee", amount: 5e3 },
+  { id: "transport", label: "Transport Fee", amount: 1200 },
+  { id: "library", label: "Library Fee", amount: 500 },
+  { id: "exam", label: "Exam Fee", amount: 800 },
+  { id: "activity", label: "Activity Fee", amount: 600 },
+  { id: "fine", label: "Late Fine", amount: 200 }
+];
+const initialLog = [
+  {
+    time: "08:45 AM",
+    rcpt: "RCP-048291",
+    student: "Ananya Nair",
+    cls: "VIII-A",
+    amount: 4500,
+    method: "EFTPOS",
+    feeHeads: "Tuition Fee"
+  },
+  {
+    time: "09:20 AM",
+    rcpt: "RCP-048292",
+    student: "Nikhil Das",
+    cls: "VI-C",
+    amount: 5500,
+    method: "Cash",
+    feeHeads: "Tuition + Library"
+  },
+  {
+    time: "10:05 AM",
+    rcpt: "RCP-048293",
+    student: "Vikram Gupta",
+    cls: "X-B",
+    amount: 4e3,
+    method: "Cheque",
+    feeHeads: "Exam Fee"
+  },
+  {
+    time: "11:30 AM",
+    rcpt: "RCP-048294",
+    student: "Sita Rao",
+    cls: "VII-C",
+    amount: 5800,
+    method: "Cash",
+    feeHeads: "Tuition Fee"
+  },
+  {
+    time: "02:15 PM",
+    rcpt: "RCP-048295",
+    student: "Ramesh Bhat",
+    cls: "IX-B",
+    amount: 6500,
+    method: "Money Order",
+    feeHeads: "Annual Fee"
+  }
+];
+function fmt$3(n2) {
+  return `₹${n2.toLocaleString("en-IN")}`;
+}
+function todayStr() {
+  const d2 = /* @__PURE__ */ new Date();
+  return `${String(d2.getDate()).padStart(2, "0")}/${String(d2.getMonth() + 1).padStart(2, "0")}/${d2.getFullYear()}`;
+}
+function genRcpt() {
+  return `RCP-${String(Date.now() % 1e6).padStart(6, "0")}`;
+}
+function timeNow() {
+  return (/* @__PURE__ */ new Date()).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true
+  });
+}
+function CashDeskPage() {
+  const [studentSearch, setStudentSearch] = reactExports.useState("");
+  const [selectedStudent, setSelectedStudent] = reactExports.useState(null);
+  const [amount, setAmount] = reactExports.useState("");
+  const [checkedFeeHeads, setCheckedFeeHeads] = reactExports.useState(["tuition"]);
+  const [payMethod, setPayMethod] = reactExports.useState("Cash");
+  const [tendered, setTendered] = reactExports.useState("");
+  const [chequeNo, setChequeNo] = reactExports.useState("");
+  const [bankName, setBankName] = reactExports.useState("");
+  const [chequeDate, setChequeDate] = reactExports.useState("");
+  const [moNo, setMoNo] = reactExports.useState("");
+  const [issuingBank, setIssuingBank] = reactExports.useState("");
+  const [eftposState, setEftposState] = reactExports.useState("idle");
+  const [notes, setNotes] = reactExports.useState("");
+  const [receiptData, setReceiptData] = reactExports.useState(null);
+  const [txnLog, setTxnLog] = reactExports.useState(initialLog);
+  const changeDue = Math.max(
+    0,
+    (Number.parseFloat(tendered) || 0) - (Number.parseFloat(amount) || 0)
+  );
+  const filteredStudents = mockStudents.filter(
+    (s2) => s2.name.toLowerCase().includes(studentSearch.toLowerCase()) || s2.admissionNo.toLowerCase().includes(studentSearch.toLowerCase())
+  ).slice(0, 8);
+  function toggleFeeHead(id) {
+    setCheckedFeeHeads(
+      (prev) => prev.includes(id) ? prev.filter((h2) => h2 !== id) : [...prev, id]
+    );
+  }
+  function startEftpos() {
+    setEftposState("processing");
+    setTimeout(() => {
+      const success = Math.random() > 0.1;
+      setEftposState(success ? "success" : "declined");
+    }, 2e3);
+  }
+  function processPayment() {
+    if (!selectedStudent) {
+      ue.error("Please select a student first");
+      return;
+    }
+    const amt = Number.parseFloat(amount);
+    if (!amt || amt <= 0) {
+      ue.error("Enter a valid amount");
+      return;
+    }
+    if (checkedFeeHeads.length === 0) {
+      ue.error("Select at least one fee head");
+      return;
+    }
+    if (payMethod === "EFTPOS" && eftposState !== "success") {
+      ue.error("Complete EFTPOS payment first");
+      return;
+    }
+    const rcptNo = genRcpt();
+    const feeHeadLabels = FEE_HEADS.filter(
+      (f2) => checkedFeeHeads.includes(f2.id)
+    ).map((f2) => f2.label);
+    setReceiptData({
+      rcptNo,
+      student: selectedStudent,
+      feeHeads: feeHeadLabels,
+      amount: amt,
+      method: payMethod,
+      change: payMethod === "Cash" ? changeDue : 0
+    });
+    setTxnLog((prev) => [
+      {
+        time: timeNow(),
+        rcpt: rcptNo,
+        student: selectedStudent.name,
+        cls: `${selectedStudent.className}-${selectedStudent.section}`,
+        amount: amt,
+        method: payMethod,
+        feeHeads: feeHeadLabels.join(", ")
+      },
+      ...prev
+    ]);
+    setAmount("");
+    setTendered("");
+    setCheckedFeeHeads(["tuition"]);
+    setNotes("");
+    setEftposState("idle");
+    ue.success(`Payment of ${fmt$3(amt)} processed — ${rcptNo}`);
+  }
+  function printReceipt() {
+    if (!receiptData) return;
+    const {
+      rcptNo,
+      student,
+      feeHeads,
+      amount: amt,
+      method,
+      change
+    } = receiptData;
+    const newWin = window.open("", "_blank", "width=400,height=600");
+    if (!newWin) return;
+    newWin.document.write(`<!DOCTYPE html><html><head><title>Receipt</title><style>
+      body{font-family:Arial,sans-serif;padding:24px;font-size:13px}
+      h2{text-align:center;margin:0}p{margin:4px 0}.divider{border-top:1px dashed #999;margin:8px 0}
+      .row{display:flex;justify-content:space-between}.total{font-weight:bold;font-size:15px}
+    </style></head><body>
+      <h2>SmartSkale School</h2><p style="text-align:center;color:#666">Estd. 2001 | CBSE Affiliated</p>
+      <div class="divider"></div>
+      <h3 style="text-align:center;letter-spacing:2px">RECEIPT</h3>
+      <div class="divider"></div>
+      <p><b>Receipt No:</b> ${rcptNo}</p>
+      <p><b>Date:</b> ${todayStr()}</p>
+      <p><b>Student:</b> ${student.name}</p>
+      <p><b>Admission No:</b> ${student.admissionNo}</p>
+      <p><b>Class:</b> ${student.className}-${student.section}</p>
+      <div class="divider"></div>
+      <p><b>Fee Heads:</b></p>
+      ${feeHeads.map((h2) => `<p style="padding-left:12px">• ${h2}</p>`).join("")}
+      <div class="divider"></div>
+      <div class="row total"><span>Amount Paid</span><span>${fmt$3(amt)}</span></div>
+      <p><b>Payment Method:</b> ${method}</p>
+      ${change > 0 ? `<p><b>Change Given:</b> ${fmt$3(change)}</p>` : ""}
+      <p><b>Outstanding Balance:</b> ${fmt$3(Math.max(0, student.feeDue - amt))}</p>
+      <div class="divider"></div>
+      <p style="text-align:center;font-size:11px;color:#888">This is a computer-generated receipt.<br>No signature required.</p>
+    </body></html>`);
+    newWin.document.close();
+    newWin.print();
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Cash Desk" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-0.5", children: "Multi-method payment collection — Cash, Cheque, Money Order, EFTPOS" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-sm", children: "Student Search" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Search,
+              {
+                size: 14,
+                className: "absolute left-2.5 top-2.5 text-muted-foreground"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                className: "pl-8 h-8 text-sm",
+                placeholder: "Name or admission no...",
+                value: studentSearch,
+                onChange: (e3) => setStudentSearch(e3.target.value),
+                "data-ocid": "cashdesk-search"
+              }
+            )
+          ] }),
+          studentSearch && filteredStudents.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border rounded max-h-40 overflow-y-auto", children: filteredStudents.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: `px-3 py-2 text-xs cursor-pointer hover:bg-muted transition-colors ${(selectedStudent == null ? void 0 : selectedStudent.id) === s2.id ? "bg-primary/10" : ""}`,
+              onClick: () => {
+                setSelectedStudent(s2);
+                setStudentSearch("");
+              },
+              onKeyDown: (e3) => {
+                if (e3.key === "Enter" || e3.key === " ") {
+                  setSelectedStudent(s2);
+                  setStudentSearch("");
+                }
+              },
+              "data-ocid": `cashdesk-student-${s2.id}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-medium", children: s2.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-muted-foreground", children: [
+                  s2.className,
+                  "-",
+                  s2.section,
+                  " · ",
+                  s2.admissionNo
+                ] })
+              ]
+            },
+            s2.id
+          )) }),
+          selectedStudent ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-primary/5 border border-primary/20 rounded p-3 space-y-1.5 text-sm", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold text-base", children: selectedStudent.name }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-muted-foreground", children: [
+              selectedStudent.className,
+              "-",
+              selectedStudent.section,
+              " ·",
+              " ",
+              selectedStudent.admissionNo
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between items-center pt-1", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground text-xs", children: "Outstanding Balance" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-destructive", children: fmt$3(selectedStudent.feeDue) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "ghost",
+                size: "sm",
+                className: "w-full h-7 text-xs mt-1",
+                onClick: () => setSelectedStudent(null),
+                children: "Clear Selection"
+              }
+            )
+          ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-6 text-muted-foreground text-sm", children: "Search for a student to begin" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { className: "pb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-sm", children: "Payment Entry" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Amount (₹)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                type: "number",
+                value: amount,
+                onChange: (e3) => setAmount(e3.target.value),
+                placeholder: "0",
+                className: "mt-1 text-xl font-bold h-12",
+                "data-ocid": "cashdesk-amount"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Fee Heads" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-1 mt-1", children: FEE_HEADS.map((f2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex items-center gap-2 p-1.5 rounded hover:bg-muted/50",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Checkbox,
+                    {
+                      id: `fh-${f2.id}`,
+                      checked: checkedFeeHeads.includes(f2.id),
+                      onCheckedChange: () => toggleFeeHead(f2.id),
+                      "data-ocid": `feehead-${f2.id}`
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "label",
+                    {
+                      htmlFor: `fh-${f2.id}`,
+                      className: "text-xs cursor-pointer",
+                      children: f2.label
+                    }
+                  )
+                ]
+              },
+              f2.id
+            )) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Payment Method" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-1 mt-1 flex-wrap", children: ["Cash", "Cheque", "Money Order", "EFTPOS"].map((m2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                variant: payMethod === m2 ? "default" : "outline",
+                className: "h-7 text-xs",
+                onClick: () => {
+                  setPayMethod(m2);
+                  setEftposState("idle");
+                },
+                "data-ocid": `method-${m2.toLowerCase().replace(" ", "-")}`,
+                children: m2
+              },
+              m2
+            )) })
+          ] }),
+          payMethod === "Cash" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Amount Tendered (₹)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                type: "number",
+                value: tendered,
+                onChange: (e3) => setTendered(e3.target.value),
+                placeholder: "0",
+                className: "mt-1 h-8",
+                "data-ocid": "tendered-amount"
+              }
+            ),
+            tendered && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 flex justify-between bg-muted/40 rounded p-2 text-sm", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Change Due" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold text-green-600", children: fmt$3(changeDue) })
+            ] })
+          ] }),
+          payMethod === "Cheque" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "Cheque No",
+                value: chequeNo,
+                onChange: (e3) => setChequeNo(e3.target.value),
+                className: "h-8 text-sm",
+                "data-ocid": "cheque-no"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "Bank Name",
+                value: bankName,
+                onChange: (e3) => setBankName(e3.target.value),
+                className: "h-8 text-sm",
+                "data-ocid": "bank-name"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                type: "date",
+                value: chequeDate,
+                onChange: (e3) => setChequeDate(e3.target.value),
+                className: "h-8 text-sm",
+                "data-ocid": "cheque-date"
+              }
+            )
+          ] }),
+          payMethod === "Money Order" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "MO Number",
+                value: moNo,
+                onChange: (e3) => setMoNo(e3.target.value),
+                className: "h-8 text-sm",
+                "data-ocid": "mo-number"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                placeholder: "Issuing Bank",
+                value: issuingBank,
+                onChange: (e3) => setIssuingBank(e3.target.value),
+                className: "h-8 text-sm",
+                "data-ocid": "issuing-bank"
+              }
+            )
+          ] }),
+          payMethod === "EFTPOS" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-2 border-dashed rounded-lg p-4 text-center space-y-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              CreditCard,
+              {
+                size: 32,
+                className: "mx-auto text-muted-foreground"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: "EFTPOS Terminal" }),
+            eftposState === "idle" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                className: "w-full",
+                onClick: startEftpos,
+                "data-ocid": "eftpos-tap-btn",
+                children: "Tap / Insert Card"
+              }
+            ),
+            eftposState === "processing" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-center gap-2 text-sm", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" }),
+              "Processing..."
+            ] }),
+            eftposState === "success" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-center gap-2 text-green-600 text-sm font-medium", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 18 }),
+              " Payment Approved"
+            ] }),
+            eftposState === "declined" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-center gap-2 text-red-600 text-sm font-medium", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleX, { size: 18 }),
+                " Card Declined"
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Button,
+                {
+                  size: "sm",
+                  variant: "outline",
+                  className: "w-full",
+                  onClick: () => setEftposState("idle"),
+                  "data-ocid": "eftpos-retry-btn",
+                  children: "Try Again"
+                }
+              )
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Textarea,
+            {
+              placeholder: "Notes (optional)",
+              value: notes,
+              onChange: (e3) => setNotes(e3.target.value),
+              className: "text-sm h-16",
+              "data-ocid": "cashdesk-notes"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              className: "w-full",
+              onClick: processPayment,
+              disabled: !selectedStudent,
+              "data-ocid": "cashdesk-process-btn",
+              children: "Process Payment"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "pb-2 flex flex-row items-center justify-between", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-sm", children: "Receipt Preview" }),
+          receiptData && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              size: "sm",
+              variant: "outline",
+              className: "h-7 text-xs gap-1",
+              onClick: printReceipt,
+              "data-ocid": "print-receipt-btn",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 13 }),
+                " Print"
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { children: receiptData ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border rounded-lg p-4 space-y-2 text-sm font-mono", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-center font-sans", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-bold", children: "SmartSkale School" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground", children: "CBSE Affiliated" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-dashed" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center font-bold tracking-widest font-sans", children: "RECEIPT" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-dashed" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1 text-xs", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Receipt No" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: receiptData.rcptNo })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Date" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: todayStr() })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Student" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: receiptData.student.name })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Class" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                receiptData.student.className,
+                "-",
+                receiptData.student.section
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-dashed" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-medium mb-1", children: "Fee Heads:" }),
+            receiptData.feeHeads.map((h2) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "pl-2", children: [
+              "• ",
+              h2
+            ] }, h2))
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-dashed" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1 text-xs", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between font-bold", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Amount Paid" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: fmt$3(receiptData.amount) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Method" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: receiptData.method })
+            ] }),
+            receiptData.change > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Change Given" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: fmt$3(receiptData.change) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex justify-between text-muted-foreground", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Balance After" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: fmt$3(
+                Math.max(
+                  0,
+                  receiptData.student.feeDue - receiptData.amount
+                )
+              ) })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border-t border-dashed" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-xs text-muted-foreground font-sans", children: "Auto-generated receipt" })
+        ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-2 border-dashed rounded-lg p-8 text-center text-muted-foreground text-sm space-y-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(CreditCard, { size: 32, className: "mx-auto opacity-30" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { children: "Select a student and enter amount to see receipt preview" })
+        ] }) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { className: "flex flex-row items-center justify-between pb-2", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardTitle, { className: "text-sm", children: [
+        "Today's Cash Desk Transactions",
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { variant: "outline", className: "ml-2 text-xs", children: [
+          "Total: ",
+          fmt$3(txnLog.reduce((s2, t2) => s2 + t2.amount, 0))
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "p-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Time" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Receipt No" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Class" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Amount" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Method" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Fee Heads" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: txnLog.map((t2, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          TableRow,
+          {
+            "data-ocid": `cashdesk-log-${t2.rcpt}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm", children: t2.time }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-mono text-xs", children: t2.rcpt }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-medium text-sm", children: t2.student }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm", children: t2.cls }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right font-medium", children: fmt$3(t2.amount) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", className: "text-xs", children: t2.method }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm text-muted-foreground", children: t2.feeHeads })
+            ]
+          },
+          `${t2.rcpt}-${i}`
+        )) })
+      ] }) })
+    ] })
+  ] });
+}
 const SCHOOL_NAME = "SmartSkale School";
 const TODAY = (/* @__PURE__ */ new Date()).toLocaleDateString("en-IN", {
   day: "2-digit",
@@ -78181,7 +79699,7 @@ function DashboardSkeleton() {
     ] })
   ] });
 }
-const UPCOMING_EVENTS = [
+const UPCOMING_EVENTS$1 = [
   {
     date: "Dec 15",
     name: "Annual Day",
@@ -78337,6 +79855,80 @@ function AdminDashboard({ navigate }) {
   const feeCollected = 23400;
   const feeTarget = 5e4;
   const feePct = Math.round(feeCollected / feeTarget * 100);
+  const moduleStats = [
+    {
+      label: "Split Billing Active",
+      value: "5 students",
+      sub: "1 inactive",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 20 }),
+      color: "text-cyan-600",
+      bg: "bg-cyan-500/10",
+      path: "/admin/split-billing"
+    },
+    {
+      label: "Payment Plans",
+      value: "2 overdue",
+      sub: "6 total plans",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CreditCard, { size: 20 }),
+      color: "text-red-600",
+      bg: "bg-red-500/10",
+      path: "/admin/payment-plans"
+    },
+    {
+      label: "Reconciliation",
+      value: "5 pending",
+      sub: "13 auto-reconciled today",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 20 }),
+      color: "text-indigo-600",
+      bg: "bg-indigo-500/10",
+      path: "/admin/reconciliation"
+    },
+    {
+      label: "Cash Desk Today",
+      value: "₹26,300",
+      sub: "5 transactions",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Banknote, { size: 20 }),
+      color: "text-emerald-600",
+      bg: "bg-emerald-500/10",
+      path: "/admin/cash-desk"
+    },
+    {
+      label: "Forms Pending",
+      value: "3 forms",
+      sub: "242 responses awaited",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 20 }),
+      color: "text-violet-600",
+      bg: "bg-violet-500/10",
+      path: "/admin/forms"
+    },
+    {
+      label: "Unexplained Absences",
+      value: "4 today",
+      sub: "2 escalated",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(UserX, { size: 20 }),
+      color: "text-rose-600",
+      bg: "bg-rose-500/10",
+      path: "/admin/absence-workflow"
+    },
+    {
+      label: "Tasks",
+      value: "3 overdue",
+      sub: "4 due today",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { size: 20 }),
+      color: "text-amber-600",
+      bg: "bg-amber-500/10",
+      path: "/admin/tasks"
+    },
+    {
+      label: "Class Builder",
+      value: "3/48 classes built",
+      sub: "19 students allocated",
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Layers, { size: 20 }),
+      color: "text-teal-600",
+      bg: "bg-teal-500/10",
+      path: "/admin/class-builder"
+    }
+  ];
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", "data-ocid": "admin_dashboard.page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
       /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Dashboard" }),
@@ -78353,6 +79945,24 @@ function AdminDashboard({ navigate }) {
           /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s2.bg} ${s2.color} p-3 rounded-xl`, children: s2.icon }),
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: s2.value }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: s2.label }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: s2.sub })
+          ] })
+        ]
+      },
+      s2.label
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4", children: moduleStats.map((s2, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "button",
+      {
+        type: "button",
+        onClick: () => navigate(s2.path),
+        "data-ocid": `admin_dashboard.module_stat.${i + 1}`,
+        className: "bg-card border border-border rounded-2xl p-5 flex items-start gap-4 hover:shadow-md transition-shadow text-left",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${s2.bg} ${s2.color} p-3 rounded-xl`, children: s2.icon }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-bold text-foreground", children: s2.value }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: s2.label }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: s2.sub })
           ] })
@@ -78480,7 +80090,7 @@ function AdminDashboard({ navigate }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Calendar, { size: 16, className: "text-blue-500" }),
         /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-foreground", children: "Upcoming Events" })
       ] }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-3 overflow-x-auto pb-1", children: UPCOMING_EVENTS.map((ev) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-3 overflow-x-auto pb-1", children: UPCOMING_EVENTS$1.map((ev) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
         "div",
         {
           className: `flex-shrink-0 rounded-xl border p-4 min-w-[160px] ${ev.color}`,
@@ -80362,6 +81972,7 @@ function ExamsPage() {
   const [maxMarksError, setMaxMarksError] = reactExports.useState("");
   const [saving, setSaving] = reactExports.useState(false);
   const [expandedExam, setExpandedExam] = reactExports.useState(null);
+  const [deleteTarget, setDeleteTarget] = reactExports.useState(null);
   const [filterClass, setFilterClass] = reactExports.useState("all");
   const [filterSection, setFilterSection] = reactExports.useState("all");
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
@@ -80463,8 +82074,13 @@ function ExamsPage() {
     }
     ue.success(editId ? "Exam updated!" : "Exam scheduled!");
   }
-  async function handleDelete(id, name) {
-    if (!window.confirm(`Delete exam "${name}"?`)) return;
+  async function handleDelete(id) {
+    const exam = exams.find((e3) => e3.id === id);
+    if (exam) setDeleteTarget(exam);
+  }
+  async function confirmDeleteExam() {
+    if (!deleteTarget) return;
+    const id = deleteTarget.id;
     if (actor) {
       try {
         const res = await actor.deleteExam(id);
@@ -80482,6 +82098,7 @@ function ExamsPage() {
       setExams((prev) => prev.filter((e3) => e3.id !== id));
       ue.success("Exam deleted.");
     }
+    setDeleteTarget(null);
   }
   const filteredExams = exams.filter((e3) => {
     if (filterClass !== "all" && e3.class !== filterClass) return false;
@@ -80619,7 +82236,7 @@ function ExamsPage() {
                     size: "icon",
                     variant: "ghost",
                     className: "h-7 w-7 text-destructive hover:text-destructive",
-                    onClick: () => handleDelete(e3.id, e3.name),
+                    onClick: () => handleDelete(e3.id),
                     "data-ocid": `exams.delete_button.${i + 1}`,
                     children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 })
                   }
@@ -80792,7 +82409,43 @@ function ExamsPage() {
           }
         )
       ] })
-    ] }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: !!deleteTarget,
+        onOpenChange: (open) => !open && setDeleteTarget(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-sm", "data-ocid": "exams.delete.dialog", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Delete Exam" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+            "Are you sure you want to delete",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-foreground", children: deleteTarget == null ? void 0 : deleteTarget.name }),
+            "? This action cannot be undone."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                onClick: () => setDeleteTarget(null),
+                "data-ocid": "exams.delete.cancel_button",
+                children: "Cancel"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "destructive",
+                onClick: confirmDeleteExam,
+                "data-ocid": "exams.delete.confirm_button",
+                children: "Delete"
+              }
+            )
+          ] })
+        ] })
+      }
+    )
   ] });
 }
 const UPI_SUFFIXES = ["@okaxis", "@oksbi", "@paytm", "@ybl", "@ibl"];
@@ -81234,7 +82887,7 @@ var AlertDialog$1 = (props) => {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(Root$7, { ...dialogScope, ...alertDialogProps, modal: true });
 };
 AlertDialog$1.displayName = ROOT_NAME;
-var TRIGGER_NAME$3 = "AlertDialogTrigger";
+var TRIGGER_NAME$2 = "AlertDialogTrigger";
 var AlertDialogTrigger = reactExports.forwardRef(
   (props, forwardedRef) => {
     const { __scopeAlertDialog, ...triggerProps } = props;
@@ -81242,7 +82895,7 @@ var AlertDialogTrigger = reactExports.forwardRef(
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Trigger$3, { ...dialogScope, ...triggerProps, ref: forwardedRef });
   }
 );
-AlertDialogTrigger.displayName = TRIGGER_NAME$3;
+AlertDialogTrigger.displayName = TRIGGER_NAME$2;
 var PORTAL_NAME = "AlertDialogPortal";
 var AlertDialogPortal$1 = (props) => {
   const { __scopeAlertDialog, ...portalProps } = props;
@@ -82275,7 +83928,7 @@ var Switch$1 = reactExports.forwardRef(
           role: "switch",
           "aria-checked": checked,
           "aria-required": required,
-          "data-state": getState$3(checked),
+          "data-state": getState$2(checked),
           "data-disabled": disabled ? "" : void 0,
           disabled,
           value,
@@ -82316,7 +83969,7 @@ var SwitchThumb = reactExports.forwardRef(
     return /* @__PURE__ */ jsxRuntimeExports.jsx(
       Primitive$1.span,
       {
-        "data-state": getState$3(context.checked),
+        "data-state": getState$2(context.checked),
         "data-disabled": context.disabled ? "" : void 0,
         ...thumbProps,
         ref: forwardedRef
@@ -82325,7 +83978,7 @@ var SwitchThumb = reactExports.forwardRef(
   }
 );
 SwitchThumb.displayName = THUMB_NAME;
-var BUBBLE_INPUT_NAME$1 = "SwitchBubbleInput";
+var BUBBLE_INPUT_NAME = "SwitchBubbleInput";
 var SwitchBubbleInput = reactExports.forwardRef(
   ({
     __scopeSwitch,
@@ -82374,8 +84027,8 @@ var SwitchBubbleInput = reactExports.forwardRef(
     );
   }
 );
-SwitchBubbleInput.displayName = BUBBLE_INPUT_NAME$1;
-function getState$3(checked) {
+SwitchBubbleInput.displayName = BUBBLE_INPUT_NAME;
+function getState$2(checked) {
   return checked ? "checked" : "unchecked";
 }
 var Root$1 = Switch$1;
@@ -82981,7 +84634,7 @@ function FeesSkeleton() {
     ["a", "b", "c", "d"].map((k2) => /* @__PURE__ */ jsxRuntimeExports.jsx(Skeleton, { className: "h-14 rounded-xl" }, k2))
   ] });
 }
-const statusBadge$3 = (status) => {
+const statusBadge$6 = (status) => {
   if (status === "Paid")
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/15 text-green-600 border-green-200", children: "Paid" });
   if (status === "Partial")
@@ -83315,7 +84968,7 @@ function FeesPage({ navigate }) {
                     p2.dueAmount.toLocaleString()
                   ] }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", className: "text-xs", children: p2.installmentPlan }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$3(p2.status) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$6(p2.status) }),
                   /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: p2.dueAmount > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
                     Button,
                     {
@@ -83626,6 +85279,1121 @@ function FeesPage({ navigate }) {
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: saveDisc, "data-ocid": "fees.discount.save_button", children: "Save" })
       ] })
     ] }) })
+  ] });
+}
+const FIELD_TYPES = [
+  { type: "text", label: "Text Input", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Type2, { size: 14 }) },
+  { type: "textarea", label: "Textarea", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 14 }) },
+  { type: "checkbox", label: "Checkbox", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { size: 14 }) },
+  { type: "dropdown", label: "Dropdown", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(List$1, { size: 14 }) },
+  { type: "date", label: "Date", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CalendarDays, { size: 14 }) },
+  { type: "number", label: "Number", icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Hash$2, { size: 14 }) }
+];
+function fieldTypeIcon(type) {
+  var _a3;
+  return ((_a3 = FIELD_TYPES.find((f2) => f2.type === type)) == null ? void 0 : _a3.icon) ?? /* @__PURE__ */ jsxRuntimeExports.jsx(Type2, { size: 14 });
+}
+function FieldBadge({ type }) {
+  const colors = {
+    text: "bg-blue-100 text-blue-700",
+    textarea: "bg-purple-100 text-purple-700",
+    checkbox: "bg-green-100 text-green-700",
+    dropdown: "bg-orange-100 text-orange-700",
+    date: "bg-pink-100 text-pink-700",
+    number: "bg-yellow-100 text-yellow-700"
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "span",
+    {
+      className: `inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-medium ${colors[type]}`,
+      children: [
+        fieldTypeIcon(type),
+        " ",
+        type
+      ]
+    }
+  );
+}
+function PreviewField({ field }) {
+  var _a3;
+  const options = ((_a3 = field.options) == null ? void 0 : _a3.split(",").map((o2) => o2.trim()).filter(Boolean)) ?? [];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm font-medium text-foreground", children: [
+      field.label || /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground italic", children: "Untitled field" }),
+      field.required && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-500 ml-1", children: "*" })
+    ] }),
+    field.type === "text" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        disabled: true,
+        placeholder: field.placeholder || "Text input",
+        className: "w-full h-9 px-3 rounded-lg border border-input bg-muted/30 text-sm text-muted-foreground cursor-not-allowed"
+      }
+    ),
+    field.type === "textarea" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "textarea",
+      {
+        disabled: true,
+        placeholder: field.placeholder || "Enter text...",
+        rows: 3,
+        className: "w-full px-3 py-2 rounded-lg border border-input bg-muted/30 text-sm text-muted-foreground cursor-not-allowed resize-none"
+      }
+    ),
+    field.type === "checkbox" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "input",
+        {
+          type: "checkbox",
+          disabled: true,
+          className: "w-4 h-4 rounded border border-input cursor-not-allowed"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-muted-foreground", children: field.label || "Check this option" })
+    ] }),
+    field.type === "dropdown" && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "select",
+      {
+        disabled: true,
+        className: "w-full h-9 px-3 rounded-lg border border-input bg-muted/30 text-sm text-muted-foreground cursor-not-allowed",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: "Select an option…" }),
+          options.map((o2) => /* @__PURE__ */ jsxRuntimeExports.jsx("option", { children: o2 }, o2))
+        ]
+      }
+    ),
+    field.type === "date" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        type: "date",
+        disabled: true,
+        className: "w-full h-9 px-3 rounded-lg border border-input bg-muted/30 text-sm text-muted-foreground cursor-not-allowed"
+      }
+    ),
+    field.type === "number" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "input",
+      {
+        type: "number",
+        disabled: true,
+        placeholder: "0",
+        className: "w-full h-9 px-3 rounded-lg border border-input bg-muted/30 text-sm text-muted-foreground cursor-not-allowed"
+      }
+    )
+  ] });
+}
+function FormBuilderPage() {
+  const [title, setTitle] = reactExports.useState("");
+  const [description, setDescription] = reactExports.useState("");
+  const [fields, setFields] = reactExports.useState([]);
+  const [showFieldMenu, setShowFieldMenu] = reactExports.useState(false);
+  const [targetAudience, setTargetAudience] = reactExports.useState("parents");
+  const [targetClass, setTargetClass] = reactExports.useState(CLASSES[0]);
+  const [targetSection, setTargetSection] = reactExports.useState("");
+  const [showPreview, setShowPreview] = reactExports.useState(true);
+  const audienceCount = {
+    parents: 162,
+    students: 480,
+    staff: 32,
+    class: 35
+  };
+  const addField = (type) => {
+    const newField = {
+      id: `f-${Date.now()}`,
+      type,
+      label: "",
+      required: false,
+      placeholder: "",
+      options: type === "dropdown" ? "Option 1, Option 2, Option 3" : void 0
+    };
+    setFields((prev) => [...prev, newField]);
+    setShowFieldMenu(false);
+  };
+  const updateField = (id, updates) => {
+    setFields(
+      (prev) => prev.map((f2) => f2.id === id ? { ...f2, ...updates } : f2)
+    );
+  };
+  const removeField = (id) => {
+    setFields((prev) => prev.filter((f2) => f2.id !== id));
+  };
+  const moveField = (id, dir) => {
+    setFields((prev) => {
+      const idx = prev.findIndex((f2) => f2.id === id);
+      if (idx < 0) return prev;
+      const next = [...prev];
+      const swap2 = dir === "up" ? idx - 1 : idx + 1;
+      if (swap2 < 0 || swap2 >= next.length) return prev;
+      [next[idx], next[swap2]] = [next[swap2], next[idx]];
+      return next;
+    });
+  };
+  const handleSaveDraft = () => {
+    if (!title.trim()) {
+      ue.error("Please enter a form title");
+      return;
+    }
+    ue.success("Form saved as draft");
+  };
+  const handleSend = () => {
+    if (!title.trim()) {
+      ue.error("Form title cannot be empty");
+      return;
+    }
+    if (fields.length === 0) {
+      ue.error("Add at least one field to the form");
+      return;
+    }
+    const count2 = targetAudience === "class" ? audienceCount.class : audienceCount[targetAudience];
+    ue.success(`Form sent to ${count2} recipients`);
+    setTimeout(() => {
+      window.location.hash = "/admin/forms";
+    }, 800);
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", "data-ocid": "form-builder.page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-2xl font-bold text-foreground flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "text-primary", size: 24 }),
+          "Form Builder"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1", children: "Design your form and send it to the right audience" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "outline",
+            onClick: () => setShowPreview((p2) => !p2),
+            "data-ocid": "form-builder.preview.toggle",
+            children: showPreview ? "Hide Preview" : "Show Preview"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "outline",
+            onClick: handleSaveDraft,
+            "data-ocid": "form-builder.save_draft.button",
+            children: "Save Draft"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: handleSend, "data-ocid": "form-builder.send.button", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 15, className: "mr-1.5" }),
+          " Send Form"
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: `grid gap-6 ${showPreview ? "grid-cols-1 lg:grid-cols-2" : "grid-cols-1 max-w-2xl"}`,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-2xl p-5 space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-base font-semibold", children: "Form Title *" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Input,
+                  {
+                    placeholder: "e.g. Annual Medical Check Consent",
+                    value: title,
+                    onChange: (e3) => setTitle(e3.target.value),
+                    className: "text-base",
+                    "data-ocid": "form-builder.title.input"
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Form Description" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Textarea,
+                  {
+                    placeholder: "Brief description of the form's purpose...",
+                    value: description,
+                    onChange: (e3) => setDescription(e3.target.value),
+                    rows: 2,
+                    "data-ocid": "form-builder.description.textarea"
+                  }
+                )
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-2xl p-5 space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "font-semibold text-foreground", children: [
+                  "Form Fields (",
+                  fields.length,
+                  ")"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      size: "sm",
+                      onClick: () => setShowFieldMenu((p2) => !p2),
+                      "data-ocid": "form-builder.add_field.button",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 14, className: "mr-1.5" }),
+                        " Add Field",
+                        " ",
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 13, className: "ml-1" })
+                      ]
+                    }
+                  ),
+                  showFieldMenu && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "div",
+                    {
+                      className: "absolute right-0 top-full mt-1 z-30 bg-card border border-border rounded-xl shadow-lg overflow-hidden w-44",
+                      "data-ocid": "form-builder.field_menu",
+                      children: FIELD_TYPES.map((ft2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        "button",
+                        {
+                          type: "button",
+                          className: "w-full flex items-center gap-2.5 px-3 py-2.5 text-sm hover:bg-muted/50 transition-colors text-foreground",
+                          onClick: () => addField(ft2.type),
+                          "data-ocid": `form-builder.add_field.${ft2.type}`,
+                          children: [
+                            ft2.icon,
+                            " ",
+                            ft2.label
+                          ]
+                        },
+                        ft2.type
+                      ))
+                    }
+                  )
+                ] })
+              ] }),
+              fields.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  className: "text-center py-10 text-muted-foreground border-2 border-dashed border-border rounded-xl",
+                  "data-ocid": "form-builder.fields.empty_state",
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 32, className: "mx-auto mb-2 opacity-30" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", children: "No fields added yet" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs mt-0.5", children: 'Click "Add Field" to start building your form' })
+                  ]
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3", children: fields.map((field, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "div",
+                {
+                  className: "border border-border rounded-xl p-4 space-y-3 bg-background",
+                  "data-ocid": `form-builder.field.${i + 1}`,
+                  children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(FieldBadge, { type: field.type }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1", children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            onClick: () => moveField(field.id, "up"),
+                            disabled: i === 0,
+                            className: "p-1 text-muted-foreground hover:text-foreground disabled:opacity-30",
+                            "aria-label": "Move up",
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowUp, { size: 14 })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            onClick: () => moveField(field.id, "down"),
+                            disabled: i === fields.length - 1,
+                            className: "p-1 text-muted-foreground hover:text-foreground disabled:opacity-30",
+                            "aria-label": "Move down",
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowDown, { size: 14 })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          "button",
+                          {
+                            type: "button",
+                            onClick: () => removeField(field.id),
+                            className: "p-1 text-muted-foreground hover:text-destructive",
+                            "aria-label": "Remove field",
+                            "data-ocid": `form-builder.field.delete.${i + 1}`,
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 14 })
+                          }
+                        )
+                      ] })
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Label *" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          placeholder: "Field label",
+                          value: field.label,
+                          onChange: (e3) => updateField(field.id, { label: e3.target.value }),
+                          className: "h-8 text-sm",
+                          "data-ocid": `form-builder.field.label.${i + 1}`
+                        }
+                      )
+                    ] }),
+                    (field.type === "text" || field.type === "textarea") && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Placeholder" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Input,
+                        {
+                          placeholder: "Hint text shown inside the field",
+                          value: field.placeholder,
+                          onChange: (e3) => updateField(field.id, { placeholder: e3.target.value }),
+                          className: "h-8 text-sm",
+                          "data-ocid": `form-builder.field.placeholder.${i + 1}`
+                        }
+                      )
+                    ] }),
+                    field.type === "dropdown" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Options (comma-separated)" }),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Textarea,
+                        {
+                          placeholder: "Option 1, Option 2, Option 3",
+                          value: field.options,
+                          onChange: (e3) => updateField(field.id, { options: e3.target.value }),
+                          rows: 2,
+                          className: "text-sm",
+                          "data-ocid": `form-builder.field.options.${i + 1}`
+                        }
+                      )
+                    ] }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        "button",
+                        {
+                          type: "button",
+                          role: "switch",
+                          "aria-checked": field.required,
+                          onClick: () => updateField(field.id, { required: !field.required }),
+                          className: `w-9 h-5 rounded-full transition-colors relative ${field.required ? "bg-primary" : "bg-muted"}`,
+                          "data-ocid": `form-builder.field.required.${i + 1}`,
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "span",
+                            {
+                              className: `absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${field.required ? "translate-x-4" : "translate-x-0.5"}`
+                            }
+                          )
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "Required" })
+                    ] })
+                  ]
+                },
+                field.id
+              )) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-2xl p-5 space-y-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-foreground", children: "Target Audience" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-2 sm:grid-cols-4", children: [
+                { val: "parents", label: "All Parents", count: 162 },
+                { val: "students", label: "All Students", count: 480 },
+                { val: "staff", label: "All Staff", count: 32 },
+                { val: "class", label: "By Class", count: null }
+              ].map((opt) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => setTargetAudience(opt.val),
+                  className: `px-3 py-2.5 rounded-xl border text-sm font-medium transition-colors text-center ${targetAudience === opt.val ? "bg-primary text-primary-foreground border-primary" : "border-border text-foreground hover:bg-muted/50"}`,
+                  "data-ocid": `form-builder.target.${opt.val}`,
+                  children: [
+                    opt.label,
+                    opt.count && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "block text-xs opacity-70", children: [
+                      opt.count,
+                      " recipients"
+                    ] })
+                  ]
+                },
+                opt.val
+              )) }),
+              targetAudience === "class" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-3 flex-wrap", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1 flex-1 min-w-32", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Class" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: targetClass, onValueChange: setTargetClass, children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      SelectTrigger,
+                      {
+                        className: "h-9",
+                        "data-ocid": "form-builder.class.select",
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {})
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "max-h-60 overflow-y-auto", children: CLASSES.map((c2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c2, children: c2 }, c2)) })
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1 flex-1 min-w-32", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs", children: "Section" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: targetSection,
+                      onValueChange: setTargetSection,
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          SelectTrigger,
+                          {
+                            className: "h-9",
+                            "data-ocid": "form-builder.section.select",
+                            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "All sections" })
+                          }
+                        ),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "", children: "All Sections" }),
+                          (targetClass === "XI" || targetClass === "XII" ? ["Science", "Commerce", "Arts"] : SECTIONS$1).map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2, children: s2 }, s2))
+                        ] })
+                      ]
+                    }
+                  )
+                ] })
+              ] })
+            ] })
+          ] }),
+          showPreview && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "sticky top-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-2xl p-5 space-y-5", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 pb-3 border-b border-border", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "w-7 h-7 bg-primary/10 rounded-lg flex items-center justify-center", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 15, className: "text-primary" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-foreground text-sm", children: "Form Preview" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", className: "text-xs ml-auto", children: "Read-only" })
+            ] }),
+            !title && fields.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "text-center py-10 text-muted-foreground",
+                "data-ocid": "form-builder.preview.empty",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 40, className: "mx-auto mb-3 opacity-20" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm", children: "Add a title and fields to see the preview" })
+                ]
+              }
+            ) : /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+              title && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-lg font-bold text-foreground", children: title }),
+                description && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-1", children: description })
+              ] }),
+              fields.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-4", children: fields.map((f2) => /* @__PURE__ */ jsxRuntimeExports.jsx(PreviewField, { field: f2 }, f2.id)) }),
+              fields.length > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  disabled: true,
+                  type: "submit",
+                  className: "w-full h-10 rounded-xl bg-primary/30 text-primary-foreground/60 text-sm font-medium cursor-not-allowed",
+                  children: "Submit (Preview only)"
+                }
+              )
+            ] })
+          ] }) })
+        ]
+      }
+    )
+  ] });
+}
+const mockRecipients = [
+  "Ramesh Sharma",
+  "Vikram Singh",
+  "Suresh Mehta",
+  "Dilip Patel",
+  "Rajesh Kumar",
+  "Prakash Joshi",
+  "Mohan Verma",
+  "Sajan Nair",
+  "Biplab Das",
+  "Venkat Reddy",
+  "Anita Sharma",
+  "Kavita Singh",
+  "Priya Mehta",
+  "Sunita Patel",
+  "Geeta Kumar"
+];
+function generateResponseData(form) {
+  const seed2 = form.id.split("").reduce((a2, c2) => a2 + c2.charCodeAt(0), 0);
+  return mockRecipients.slice(0, Math.min(form.sentTo, 15)).map((name, i) => {
+    const responded = i < form.responses;
+    const dateOffset = (seed2 + i) % 20;
+    const d2 = /* @__PURE__ */ new Date("2026-04-01");
+    d2.setDate(d2.getDate() + dateOffset);
+    return {
+      id: `r${i}`,
+      name,
+      role: form.target === "Staff" ? "Teacher" : form.target === "Students" ? "Student" : "Parent",
+      class: form.target === "Staff" ? "—" : `${["VI", "VII", "VIII", "IX", "X"][(seed2 + i) % 5]}-${["A", "B", "C"][(seed2 + i) % 3]}`,
+      responded,
+      responseDate: responded ? d2.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      }) : "—",
+      fieldValues: form.fields.map((f2) => {
+        var _a3;
+        return {
+          label: f2.label,
+          value: f2.type === "checkbox" ? i % 3 !== 0 ? "Yes" : "No" : f2.type === "dropdown" ? ((_a3 = f2.options) == null ? void 0 : _a3[i % (f2.options.length || 1)]) ?? "—" : f2.type === "date" ? "2026-05-15" : `Sample response ${i + 1}`
+        };
+      })
+    };
+  });
+}
+const mockForms = [
+  {
+    id: "f1",
+    name: "Annual Medical Check Consent",
+    createdBy: "Admin",
+    target: "Parents",
+    sentTo: 162,
+    responses: 134,
+    status: "Active",
+    createdDate: "2026-04-01",
+    fields: [
+      { type: "text", label: "Child Name", required: true },
+      {
+        type: "checkbox",
+        label: "I consent to the annual medical examination",
+        required: true
+      },
+      { type: "date", label: "Preferred Date", required: false },
+      {
+        type: "text",
+        label: "Any known allergies or conditions",
+        required: false
+      }
+    ]
+  },
+  {
+    id: "f2",
+    name: "Sports Day Permission Slip",
+    createdBy: "Amit Kumar",
+    target: "Parents",
+    sentTo: 120,
+    responses: 98,
+    status: "Active",
+    createdDate: "2026-04-15",
+    fields: [
+      { type: "text", label: "Parent Name", required: true },
+      {
+        type: "checkbox",
+        label: "I give permission for my child to participate in Sports Day",
+        required: true
+      },
+      {
+        type: "dropdown",
+        label: "T-shirt Size",
+        options: ["XS", "S", "M", "L", "XL"],
+        required: true
+      }
+    ]
+  },
+  {
+    id: "f3",
+    name: "Parent Satisfaction Survey",
+    createdBy: "Admin",
+    target: "Parents",
+    sentTo: 162,
+    responses: 45,
+    status: "Active",
+    createdDate: "2026-04-20",
+    fields: [
+      {
+        type: "dropdown",
+        label: "Overall Satisfaction",
+        options: [
+          "Very Satisfied",
+          "Satisfied",
+          "Neutral",
+          "Dissatisfied",
+          "Very Dissatisfied"
+        ],
+        required: true
+      },
+      {
+        type: "text",
+        label: "What do you appreciate most about the school?",
+        required: false
+      },
+      { type: "text", label: "What could be improved?", required: false },
+      {
+        type: "checkbox",
+        label: "Would you recommend this school to others?",
+        required: false
+      }
+    ]
+  },
+  {
+    id: "f4",
+    name: "Emergency Contact Update",
+    createdBy: "Admin",
+    target: "Parents",
+    sentTo: 162,
+    responses: 162,
+    status: "Closed",
+    createdDate: "2026-03-01",
+    fields: [
+      { type: "text", label: "Primary Contact Name", required: true },
+      { type: "text", label: "Primary Contact Phone", required: true },
+      { type: "text", label: "Secondary Contact Name", required: false },
+      { type: "text", label: "Relationship", required: true }
+    ]
+  },
+  {
+    id: "f5",
+    name: "Teacher Professional Development Feedback",
+    createdBy: "Admin",
+    target: "Staff",
+    sentTo: 32,
+    responses: 12,
+    status: "Active",
+    createdDate: "2026-04-25",
+    fields: [
+      {
+        type: "dropdown",
+        label: "Training Session Attended",
+        options: [
+          "Digital Literacy",
+          "Special Needs Education",
+          "Assessment Techniques",
+          "None"
+        ],
+        required: true
+      },
+      { type: "text", label: "Key Learning", required: false },
+      {
+        type: "checkbox",
+        label: "I would like further training",
+        required: false
+      }
+    ]
+  },
+  {
+    id: "f6",
+    name: "Student Interest Survey",
+    createdBy: "Priya Singh",
+    target: "Students",
+    sentTo: 80,
+    responses: 5,
+    status: "Draft",
+    createdDate: "2026-05-01",
+    fields: [
+      {
+        type: "dropdown",
+        label: "Favourite Subject",
+        options: [
+          "Math",
+          "Science",
+          "English",
+          "Hindi",
+          "Social Science",
+          "Art",
+          "PE"
+        ],
+        required: true
+      },
+      {
+        type: "checkbox",
+        label: "Would you like after-school clubs?",
+        required: false
+      },
+      { type: "text", label: "Club ideas", required: false }
+    ]
+  }
+];
+function statusBadge$5(status) {
+  if (status === "Active")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/15 text-green-700 border-green-300", children: "Active" });
+  if (status === "Draft")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", className: "text-muted-foreground", children: "Draft" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-muted text-muted-foreground", children: "Closed" });
+}
+function FormsPage() {
+  const [forms, setForms] = reactExports.useState(mockForms);
+  const [search, setSearch] = reactExports.useState("");
+  const [filterStatus, setFilterStatus] = reactExports.useState("All");
+  const [filterTarget, setFilterTarget] = reactExports.useState("All");
+  const [responseSheetForm, setResponseSheetForm] = reactExports.useState(
+    null
+  );
+  const [viewResponseRecipient, setViewResponseRecipient] = reactExports.useState(null);
+  const [expandedRow, setExpandedRow] = reactExports.useState(null);
+  const filtered = forms.filter((f2) => {
+    if (search && !f2.name.toLowerCase().includes(search.toLowerCase()))
+      return false;
+    if (filterStatus !== "All" && f2.status !== filterStatus) return false;
+    if (filterTarget !== "All" && f2.target !== filterTarget) return false;
+    return true;
+  });
+  const totalResponses = forms.reduce((s2, f2) => s2 + f2.responses, 0);
+  const totalSent = forms.reduce((s2, f2) => s2 + f2.sentTo, 0);
+  const avgRate = totalSent ? Math.round(totalResponses / totalSent * 100) : 0;
+  const activeForms = forms.filter((f2) => f2.status === "Active").length;
+  const stats = [
+    {
+      label: "Total Forms",
+      value: forms.length,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 20, className: "text-primary" })
+    },
+    {
+      label: "Active Forms",
+      value: activeForms,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(SquareCheckBig, { size: 20, className: "text-green-600" })
+    },
+    {
+      label: "Total Responses",
+      value: totalResponses,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 20, className: "text-blue-600" })
+    },
+    {
+      label: "Avg Response Rate",
+      value: `${avgRate}%`,
+      icon: /* @__PURE__ */ jsxRuntimeExports.jsx(TrendingUp, { size: 20, className: "text-orange-500" })
+    }
+  ];
+  const handleClose = (id) => {
+    setForms(
+      (prev) => prev.map((f2) => f2.id === id ? { ...f2, status: "Closed" } : f2)
+    );
+    ue.success("Form closed");
+  };
+  const handleDelete = (id) => {
+    setForms((prev) => prev.filter((f2) => f2.id !== id));
+    ue.success("Form deleted");
+  };
+  const handleSend = (form) => {
+    if (form.status === "Closed") {
+      ue.error("Cannot send a closed form");
+      return;
+    }
+    ue.success(`Form "${form.name}" sent to ${form.sentTo} recipients`);
+  };
+  const responseData = responseSheetForm ? generateResponseData(responseSheetForm) : [];
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", "data-ocid": "forms.page", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("h1", { className: "text-2xl font-bold text-foreground flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { className: "text-primary", size: 24 }),
+          "Digital Forms"
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-1", children: "Create and manage forms for parents, students, and staff" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: () => {
+            window.location.hash = "/admin/forms/builder";
+          },
+          "data-ocid": "forms.create.button",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16, className: "mr-2" }),
+            " Create New Form"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 lg:grid-cols-4 gap-4", children: stats.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "bg-card border border-border rounded-2xl p-4 flex items-center gap-3",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-2 bg-muted/40 rounded-xl", children: s2.icon }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: s2.value }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: s2.label })
+          ] })
+        ]
+      },
+      s2.label
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3 items-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative flex-1 min-w-48", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Search,
+          {
+            size: 14,
+            className: "absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            placeholder: "Search forms...",
+            value: search,
+            onChange: (e3) => setSearch(e3.target.value),
+            className: "pl-8 h-9 text-sm",
+            "data-ocid": "forms.search.input"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: filterStatus, onValueChange: setFilterStatus, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 h-9", "data-ocid": "forms.status.filter", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: ["All", "Active", "Draft", "Closed"].map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2, children: s2 }, s2)) })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: filterTarget, onValueChange: setFilterTarget, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 h-9", "data-ocid": "forms.target.filter", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: ["All", "Parents", "Students", "Staff"].map((t2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: t2, children: t2 }, t2)) })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-card border border-border rounded-2xl overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "overflow-x-auto", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-border bg-muted/30", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Form Name" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Created By" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Target" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Sent To" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Responses" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Rate %" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Status" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Created" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Actions" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: filtered.map((form, i) => /* @__PURE__ */ jsxRuntimeExports.jsxs(React$2.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "tr",
+            {
+              className: "border-b border-border last:border-0 hover:bg-muted/20 cursor-pointer",
+              onClick: () => setExpandedRow(expandedRow === form.id ? null : form.id),
+              onKeyDown: (e3) => e3.key === "Enter" && setExpandedRow(expandedRow === form.id ? null : form.id),
+              tabIndex: 0,
+              "data-ocid": `forms.row.${i + 1}`,
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-medium text-foreground", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    ChevronDown,
+                    {
+                      size: 14,
+                      className: `text-muted-foreground transition-transform ${expandedRow === form.id ? "rotate-180" : ""}`
+                    }
+                  ),
+                  form.name
+                ] }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground", children: form.createdBy }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", className: "text-xs", children: form.target }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right text-muted-foreground", children: form.sentTo }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right font-medium text-foreground", children: form.responses }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "span",
+                  {
+                    className: `text-xs font-semibold ${form.responses / form.sentTo >= 0.75 ? "text-green-600" : form.responses / form.sentTo >= 0.5 ? "text-yellow-600" : "text-red-500"}`,
+                    children: [
+                      Math.round(form.responses / form.sentTo * 100),
+                      "%"
+                    ]
+                  }
+                ) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$5(form.status) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground text-xs", children: new Date(form.createdDate).toLocaleDateString("en-IN", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric"
+                }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "td",
+                  {
+                    className: "px-4 py-3",
+                    onClick: (e3) => e3.stopPropagation(),
+                    onKeyDown: (e3) => e3.stopPropagation(),
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1 flex-wrap", children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        Button,
+                        {
+                          size: "sm",
+                          variant: "outline",
+                          className: "h-7 text-xs",
+                          onClick: () => setResponseSheetForm(form),
+                          "data-ocid": `forms.view_responses.${form.id}`,
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Eye, { size: 12, className: "mr-1" }),
+                            " Responses"
+                          ]
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        Button,
+                        {
+                          size: "sm",
+                          variant: "outline",
+                          className: "h-7 text-xs",
+                          onClick: () => handleSend(form),
+                          "data-ocid": `forms.send.${form.id}`,
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(Send, { size: 12, className: "mr-1" }),
+                            " Send"
+                          ]
+                        }
+                      ),
+                      form.status !== "Closed" ? /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Button,
+                        {
+                          size: "sm",
+                          variant: "ghost",
+                          className: "h-7 text-xs text-muted-foreground hover:text-destructive",
+                          onClick: () => handleClose(form.id),
+                          "data-ocid": `forms.close.${form.id}`,
+                          children: "Close"
+                        }
+                      ) : /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                        Button,
+                        {
+                          size: "sm",
+                          variant: "ghost",
+                          className: "h-7 text-xs text-destructive hover:text-destructive",
+                          onClick: () => handleDelete(form.id),
+                          "data-ocid": `forms.delete.${form.id}`,
+                          children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 12, className: "mr-1" }),
+                            " Delete"
+                          ]
+                        }
+                      )
+                    ] })
+                  }
+                )
+              ]
+            }
+          ),
+          expandedRow === form.id && /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "tr",
+            {
+              className: "bg-muted/10 border-b border-border",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { colSpan: 9, className: "px-6 py-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs font-semibold text-muted-foreground mb-2", children: [
+                  "Form Fields (",
+                  form.fields.length,
+                  ")"
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex flex-wrap gap-2", children: form.fields.map((f2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  "div",
+                  {
+                    className: "flex items-center gap-1.5 bg-card border border-border rounded-lg px-2.5 py-1.5 text-xs",
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        Badge,
+                        {
+                          variant: "outline",
+                          className: "text-[10px] px-1.5 py-0",
+                          children: f2.type
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-medium text-foreground", children: f2.label }),
+                      f2.required && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-red-500 text-[10px] font-bold", children: "*" })
+                    ]
+                  },
+                  f2.label
+                )) })
+              ] })
+            },
+            `${form.id}-fields`
+          )
+        ] }, form.id)) })
+      ] }),
+      filtered.length === 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: "text-center py-12 text-muted-foreground",
+          "data-ocid": "forms.empty_state",
+          children: "No forms match your filters."
+        }
+      )
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Sheet,
+      {
+        open: !!responseSheetForm,
+        onOpenChange: (o2) => !o2 && setResponseSheetForm(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          SheetContent,
+          {
+            side: "right",
+            className: "w-full sm:max-w-2xl overflow-y-auto",
+            "data-ocid": "forms.responses.sheet",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SheetHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SheetTitle, { children: [
+                responseSheetForm == null ? void 0 : responseSheetForm.name,
+                " — Responses"
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 space-y-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 text-sm text-muted-foreground", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                    responseSheetForm == null ? void 0 : responseSheetForm.responses,
+                    " responded"
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "·" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                    ((responseSheetForm == null ? void 0 : responseSheetForm.sentTo) ?? 0) - ((responseSheetForm == null ? void 0 : responseSheetForm.responses) ?? 0),
+                    " ",
+                    "pending"
+                  ] })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "rounded-xl border border-border overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-xs", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-muted/30 border-b border-border", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Name" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Role" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Class" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Responded" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Date" }),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-3 py-2.5 font-semibold text-muted-foreground", children: "Action" })
+                  ] }) }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: responseData.map((r2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    "tr",
+                    {
+                      className: "border-b border-border last:border-0 hover:bg-muted/10",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5 font-medium text-foreground", children: r2.name }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5 text-muted-foreground", children: r2.role }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5 text-muted-foreground", children: r2.class }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5", children: r2.responded ? /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/15 text-green-700 border-green-300 text-[10px]", children: "Yes" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          Badge,
+                          {
+                            variant: "outline",
+                            className: "text-muted-foreground text-[10px]",
+                            children: "No"
+                          }
+                        ) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5 text-muted-foreground", children: r2.responseDate }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2.5", children: r2.responded && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                          Button,
+                          {
+                            size: "sm",
+                            variant: "ghost",
+                            className: "h-6 text-[10px] px-2",
+                            onClick: () => setViewResponseRecipient({
+                              name: r2.name,
+                              fieldValues: r2.fieldValues
+                            }),
+                            "data-ocid": `forms.view_response.${r2.id}`,
+                            children: "View"
+                          }
+                        ) })
+                      ]
+                    },
+                    r2.id
+                  )) })
+                ] }) })
+              ] })
+            ]
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: !!viewResponseRecipient,
+        onOpenChange: (o2) => !o2 && setViewResponseRecipient(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          DialogContent,
+          {
+            className: "max-w-md",
+            "data-ocid": "forms.response_detail.dialog",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { children: [
+                "Response — ",
+                viewResponseRecipient == null ? void 0 : viewResponseRecipient.name
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-3 mt-2", children: viewResponseRecipient == null ? void 0 : viewResponseRecipient.fieldValues.map((fv) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide", children: fv.label }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-foreground bg-muted/30 rounded-lg px-3 py-2", children: fv.value || "—" })
+              ] }, fv.label)) })
+            ]
+          }
+        )
+      }
+    )
   ] });
 }
 const INITIAL_ALBUMS = [
@@ -84452,287 +87220,6 @@ function GrievancePage() {
       }
     )
   ] });
-}
-var CHECKBOX_NAME = "Checkbox";
-var [createCheckboxContext] = createContextScope$1(CHECKBOX_NAME);
-var [CheckboxProviderImpl, useCheckboxContext] = createCheckboxContext(CHECKBOX_NAME);
-function CheckboxProvider(props) {
-  const {
-    __scopeCheckbox,
-    checked: checkedProp,
-    children,
-    defaultChecked,
-    disabled,
-    form,
-    name,
-    onCheckedChange,
-    required,
-    value = "on",
-    // @ts-expect-error
-    internal_do_not_use_render
-  } = props;
-  const [checked, setChecked] = useControllableState({
-    prop: checkedProp,
-    defaultProp: defaultChecked ?? false,
-    onChange: onCheckedChange,
-    caller: CHECKBOX_NAME
-  });
-  const [control, setControl] = reactExports.useState(null);
-  const [bubbleInput, setBubbleInput] = reactExports.useState(null);
-  const hasConsumerStoppedPropagationRef = reactExports.useRef(false);
-  const isFormControl = control ? !!form || !!control.closest("form") : (
-    // We set this to true by default so that events bubble to forms without JS (SSR)
-    true
-  );
-  const context = {
-    checked,
-    disabled,
-    setChecked,
-    control,
-    setControl,
-    name,
-    form,
-    value,
-    hasConsumerStoppedPropagationRef,
-    required,
-    defaultChecked: isIndeterminate(defaultChecked) ? false : defaultChecked,
-    isFormControl,
-    bubbleInput,
-    setBubbleInput
-  };
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    CheckboxProviderImpl,
-    {
-      scope: __scopeCheckbox,
-      ...context,
-      children: isFunction(internal_do_not_use_render) ? internal_do_not_use_render(context) : children
-    }
-  );
-}
-var TRIGGER_NAME$2 = "CheckboxTrigger";
-var CheckboxTrigger = reactExports.forwardRef(
-  ({ __scopeCheckbox, onKeyDown, onClick, ...checkboxProps }, forwardedRef) => {
-    const {
-      control,
-      value,
-      disabled,
-      checked,
-      required,
-      setControl,
-      setChecked,
-      hasConsumerStoppedPropagationRef,
-      isFormControl,
-      bubbleInput
-    } = useCheckboxContext(TRIGGER_NAME$2, __scopeCheckbox);
-    const composedRefs = useComposedRefs(forwardedRef, setControl);
-    const initialCheckedStateRef = reactExports.useRef(checked);
-    reactExports.useEffect(() => {
-      const form = control == null ? void 0 : control.form;
-      if (form) {
-        const reset = () => setChecked(initialCheckedStateRef.current);
-        form.addEventListener("reset", reset);
-        return () => form.removeEventListener("reset", reset);
-      }
-    }, [control, setChecked]);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Primitive$1.button,
-      {
-        type: "button",
-        role: "checkbox",
-        "aria-checked": isIndeterminate(checked) ? "mixed" : checked,
-        "aria-required": required,
-        "data-state": getState$2(checked),
-        "data-disabled": disabled ? "" : void 0,
-        disabled,
-        value,
-        ...checkboxProps,
-        ref: composedRefs,
-        onKeyDown: composeEventHandlers(onKeyDown, (event) => {
-          if (event.key === "Enter") event.preventDefault();
-        }),
-        onClick: composeEventHandlers(onClick, (event) => {
-          setChecked((prevChecked) => isIndeterminate(prevChecked) ? true : !prevChecked);
-          if (bubbleInput && isFormControl) {
-            hasConsumerStoppedPropagationRef.current = event.isPropagationStopped();
-            if (!hasConsumerStoppedPropagationRef.current) event.stopPropagation();
-          }
-        })
-      }
-    );
-  }
-);
-CheckboxTrigger.displayName = TRIGGER_NAME$2;
-var Checkbox$1 = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const {
-      __scopeCheckbox,
-      name,
-      checked,
-      defaultChecked,
-      required,
-      disabled,
-      value,
-      onCheckedChange,
-      form,
-      ...checkboxProps
-    } = props;
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
-      CheckboxProvider,
-      {
-        __scopeCheckbox,
-        checked,
-        defaultChecked,
-        disabled,
-        required,
-        onCheckedChange,
-        name,
-        form,
-        value,
-        internal_do_not_use_render: ({ isFormControl }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx(
-            CheckboxTrigger,
-            {
-              ...checkboxProps,
-              ref: forwardedRef,
-              __scopeCheckbox
-            }
-          ),
-          isFormControl && /* @__PURE__ */ jsxRuntimeExports.jsx(
-            CheckboxBubbleInput,
-            {
-              __scopeCheckbox
-            }
-          )
-        ] })
-      }
-    );
-  }
-);
-Checkbox$1.displayName = CHECKBOX_NAME;
-var INDICATOR_NAME = "CheckboxIndicator";
-var CheckboxIndicator = reactExports.forwardRef(
-  (props, forwardedRef) => {
-    const { __scopeCheckbox, forceMount, ...indicatorProps } = props;
-    const context = useCheckboxContext(INDICATOR_NAME, __scopeCheckbox);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Presence,
-      {
-        present: forceMount || isIndeterminate(context.checked) || context.checked === true,
-        children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-          Primitive$1.span,
-          {
-            "data-state": getState$2(context.checked),
-            "data-disabled": context.disabled ? "" : void 0,
-            ...indicatorProps,
-            ref: forwardedRef,
-            style: { pointerEvents: "none", ...props.style }
-          }
-        )
-      }
-    );
-  }
-);
-CheckboxIndicator.displayName = INDICATOR_NAME;
-var BUBBLE_INPUT_NAME = "CheckboxBubbleInput";
-var CheckboxBubbleInput = reactExports.forwardRef(
-  ({ __scopeCheckbox, ...props }, forwardedRef) => {
-    const {
-      control,
-      hasConsumerStoppedPropagationRef,
-      checked,
-      defaultChecked,
-      required,
-      disabled,
-      name,
-      value,
-      form,
-      bubbleInput,
-      setBubbleInput
-    } = useCheckboxContext(BUBBLE_INPUT_NAME, __scopeCheckbox);
-    const composedRefs = useComposedRefs(forwardedRef, setBubbleInput);
-    const prevChecked = usePrevious(checked);
-    const controlSize = useSize(control);
-    reactExports.useEffect(() => {
-      const input = bubbleInput;
-      if (!input) return;
-      const inputProto = window.HTMLInputElement.prototype;
-      const descriptor = Object.getOwnPropertyDescriptor(
-        inputProto,
-        "checked"
-      );
-      const setChecked = descriptor.set;
-      const bubbles = !hasConsumerStoppedPropagationRef.current;
-      if (prevChecked !== checked && setChecked) {
-        const event = new Event("click", { bubbles });
-        input.indeterminate = isIndeterminate(checked);
-        setChecked.call(input, isIndeterminate(checked) ? false : checked);
-        input.dispatchEvent(event);
-      }
-    }, [bubbleInput, prevChecked, checked, hasConsumerStoppedPropagationRef]);
-    const defaultCheckedRef = reactExports.useRef(isIndeterminate(checked) ? false : checked);
-    return /* @__PURE__ */ jsxRuntimeExports.jsx(
-      Primitive$1.input,
-      {
-        type: "checkbox",
-        "aria-hidden": true,
-        defaultChecked: defaultChecked ?? defaultCheckedRef.current,
-        required,
-        disabled,
-        name,
-        value,
-        form,
-        ...props,
-        tabIndex: -1,
-        ref: composedRefs,
-        style: {
-          ...props.style,
-          ...controlSize,
-          position: "absolute",
-          pointerEvents: "none",
-          opacity: 0,
-          margin: 0,
-          // We transform because the input is absolutely positioned but we have
-          // rendered it **after** the button. This pulls it back to sit on top
-          // of the button.
-          transform: "translateX(-100%)"
-        }
-      }
-    );
-  }
-);
-CheckboxBubbleInput.displayName = BUBBLE_INPUT_NAME;
-function isFunction(value) {
-  return typeof value === "function";
-}
-function isIndeterminate(checked) {
-  return checked === "indeterminate";
-}
-function getState$2(checked) {
-  return isIndeterminate(checked) ? "indeterminate" : checked ? "checked" : "unchecked";
-}
-function Checkbox({
-  className,
-  ...props
-}) {
-  return /* @__PURE__ */ jsxRuntimeExports.jsx(
-    Checkbox$1,
-    {
-      "data-slot": "checkbox",
-      className: cn(
-        "peer border-input dark:bg-input/30 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground dark:data-[state=checked]:bg-primary data-[state=checked]:border-primary focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive size-4 shrink-0 rounded-[4px] border shadow-xs transition-shadow outline-none focus-visible:ring-[3px] disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      ),
-      ...props,
-      children: /* @__PURE__ */ jsxRuntimeExports.jsx(
-        CheckboxIndicator,
-        {
-          "data-slot": "checkbox-indicator",
-          className: "flex items-center justify-center text-current transition-none",
-          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "size-3.5" })
-        }
-      )
-    }
-  );
 }
 const mockHealthRecords = [
   {
@@ -86558,7 +89045,7 @@ const mockLeaveBalances = [
     usedEmergency: 0
   }
 ];
-const statusBadge$2 = (s2) => {
+const statusBadge$4 = (s2) => {
   if (s2 === "Approved")
     return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/15 text-green-600 border-green-200", children: "Approved" });
   if (s2 === "Rejected")
@@ -86668,7 +89155,7 @@ function LeaveManagementPage() {
                 l2.rejectionReason
               ] })
             ] }),
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$2(l2.status) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: statusBadge$4(l2.status) }),
             /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: l2.status === "Pending" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
               /* @__PURE__ */ jsxRuntimeExports.jsxs(
                 Button,
@@ -88085,7 +90572,7 @@ const RECORDING_DURATIONS = {
   oc2: "44:12",
   oc3: "38:55"
 };
-const EMPTY_FORM = {
+const EMPTY_FORM$1 = {
   title: "",
   subject: "",
   class: "",
@@ -88100,7 +90587,7 @@ const EMPTY_FORM = {
 function OnlineClassPage() {
   const [classes, setClasses] = reactExports.useState(initialClasses);
   const [createOpen, setCreateOpen] = reactExports.useState(false);
-  const [form, setForm] = reactExports.useState(EMPTY_FORM);
+  const [form, setForm] = reactExports.useState(EMPTY_FORM$1);
   const liveClasses = classes.filter((c2) => c2.status === "Live");
   const recordings = classes.filter((c2) => c2.status === "Completed");
   function handleCreate() {
@@ -88122,7 +90609,7 @@ function OnlineClassPage() {
     };
     setClasses((prev) => [newClass, ...prev]);
     setCreateOpen(false);
-    setForm(EMPTY_FORM);
+    setForm(EMPTY_FORM$1);
     ue.success("Class scheduled successfully");
   }
   function endClass(id) {
@@ -89267,6 +91754,551 @@ function RoleCard({ roleCount }) {
       ]
     }
   );
+}
+const mockPaymentPlans = [
+  {
+    id: "pp1",
+    studentName: "Arjun Sharma",
+    className: "VII-A",
+    totalFee: 24e3,
+    instalments: 4,
+    paid: 2,
+    nextDue: "2026-10-01",
+    nextAmount: 6e3,
+    status: "On Track",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 6e3, status: "Paid" },
+      { no: 2, dueDate: "2026-07-01", amount: 6e3, status: "Paid" },
+      { no: 3, dueDate: "2026-10-01", amount: 6e3, status: "Pending" },
+      { no: 4, dueDate: "2027-01-01", amount: 6e3, status: "Pending" }
+    ]
+  },
+  {
+    id: "pp2",
+    studentName: "Priya Singh",
+    className: "VI-B",
+    totalFee: 18500,
+    instalments: 3,
+    paid: 1,
+    nextDue: "2026-09-01",
+    nextAmount: 6167,
+    status: "Overdue",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 6167, status: "Paid" },
+      { no: 2, dueDate: "2026-09-01", amount: 6167, status: "Overdue" },
+      { no: 3, dueDate: "2027-01-01", amount: 6166, status: "Pending" }
+    ]
+  },
+  {
+    id: "pp3",
+    studentName: "Rohan Mehta",
+    className: "IX-C",
+    totalFee: 3e4,
+    instalments: 6,
+    paid: 3,
+    nextDue: "2026-10-01",
+    nextAmount: 5e3,
+    status: "On Track",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 5e3, status: "Paid" },
+      { no: 2, dueDate: "2026-05-01", amount: 5e3, status: "Paid" },
+      { no: 3, dueDate: "2026-06-01", amount: 5e3, status: "Paid" },
+      { no: 4, dueDate: "2026-10-01", amount: 5e3, status: "Pending" },
+      { no: 5, dueDate: "2026-11-01", amount: 5e3, status: "Pending" },
+      { no: 6, dueDate: "2026-12-01", amount: 5e3, status: "Pending" }
+    ]
+  },
+  {
+    id: "pp4",
+    studentName: "Kavya Patel",
+    className: "VIII-B",
+    totalFee: 26e3,
+    instalments: 2,
+    paid: 2,
+    nextDue: null,
+    nextAmount: 0,
+    status: "Completed",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 13e3, status: "Paid" },
+      { no: 2, dueDate: "2026-10-01", amount: 13e3, status: "Paid" }
+    ]
+  },
+  {
+    id: "pp5",
+    studentName: "Aditya Kumar",
+    className: "X-A",
+    totalFee: 32e3,
+    instalments: 4,
+    paid: 1,
+    nextDue: "2026-07-01",
+    nextAmount: 8e3,
+    status: "Overdue",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 8e3, status: "Paid" },
+      { no: 2, dueDate: "2026-07-01", amount: 8e3, status: "Overdue" },
+      { no: 3, dueDate: "2026-10-01", amount: 8e3, status: "Pending" },
+      { no: 4, dueDate: "2027-01-01", amount: 8e3, status: "Pending" }
+    ]
+  },
+  {
+    id: "pp6",
+    studentName: "Sneha Joshi",
+    className: "XI-Science",
+    totalFee: 35e3,
+    instalments: 4,
+    paid: 2,
+    nextDue: "2026-10-01",
+    nextAmount: 8750,
+    status: "On Track",
+    schedule: [
+      { no: 1, dueDate: "2026-04-01", amount: 8750, status: "Paid" },
+      { no: 2, dueDate: "2026-07-01", amount: 8750, status: "Paid" },
+      { no: 3, dueDate: "2026-10-01", amount: 8750, status: "Pending" },
+      { no: 4, dueDate: "2027-01-01", amount: 8750, status: "Pending" }
+    ]
+  }
+];
+function fmt$2(n2) {
+  return `₹${n2.toLocaleString("en-IN")}`;
+}
+function fmtDate(d2) {
+  return new Date(d2).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric"
+  });
+}
+function statusBadge$3(s2) {
+  if (s2 === "On Track")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/20 text-green-700 border-green-500/30", children: "On Track" });
+  if (s2 === "Overdue")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-500/20 text-red-700 border-red-500/30", children: "Overdue" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", children: "Completed" });
+}
+function instalmentBadge(s2) {
+  if (s2 === "Paid")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-500/20 text-green-700 border-green-500/30", children: "Paid" });
+  if (s2 === "Overdue")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-500/20 text-red-700 border-red-500/30", children: "Overdue" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "outline", children: "Pending" });
+}
+function addMonths(dateStr, n2) {
+  const d2 = new Date(dateStr);
+  d2.setMonth(d2.getMonth() + n2);
+  return d2.toISOString().split("T")[0];
+}
+function PaymentPlansPage() {
+  const [plans, setPlans] = reactExports.useState(mockPaymentPlans);
+  const [createOpen, setCreateOpen] = reactExports.useState(false);
+  const [viewPlan, setViewPlan] = reactExports.useState(null);
+  const [search, setSearch] = reactExports.useState("");
+  const [fStudentId, setFStudentId] = reactExports.useState("");
+  const [fStudentSearch, setFStudentSearch] = reactExports.useState("");
+  const [fTotal, setFTotal] = reactExports.useState("");
+  const [fInstalments, setFInstalments] = reactExports.useState("4");
+  const [fStartDate, setFStartDate] = reactExports.useState("2026-04-01");
+  const [fFrequency, setFFrequency] = reactExports.useState("Monthly");
+  const fStudent = mockStudents.find((s2) => s2.id === fStudentId);
+  const nInst = Number.parseInt(fInstalments) || 4;
+  const totalAmt = Number.parseFloat(fTotal) || 0;
+  const baseAmt = totalAmt > 0 ? Math.floor(totalAmt / nInst) : 0;
+  const freqMonths = {
+    Monthly: 1,
+    Quarterly: 3,
+    Termly: 4
+  };
+  const previewSchedule = Array.from(
+    { length: nInst },
+    (_2, i) => ({
+      no: i + 1,
+      dueDate: addMonths(fStartDate, i * (freqMonths[fFrequency] ?? 1)),
+      amount: i === nInst - 1 ? totalAmt - baseAmt * (nInst - 1) : baseAmt,
+      status: "Pending"
+    })
+  );
+  function handleCreate() {
+    var _a3, _b3;
+    if (!fStudentId) {
+      ue.error("Please select a student");
+      return;
+    }
+    if (!totalAmt) {
+      ue.error("Enter total fee amount");
+      return;
+    }
+    const newPlan = {
+      id: `pp${Date.now()}`,
+      studentName: (fStudent == null ? void 0 : fStudent.name) ?? "Unknown",
+      className: fStudent ? `${fStudent.className}-${fStudent.section}` : "",
+      totalFee: totalAmt,
+      instalments: nInst,
+      paid: 0,
+      nextDue: ((_a3 = previewSchedule[0]) == null ? void 0 : _a3.dueDate) ?? null,
+      nextAmount: ((_b3 = previewSchedule[0]) == null ? void 0 : _b3.amount) ?? 0,
+      status: "On Track",
+      schedule: previewSchedule
+    };
+    setPlans((prev) => [newPlan, ...prev]);
+    setCreateOpen(false);
+    setFStudentId("");
+    setFTotal("");
+    setFInstalments("4");
+    setFStartDate("2026-04-01");
+    ue.success("Payment plan created successfully");
+  }
+  function markPaid(planId, instNo) {
+    setPlans(
+      (prev) => prev.map((p2) => {
+        if (p2.id !== planId) return p2;
+        const newSched = p2.schedule.map(
+          (s2) => s2.no === instNo ? { ...s2, status: "Paid" } : s2
+        );
+        const paid = newSched.filter((s2) => s2.status === "Paid").length;
+        const next = newSched.find((s2) => s2.status !== "Paid");
+        const completed = paid === p2.instalments;
+        return {
+          ...p2,
+          schedule: newSched,
+          paid,
+          nextDue: (next == null ? void 0 : next.dueDate) ?? null,
+          nextAmount: (next == null ? void 0 : next.amount) ?? 0,
+          status: completed ? "Completed" : "On Track"
+        };
+      })
+    );
+    if (viewPlan) {
+      setViewPlan(
+        (prev) => prev ? {
+          ...prev,
+          schedule: prev.schedule.map(
+            (s2) => s2.no === instNo ? { ...s2, status: "Paid" } : s2
+          )
+        } : null
+      );
+    }
+    ue.success("Instalment marked as paid");
+  }
+  const filteredPlans = plans.filter(
+    (p2) => p2.studentName.toLowerCase().includes(search.toLowerCase()) || p2.className.toLowerCase().includes(search.toLowerCase())
+  );
+  const totals = {
+    total: plans.length,
+    onTrack: plans.filter((p2) => p2.status === "On Track").length,
+    overdue: plans.filter((p2) => p2.status === "Overdue").length,
+    outstanding: plans.filter((p2) => p2.status !== "Completed").reduce(
+      (s2, p2) => s2 + (p2.totalFee - p2.paid * Math.round(p2.totalFee / p2.instalments)),
+      0
+    )
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Payment Plans" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-0.5", children: "Manage instalment schedules and fee payment plans" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: () => setCreateOpen(true), "data-ocid": "create-plan-btn", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16, className: "mr-2" }),
+        " Create Payment Plan"
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
+      {
+        label: "Total Plans",
+        value: totals.total,
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 20 }),
+        color: "text-primary"
+      },
+      {
+        label: "On Track",
+        value: totals.onTrack,
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 20 }),
+        color: "text-green-600"
+      },
+      {
+        label: "Overdue Plans",
+        value: totals.overdue,
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { size: 20 }),
+        color: "text-red-600"
+      },
+      {
+        label: "Total Outstanding",
+        value: fmt$2(totals.outstanding),
+        icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleAlert, { size: 20 }),
+        color: "text-yellow-600"
+      }
+    ].map((c2) => /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6 flex items-center gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: `${c2.color} p-2 rounded-full bg-muted/60`, children: c2.icon }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: c2.label }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xl font-bold text-foreground", children: c2.value })
+      ] })
+    ] }) }, c2.label)) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(CardHeader, { className: "flex flex-row items-center justify-between pb-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-base", children: "All Payment Plans" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            placeholder: "Search student...",
+            value: search,
+            onChange: (e3) => setSearch(e3.target.value),
+            className: "w-52 h-8 text-sm",
+            "data-ocid": "plans-search"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "p-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Class" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Total Fee" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-center", children: "Instalments" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-center", children: "Paid" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Next Due" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Next Amount" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Status" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Actions" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filteredPlans.map((p2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { "data-ocid": `plan-row-${p2.id}`, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-medium", children: p2.studentName }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: p2.className }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right", children: fmt$2(p2.totalFee) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-center", children: p2.instalments }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { className: "text-center", children: [
+            p2.paid,
+            "/",
+            p2.instalments
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: p2.nextDue ? fmtDate(p2.nextDue) : "—" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right", children: p2.nextAmount ? fmt$2(p2.nextAmount) : "—" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: statusBadge$3(p2.status) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                variant: "outline",
+                onClick: () => setViewPlan(p2),
+                "data-ocid": `view-plan-${p2.id}`,
+                children: "View"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                variant: "ghost",
+                onClick: () => {
+                  window.open(
+                    `https://wa.me/?text=Fee+reminder+for+${encodeURIComponent(p2.studentName)}`
+                  );
+                  ue.info("Opening WhatsApp...");
+                },
+                "data-ocid": `send-reminder-${p2.id}`,
+                children: "Remind"
+              }
+            )
+          ] }) })
+        ] }, p2.id)) })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: createOpen, onOpenChange: setCreateOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-lg max-h-[85vh] overflow-y-auto", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Create Payment Plan" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 py-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              placeholder: "Search student...",
+              value: fStudentSearch,
+              onChange: (e3) => setFStudentSearch(e3.target.value),
+              className: "mt-1",
+              "data-ocid": "new-plan-student-search"
+            }
+          ),
+          fStudentSearch && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border rounded mt-1 max-h-32 overflow-y-auto", children: mockStudents.filter(
+            (s2) => s2.name.toLowerCase().includes(fStudentSearch.toLowerCase())
+          ).slice(0, 8).map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: "px-3 py-1.5 text-sm cursor-pointer hover:bg-muted",
+              onClick: () => {
+                setFStudentId(s2.id);
+                setFTotal(String(s2.feeDue));
+                setFStudentSearch("");
+              },
+              onKeyDown: (e3) => {
+                if (e3.key === "Enter") {
+                  setFStudentId(s2.id);
+                  setFTotal(String(s2.feeDue));
+                  setFStudentSearch("");
+                }
+              },
+              children: [
+                s2.name,
+                " — ",
+                s2.className,
+                "-",
+                s2.section
+              ]
+            },
+            s2.id
+          )) }),
+          fStudent && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs mt-1 text-muted-foreground", children: [
+            "Selected: ",
+            fStudent.name,
+            " | Outstanding:",
+            " ",
+            fmt$2(fStudent.feeDue)
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Total Fee Amount (₹)" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                type: "number",
+                value: fTotal,
+                onChange: (e3) => setFTotal(e3.target.value),
+                placeholder: "0",
+                className: "mt-1",
+                "data-ocid": "new-plan-total"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Number of Instalments" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: fInstalments, onValueChange: setFInstalments, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: ["2", "3", "4", "6", "12"].map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: n2, children: n2 }, n2)) })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Start Date" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                type: "date",
+                value: fStartDate,
+                onChange: (e3) => setFStartDate(e3.target.value),
+                className: "mt-1",
+                "data-ocid": "new-plan-start"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Frequency" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: fFrequency, onValueChange: setFFrequency, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "mt-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Monthly", children: "Monthly" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Quarterly", children: "Quarterly" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Termly", children: "Termly" })
+              ] })
+            ] })
+          ] })
+        ] }),
+        totalAmt > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs text-muted-foreground", children: "Generated Schedule" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border rounded mt-1 overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { className: "text-xs", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "py-1", children: "#" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "py-1", children: "Due Date" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "py-1 text-right", children: "Amount" })
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: previewSchedule.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { className: "text-xs", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "py-1", children: s2.no }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "py-1", children: fmtDate(s2.dueDate) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "py-1 text-right", children: fmt$2(s2.amount) })
+            ] }, s2.no)) })
+          ] }) })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setCreateOpen(false), children: "Cancel" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleCreate, "data-ocid": "create-plan-submit", children: "Create Plan" })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Sheet, { open: !!viewPlan, onOpenChange: () => setViewPlan(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SheetContent, { className: "w-full sm:max-w-xl overflow-y-auto", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(SheetHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(SheetTitle, { children: [
+        "Payment Plan — ",
+        viewPlan == null ? void 0 : viewPlan.studentName
+      ] }) }),
+      viewPlan && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-4 space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-sm bg-muted/40 rounded p-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Class: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: viewPlan.className })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Total: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt$2(viewPlan.totalFee) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Instalments: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: viewPlan.instalments })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Paid:",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+              viewPlan.paid,
+              "/",
+              viewPlan.instalments
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "#" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Due Date" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Amount" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Status" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Action" })
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: viewPlan.schedule.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            TableRow,
+            {
+              className: s2.status === "Overdue" ? "bg-red-500/5" : "",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: s2.no }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: fmtDate(s2.dueDate) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right", children: fmt$2(s2.amount) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: instalmentBadge(s2.status) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: s2.status !== "Paid" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      size: "sm",
+                      variant: "outline",
+                      className: "h-7 text-xs",
+                      onClick: () => markPaid(viewPlan.id, s2.no),
+                      "data-ocid": `mark-paid-${viewPlan.id}-${s2.no}`,
+                      children: "Mark Paid"
+                    }
+                  ),
+                  s2.status === "Overdue" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      size: "sm",
+                      variant: "ghost",
+                      className: "h-7 text-xs",
+                      onClick: () => ue.info("Reminder sent via WhatsApp"),
+                      "data-ocid": `remind-overdue-${s2.no}`,
+                      children: "Remind"
+                    }
+                  )
+                ] }) })
+              ]
+            },
+            s2.no
+          )) })
+        ] })
+      ] })
+    ] }) })
+  ] });
 }
 const sixMonthsFromNow = () => {
   const d2 = /* @__PURE__ */ new Date();
@@ -90787,6 +93819,546 @@ function PythonBackendReferencePage() {
         )
       ] })
     ] })
+  ] });
+}
+const initialTxns = [
+  {
+    id: "TXN-2026-001",
+    student: "Arjun Sharma",
+    class: "VII-A",
+    amount: 6e3,
+    method: "UPI",
+    time: "09:14 AM",
+    status: "Reconciled",
+    feeHead: "Tuition Fee",
+    balBefore: 12e3,
+    balAfter: 6e3
+  },
+  {
+    id: "TXN-2026-002",
+    student: "Priya Singh",
+    class: "VI-B",
+    amount: 6167,
+    method: "Online Banking",
+    time: "09:32 AM",
+    status: "Reconciled",
+    feeHead: "Tuition Fee Q2",
+    balBefore: 12334,
+    balAfter: 6167
+  },
+  {
+    id: "TXN-2026-003",
+    student: "Rohan Mehta",
+    class: "IX-C",
+    amount: 5e3,
+    method: "UPI",
+    time: "10:05 AM",
+    status: "Reconciled",
+    feeHead: "Monthly Fee Oct",
+    balBefore: 15e3,
+    balAfter: 1e4
+  },
+  {
+    id: "TXN-2026-004",
+    student: "Kavya Patel",
+    class: "VIII-B",
+    amount: 2500,
+    method: "Card",
+    time: "10:45 AM",
+    status: "Pending",
+    feeHead: "",
+    balBefore: 5e3,
+    balAfter: 5e3
+  },
+  {
+    id: "TXN-2026-005",
+    student: "Aditya Kumar",
+    class: "X-A",
+    amount: 8e3,
+    method: "UPI",
+    time: "11:02 AM",
+    status: "Pending",
+    feeHead: "",
+    balBefore: 24e3,
+    balAfter: 24e3
+  },
+  {
+    id: "TXN-2026-006",
+    student: "Sneha Joshi",
+    class: "XI-Science",
+    amount: 8750,
+    method: "Online Banking",
+    time: "11:20 AM",
+    status: "Reconciled",
+    feeHead: "Term 3 Fee",
+    balBefore: 17500,
+    balAfter: 8750
+  },
+  {
+    id: "TXN-2026-007",
+    student: "Unknown",
+    class: "-",
+    amount: 3200,
+    method: "UPI",
+    time: "11:45 AM",
+    status: "Mismatch",
+    feeHead: "",
+    balBefore: 0,
+    balAfter: 0
+  },
+  {
+    id: "TXN-2026-008",
+    student: "Rahul Verma",
+    class: "VII-B",
+    amount: 6e3,
+    method: "UPI",
+    time: "12:10 PM",
+    status: "Reconciled",
+    feeHead: "Tuition Fee Q3",
+    balBefore: 12e3,
+    balAfter: 6e3
+  },
+  {
+    id: "TXN-2026-009",
+    student: "Ananya Nair",
+    class: "VIII-A",
+    amount: 4500,
+    method: "Card",
+    time: "12:30 PM",
+    status: "Pending",
+    feeHead: "",
+    balBefore: 9e3,
+    balAfter: 9e3
+  },
+  {
+    id: "TXN-2026-010",
+    student: "Nikhil Das",
+    class: "VI-C",
+    amount: 5500,
+    method: "Online Banking",
+    time: "01:05 PM",
+    status: "Reconciled",
+    feeHead: "Annual Fee",
+    balBefore: 11e3,
+    balAfter: 5500
+  },
+  {
+    id: "TXN-2026-011",
+    student: "Pooja Reddy",
+    class: "IX-A",
+    amount: 7200,
+    method: "UPI",
+    time: "01:45 PM",
+    status: "Reconciled",
+    feeHead: "Tuition + Transport",
+    balBefore: 14400,
+    balAfter: 7200
+  },
+  {
+    id: "TXN-2026-012",
+    student: "Vikram Gupta",
+    class: "X-B",
+    amount: 4e3,
+    method: "Card",
+    time: "02:15 PM",
+    status: "Pending",
+    feeHead: "",
+    balBefore: 8e3,
+    balAfter: 8e3
+  },
+  {
+    id: "TXN-2026-013",
+    student: "Unknown",
+    class: "-",
+    amount: 1500,
+    method: "UPI",
+    time: "02:40 PM",
+    status: "Mismatch",
+    feeHead: "",
+    balBefore: 0,
+    balAfter: 0
+  },
+  {
+    id: "TXN-2026-014",
+    student: "Deepa Menon",
+    class: "XI-Commerce",
+    amount: 9500,
+    method: "Online Banking",
+    time: "03:00 PM",
+    status: "Reconciled",
+    feeHead: "Senior Fee Q3",
+    balBefore: 19e3,
+    balAfter: 9500
+  },
+  {
+    id: "TXN-2026-015",
+    student: "Rohit Jain",
+    class: "XII-Science",
+    amount: 1e4,
+    method: "UPI",
+    time: "03:20 PM",
+    status: "Reconciled",
+    feeHead: "Board Year Fee",
+    balBefore: 2e4,
+    balAfter: 1e4
+  },
+  {
+    id: "TXN-2026-016",
+    student: "Sita Rao",
+    class: "VII-C",
+    amount: 5800,
+    method: "Card",
+    time: "03:50 PM",
+    status: "Pending",
+    feeHead: "",
+    balBefore: 11600,
+    balAfter: 11600
+  },
+  {
+    id: "TXN-2026-017",
+    student: "Ramesh Bhat",
+    class: "IX-B",
+    amount: 6500,
+    method: "UPI",
+    time: "04:10 PM",
+    status: "Reconciled",
+    feeHead: "Tuition Fee Q3",
+    balBefore: 13e3,
+    balAfter: 6500
+  },
+  {
+    id: "TXN-2026-018",
+    student: "Geeta Pillai",
+    class: "VIII-C",
+    amount: 7e3,
+    method: "Online Banking",
+    time: "04:30 PM",
+    status: "Reconciled",
+    feeHead: "Annual Dev Fee",
+    balBefore: 14e3,
+    balAfter: 7e3
+  }
+];
+function fmt$1(n2) {
+  return `₹${n2.toLocaleString("en-IN")}`;
+}
+function statusBadge$2(s2) {
+  if (s2 === "Reconciled")
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-green-500/20 text-green-700 border-green-500/30 gap-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 12 }),
+      "Reconciled"
+    ] });
+  if (s2 === "Pending")
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-yellow-500/20 text-yellow-700 border-yellow-500/30 gap-1", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 12 }),
+      "Pending"
+    ] });
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-red-500/20 text-red-700 border-red-500/30 gap-1", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 12 }),
+    "Mismatch"
+  ] });
+}
+function ReconciliationPage() {
+  var _a3;
+  const [txns, setTxns] = reactExports.useState(initialTxns);
+  const [tab, setTab] = reactExports.useState(
+    "All"
+  );
+  const [matchDialog, setMatchDialog] = reactExports.useState(null);
+  const [reviewDialog, setReviewDialog] = reactExports.useState(null);
+  const [matchSearch, setMatchSearch] = reactExports.useState("");
+  const [matchStudentId, setMatchStudentId] = reactExports.useState("");
+  function runAutoReconcile() {
+    const pending = txns.filter((t2) => t2.status === "Pending");
+    if (pending.length === 0) {
+      ue.info("No pending transactions to reconcile");
+      return;
+    }
+    setTxns(
+      (prev) => prev.map(
+        (t2) => t2.status === "Pending" ? {
+          ...t2,
+          status: "Reconciled",
+          feeHead: "Auto-Matched Fee",
+          balAfter: t2.balBefore - t2.amount
+        } : t2
+      )
+    );
+    ue.success(`${pending.length} transactions auto-reconciled`);
+  }
+  function handleMatch() {
+    if (!matchStudentId) {
+      ue.error("Select a student to match");
+      return;
+    }
+    const student = mockStudents.find((s2) => s2.id === matchStudentId);
+    if (!matchDialog || !student) return;
+    setTxns(
+      (prev) => prev.map(
+        (t2) => t2.id === matchDialog.id ? {
+          ...t2,
+          status: "Reconciled",
+          student: student.name,
+          class: `${student.className}-${student.section}`,
+          feeHead: "Matched Fee",
+          balAfter: student.feeDue - matchDialog.amount
+        } : t2
+      )
+    );
+    setMatchDialog(null);
+    ue.success("Transaction matched and reconciled");
+  }
+  const filtered = txns.filter((t2) => tab === "All" || t2.status === tab);
+  const stats = {
+    total: txns.reduce((s2, t2) => s2 + t2.amount, 0),
+    reconciled: txns.filter((t2) => t2.status === "Reconciled").length,
+    pending: txns.filter((t2) => t2.status === "Pending").length,
+    rate: Math.round(
+      txns.filter((t2) => t2.status === "Reconciled").length / txns.length * 100
+    )
+  };
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Payment Reconciliation" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-0.5", children: "Auto-match online payments to student outstanding balances" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { onClick: runAutoReconcile, "data-ocid": "auto-reconcile-btn", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(RefreshCw, { size: 16, className: "mr-2" }),
+        " Run Auto-Reconcile"
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 md:grid-cols-4 gap-4", children: [
+      {
+        label: "Total Payments Today",
+        value: fmt$1(stats.total),
+        color: "text-primary"
+      },
+      {
+        label: "Auto-Reconciled",
+        value: stats.reconciled,
+        color: "text-green-600"
+      },
+      {
+        label: "Pending Manual Review",
+        value: stats.pending + txns.filter((t2) => t2.status === "Mismatch").length,
+        color: "text-yellow-600"
+      },
+      {
+        label: "Reconciliation Rate",
+        value: `${stats.rate}%`,
+        color: "text-blue-600"
+      }
+    ].map((c2) => /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground", children: c2.label }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: `text-2xl font-bold mt-1 ${c2.color}`, children: c2.value })
+    ] }) }, c2.label)) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex gap-2", children: ["All", "Reconciled", "Pending", "Mismatch"].map((t2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      Button,
+      {
+        size: "sm",
+        variant: tab === t2 ? "default" : "outline",
+        onClick: () => setTab(t2),
+        "data-ocid": `recon-tab-${t2.toLowerCase()}`,
+        children: [
+          t2,
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "ml-1.5 text-xs opacity-75", children: [
+            "(",
+            t2 === "All" ? txns.length : txns.filter((x3) => x3.status === t2).length,
+            ")"
+          ] })
+        ]
+      },
+      t2
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-base", children: "Transaction Log" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "p-0 overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Txn ID" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Amount" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Method" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Time" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Status" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Fee Head" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Bal Before" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Bal After" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Actions" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: filtered.map((t2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          TableRow,
+          {
+            "data-ocid": `txn-row-${t2.id}`,
+            className: t2.status === "Mismatch" ? "bg-red-500/5" : t2.status === "Pending" ? "bg-yellow-500/5" : "",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-mono text-xs", children: t2.id }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-medium text-sm", children: t2.student }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground", children: t2.class })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right font-medium", children: fmt$1(t2.amount) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm", children: t2.method }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm", children: t2.time }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: statusBadge$2(t2.status) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-sm", children: t2.feeHead || /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground italic", children: "—" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right text-sm", children: t2.balBefore ? fmt$1(t2.balBefore) : "—" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right text-sm", children: t2.balAfter !== t2.balBefore ? fmt$1(t2.balAfter) : "—" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { children: [
+                t2.status === "Pending" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Button,
+                  {
+                    size: "sm",
+                    variant: "outline",
+                    className: "h-7 text-xs",
+                    onClick: () => {
+                      setMatchDialog(t2);
+                      setMatchSearch("");
+                      setMatchStudentId("");
+                    },
+                    "data-ocid": `match-txn-${t2.id}`,
+                    children: "Match"
+                  }
+                ),
+                t2.status === "Mismatch" && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  Button,
+                  {
+                    size: "sm",
+                    variant: "destructive",
+                    className: "h-7 text-xs",
+                    onClick: () => setReviewDialog(t2),
+                    "data-ocid": `review-txn-${t2.id}`,
+                    children: "Review"
+                  }
+                ),
+                t2.status === "Reconciled" && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-xs text-muted-foreground flex items-center gap-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheckBig, { size: 12, className: "text-green-600" }),
+                  "Done"
+                ] })
+              ] })
+            ]
+          },
+          t2.id
+        )) })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: !!matchDialog, onOpenChange: () => setMatchDialog(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-md", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Match Transaction to Student" }) }),
+      matchDialog && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-muted/40 rounded p-3 text-sm space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Txn: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: matchDialog.id })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Amount: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt$1(matchDialog.amount) }),
+            " via",
+            " ",
+            matchDialog.method,
+            " at ",
+            matchDialog.time
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Search Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              placeholder: "Student name or admission no...",
+              value: matchSearch,
+              onChange: (e3) => setMatchSearch(e3.target.value),
+              className: "mt-1",
+              "data-ocid": "match-search"
+            }
+          ),
+          matchSearch && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border rounded mt-1 max-h-36 overflow-y-auto", children: mockStudents.filter(
+            (s2) => s2.name.toLowerCase().includes(matchSearch.toLowerCase()) || s2.admissionNo.toLowerCase().includes(matchSearch.toLowerCase())
+          ).slice(0, 8).map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: `px-3 py-2 text-sm cursor-pointer hover:bg-muted ${matchStudentId === s2.id ? "bg-primary/10 font-medium" : ""}`,
+              onClick: () => {
+                setMatchStudentId(s2.id);
+                setMatchSearch("");
+              },
+              onKeyDown: (e3) => {
+                if (e3.key === "Enter") {
+                  setMatchStudentId(s2.id);
+                  setMatchSearch("");
+                }
+              },
+              children: [
+                s2.name,
+                " — ",
+                s2.className,
+                "-",
+                s2.section,
+                " (Due:",
+                " ",
+                fmt$1(s2.feeDue),
+                ")"
+              ]
+            },
+            s2.id
+          )) }),
+          matchStudentId && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs mt-1 text-muted-foreground", children: [
+            "Selected:",
+            " ",
+            (_a3 = mockStudents.find((s2) => s2.id === matchStudentId)) == null ? void 0 : _a3.name
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setMatchDialog(null), children: "Cancel" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleMatch, "data-ocid": "confirm-match-btn", children: "Confirm & Reconcile" })
+      ] })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: !!reviewDialog, onOpenChange: () => setReviewDialog(null), children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-md", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 18, className: "text-red-600" }),
+        " Transaction Mismatch Review"
+      ] }) }),
+      reviewDialog && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-3 text-sm", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-red-500/10 border border-red-500/20 rounded p-3 space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-medium text-red-700", children: "Discrepancy Detected" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Txn ID: ",
+            reviewDialog.id
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Amount Received: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt$1(reviewDialog.amount) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Method: ",
+            reviewDialog.method,
+            " at ",
+            reviewDialog.time
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Student on Record: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: reviewDialog.student })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground", children: "The payment could not be automatically matched. The sender details do not correspond to any enrolled student. Please verify the UTR/Reference number with the bank or contact the parent directly." })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setReviewDialog(null), children: "Close" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "destructive",
+            onClick: () => {
+              ue.info("Flagged for manual bank reconciliation");
+              setReviewDialog(null);
+            },
+            "data-ocid": "flag-mismatch-btn",
+            children: "Flag for Manual Review"
+          }
+        )
+      ] })
+    ] }) })
   ] });
 }
 function makeVerifyCode(admissionNo) {
@@ -93801,6 +97373,10 @@ function ScholarshipPage() {
               {
                 className: "cursor-pointer hover:bg-muted/50",
                 onClick: () => openDrawer(app),
+                onKeyDown: (e3) => {
+                  if (e3.key === "Enter") openDrawer(app);
+                },
+                tabIndex: 0,
                 "data-ocid": `scholarship.applications.item.${idx + 1}`,
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-medium", children: app.studentName }),
@@ -95041,6 +98617,453 @@ function SettingsPage() {
         ] })
       ] })
     ] })
+  ] });
+}
+const mockSplitBilling = [
+  {
+    id: "sb1",
+    studentId: "s001",
+    studentName: "Arjun Sharma",
+    className: "VII-A",
+    parent1: "Ramesh Sharma",
+    p1Pct: 60,
+    parent2: "Sunita Sharma",
+    p2Pct: 40,
+    totalFee: 24e3,
+    status: "Active"
+  },
+  {
+    id: "sb2",
+    studentId: "s002",
+    studentName: "Priya Singh",
+    className: "VI-B",
+    parent1: "Vikram Singh",
+    p1Pct: 50,
+    parent2: "Meena Singh",
+    p2Pct: 50,
+    totalFee: 18500,
+    status: "Active"
+  },
+  {
+    id: "sb3",
+    studentId: "s003",
+    studentName: "Rohan Mehta",
+    className: "IX-C",
+    parent1: "Suresh Mehta",
+    p1Pct: 70,
+    parent2: "Anita Mehta",
+    p2Pct: 30,
+    totalFee: 3e4,
+    status: "Active"
+  },
+  {
+    id: "sb4",
+    studentId: "s004",
+    studentName: "Kavya Patel",
+    className: "VIII-B",
+    parent1: "Dilip Patel",
+    p1Pct: 50,
+    parent2: "Hema Patel",
+    p2Pct: 50,
+    totalFee: 26e3,
+    status: "Active"
+  },
+  {
+    id: "sb5",
+    studentId: "s005",
+    studentName: "Aditya Kumar",
+    className: "X-A",
+    parent1: "Rajesh Kumar",
+    p1Pct: 60,
+    parent2: "Suman Kumar",
+    p2Pct: 40,
+    totalFee: 32e3,
+    status: "Inactive"
+  },
+  {
+    id: "sb6",
+    studentId: "s006",
+    studentName: "Sneha Joshi",
+    className: "XI-Science",
+    parent1: "Prakash Joshi",
+    p1Pct: 55,
+    parent2: "Leela Joshi",
+    p2Pct: 45,
+    totalFee: 35e3,
+    status: "Active"
+  }
+];
+function fmt(n2) {
+  return `₹${n2.toLocaleString("en-IN")}`;
+}
+function SplitBillingPage() {
+  const [entries, setEntries] = reactExports.useState(mockSplitBilling);
+  const [configOpen, setConfigOpen] = reactExports.useState(false);
+  const [invoiceEntry, setInvoiceEntry] = reactExports.useState(
+    null
+  );
+  const [search, setSearch] = reactExports.useState("");
+  const [selectedStudentId, setSelectedStudentId] = reactExports.useState("");
+  const [p1Name, setP1Name] = reactExports.useState("");
+  const [p2Name, setP2Name] = reactExports.useState("");
+  const [p1Pct, setP1Pct] = reactExports.useState(50);
+  const selectedStudent = mockStudents.find((s2) => s2.id === selectedStudentId);
+  const p2Pct = 100 - p1Pct;
+  const pctValid = p1Pct + p2Pct === 100;
+  const filteredStudents = mockStudents.filter(
+    (s2) => s2.name.toLowerCase().includes(search.toLowerCase()) || s2.admissionNo.toLowerCase().includes(search.toLowerCase())
+  );
+  function handleSave() {
+    if (!selectedStudentId) {
+      ue.error("Please select a student");
+      return;
+    }
+    if (!p1Name.trim()) {
+      ue.error("Parent 1 name is required");
+      return;
+    }
+    if (!p2Name.trim()) {
+      ue.error("Parent 2 name is required");
+      return;
+    }
+    const student = mockStudents.find((s2) => s2.id === selectedStudentId);
+    if (!student) return;
+    const newEntry = {
+      id: `sb${Date.now()}`,
+      studentId: selectedStudentId,
+      studentName: student.name,
+      className: `${student.className}-${student.section}`,
+      parent1: p1Name,
+      p1Pct,
+      parent2: p2Name,
+      p2Pct,
+      totalFee: student.feeDue,
+      status: "Active"
+    };
+    setEntries((prev) => [newEntry, ...prev]);
+    setConfigOpen(false);
+    setSelectedStudentId("");
+    setP1Name("");
+    setP2Name("");
+    setP1Pct(50);
+    ue.success("Split billing configured successfully");
+  }
+  function toggleStatus(id) {
+    setEntries(
+      (prev) => prev.map(
+        (e3) => e3.id === id ? { ...e3, status: e3.status === "Active" ? "Inactive" : "Active" } : e3
+      )
+    );
+    ue.success("Status updated");
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-6", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Split Billing" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm mt-0.5", children: "Configure invoice splitting between two parent/carer accounts" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          onClick: () => setConfigOpen(true),
+          "data-ocid": "split-billing-configure-btn",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16, className: "mr-2" }),
+            " Configure Split Billing"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6 flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-primary/10", children: /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 20, className: "text-primary" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Students with Split Billing" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: entries.filter((e3) => e3.status === "Active").length })
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6 flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-green-500/10", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 20, className: "text-green-600" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Active Configurations" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: entries.filter((e3) => e3.status === "Active").length })
+        ] })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Card, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(CardContent, { className: "pt-6 flex items-center gap-4", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "p-3 rounded-full bg-yellow-500/10", children: /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 20, className: "text-yellow-600" }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "Total Split Amount" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-foreground", children: fmt(
+            entries.filter((e3) => e3.status === "Active").reduce((s2, e3) => s2 + e3.totalFee, 0)
+          ) })
+        ] })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(Card, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(CardTitle, { className: "text-base", children: "Split Billing Configurations" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(CardContent, { className: "p-0", children: /* @__PURE__ */ jsxRuntimeExports.jsxs(Table, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Class" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Parent 1" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "P1 %" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Parent 2" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "P2 %" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { className: "text-right", children: "Total Fee" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Status" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableHead, { children: "Actions" })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TableBody, { children: entries.map((e3) => /* @__PURE__ */ jsxRuntimeExports.jsxs(TableRow, { "data-ocid": `split-row-${e3.id}`, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "font-medium", children: e3.studentName }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: e3.className }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: e3.parent1 }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { className: "text-right", children: [
+            e3.p1Pct,
+            "%"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: e3.parent2 }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(TableCell, { className: "text-right", children: [
+            e3.p2Pct,
+            "%"
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { className: "text-right font-medium", children: fmt(e3.totalFee) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Badge,
+            {
+              variant: e3.status === "Active" ? "default" : "secondary",
+              children: e3.status
+            }
+          ) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(TableCell, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              Button,
+              {
+                size: "sm",
+                variant: "outline",
+                onClick: () => setInvoiceEntry(e3),
+                "data-ocid": `generate-invoices-${e3.id}`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(FileText, { size: 14, className: "mr-1" }),
+                  " Invoices"
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                variant: "ghost",
+                onClick: () => toggleStatus(e3.id),
+                "data-ocid": `toggle-status-${e3.id}`,
+                children: e3.status === "Active" ? "Deactivate" : "Activate"
+              }
+            )
+          ] }) })
+        ] }, e3.id)) })
+      ] }) })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: configOpen, onOpenChange: setConfigOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-lg", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Configure Split Billing" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 py-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Search & Select Student" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              placeholder: "Type name or admission no...",
+              value: search,
+              onChange: (e3) => setSearch(e3.target.value),
+              className: "mt-1",
+              "data-ocid": "split-student-search"
+            }
+          ),
+          search && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "border rounded-md mt-1 max-h-36 overflow-y-auto", children: filteredStudents.slice(0, 10).map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "div",
+            {
+              className: `px-3 py-2 text-sm cursor-pointer hover:bg-muted transition-colors ${selectedStudentId === s2.id ? "bg-primary/10 font-medium" : ""}`,
+              onClick: () => {
+                setSelectedStudentId(s2.id);
+                setSearch("");
+              },
+              onKeyDown: (e3) => {
+                if (e3.key === "Enter" || e3.key === " ") {
+                  setSelectedStudentId(s2.id);
+                  setSearch("");
+                }
+              },
+              "data-ocid": `split-student-option-${s2.id}`,
+              children: [
+                s2.name,
+                " — ",
+                s2.className,
+                "-",
+                s2.section,
+                " (",
+                s2.admissionNo,
+                ")"
+              ]
+            },
+            s2.id
+          )) }),
+          selectedStudent && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "mt-2 p-2 bg-muted/50 rounded text-sm", children: [
+            "Selected: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: selectedStudent.name }),
+            " | Class",
+            " ",
+            selectedStudent.className,
+            "-",
+            selectedStudent.section,
+            " | Outstanding: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt(selectedStudent.feeDue) })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-4", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Parent 1 Name" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                value: p1Name,
+                onChange: (e3) => setP1Name(e3.target.value),
+                placeholder: "Parent 1 full name",
+                className: "mt-1",
+                "data-ocid": "split-p1-name"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Parent 2 Name" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Input,
+              {
+                value: p2Name,
+                onChange: (e3) => setP2Name(e3.target.value),
+                placeholder: "Parent 2 full name",
+                className: "mt-1",
+                "data-ocid": "split-p2-name"
+              }
+            )
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { children: [
+            "Parent 1 Share: ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+              p1Pct,
+              "%"
+            ] }),
+            " | Parent 2 Share:",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+              p2Pct,
+              "%"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Slider,
+            {
+              value: [p1Pct],
+              onValueChange: ([v2]) => setP1Pct(v2),
+              min: 0,
+              max: 100,
+              step: 5,
+              className: "mt-2",
+              "data-ocid": "split-pct-slider"
+            }
+          ),
+          !pctValid && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-destructive text-xs mt-1", children: "Total must equal 100%" })
+        ] }),
+        selectedStudent && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-2 text-sm bg-muted/40 rounded p-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Parent 1 Amount:",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt(Math.round(selectedStudent.feeDue * p1Pct / 100)) })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            "Parent 2 Amount:",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: fmt(Math.round(selectedStudent.feeDue * p2Pct / 100)) })
+          ] })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setConfigOpen(false), children: "Cancel" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleSave, "data-ocid": "split-save-btn", children: "Save Configuration" })
+      ] })
+    ] }) }),
+    invoiceEntry && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: !!invoiceEntry,
+        onOpenChange: () => setInvoiceEntry(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-2xl", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { children: [
+            "Invoice Preview — ",
+            invoiceEntry.studentName
+          ] }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 gap-4 py-2", children: [
+            {
+              parent: invoiceEntry.parent1,
+              pct: invoiceEntry.p1Pct,
+              key: "p1"
+            },
+            {
+              parent: invoiceEntry.parent2,
+              pct: invoiceEntry.p2Pct,
+              key: "p2"
+            }
+          ].map((p2) => {
+            const amt = Math.round(invoiceEntry.totalFee * p2.pct / 100);
+            return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border rounded-lg p-4 space-y-2", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center font-bold text-sm border-b pb-2", children: "SmartSkale School" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center text-xs text-muted-foreground uppercase tracking-wide", children: "Fee Invoice" }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-sm space-y-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Student:" }),
+                  " ",
+                  invoiceEntry.studentName
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Class:" }),
+                  " ",
+                  invoiceEntry.className
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Billed To:" }),
+                  " ",
+                  p2.parent
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Share:" }),
+                  " ",
+                  p2.pct,
+                  "%"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border-t pt-2 flex justify-between font-bold", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "Amount Due" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-primary", children: fmt(amt) })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground", children: "Academic Year: 2026-27" })
+            ] }, p2.key);
+          }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: () => setInvoiceEntry(null), children: "Close" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                onClick: () => {
+                  ue.success("Invoices sent to parents via WhatsApp");
+                  setInvoiceEntry(null);
+                },
+                "data-ocid": "send-invoices-btn",
+                children: "Send to Parents"
+              }
+            )
+          ] })
+        ] })
+      }
+    )
   ] });
 }
 function StaffPage({ navigate }) {
@@ -97822,6 +101845,894 @@ function SyllabusPage() {
     }) })
   ] });
 }
+const REFERENCE_DATE = /* @__PURE__ */ new Date("2026-10-12");
+const UPCOMING_EVENTS = [
+  "Annual Sports Day - 2026-12-15",
+  "Parent-Teacher Meeting - 2026-11-20",
+  "Annual Day - 2027-01-15",
+  "Board Exam Prep - 2026-11-01",
+  "Science Exhibition - 2026-12-01"
+];
+const INITIAL_TASKS = [
+  {
+    id: "t1",
+    title: "Prepare Annual Day decoration checklist",
+    description: "List all items needed for stage decoration and props",
+    assignedTo: "Priya Singh",
+    dueDate: "2026-11-15",
+    priority: "High",
+    status: "To Do",
+    linkedEvent: "Annual Day - 2027-01-15"
+  },
+  {
+    id: "t2",
+    title: "Update student health records database",
+    description: "Verify and update vaccination records for all Classes 1-5",
+    assignedTo: "Amit Kumar",
+    dueDate: "2026-10-20",
+    priority: "Medium",
+    status: "In Progress",
+    linkedEvent: ""
+  },
+  {
+    id: "t3",
+    title: "Submit timetable for Q3",
+    description: "Final timetable for all sections to be submitted to principal",
+    assignedTo: "Ravi Gupta",
+    dueDate: "2026-09-30",
+    priority: "High",
+    status: "Done",
+    linkedEvent: ""
+  },
+  {
+    id: "t4",
+    title: "Coordinate sports equipment order",
+    description: "Order new cricket bats, footballs, and track equipment",
+    assignedTo: "Rajesh Verma",
+    dueDate: "2026-11-01",
+    priority: "Medium",
+    status: "To Do",
+    linkedEvent: "Annual Sports Day - 2026-12-15"
+  },
+  {
+    id: "t5",
+    title: "Prepare PTM parent notification letter",
+    description: "Draft letter to send home with students 2 weeks before PTM",
+    assignedTo: "Sunita Patel",
+    dueDate: "2026-11-05",
+    priority: "High",
+    status: "To Do",
+    linkedEvent: "Parent-Teacher Meeting - 2026-11-20"
+  },
+  {
+    id: "t6",
+    title: "Review lab safety protocols",
+    description: "Annual review of chemistry and physics lab safety guidelines",
+    assignedTo: "Anita Nair",
+    dueDate: "2026-10-10",
+    priority: "High",
+    status: "Done",
+    linkedEvent: ""
+  },
+  {
+    id: "t7",
+    title: "Library inventory audit",
+    description: "Count and catalogue all books, identify missing/damaged items",
+    assignedTo: "Sanjay Sharma",
+    dueDate: "2026-10-05",
+    priority: "Low",
+    status: "Done",
+    linkedEvent: ""
+  },
+  {
+    id: "t8",
+    title: "Prepare board exam practice schedule",
+    description: "Design 6-week study plan for Class X and XII",
+    assignedTo: "Priya Singh",
+    dueDate: "2026-10-31",
+    priority: "High",
+    status: "In Progress",
+    linkedEvent: "Board Exam Prep - 2026-11-01"
+  },
+  {
+    id: "t9",
+    title: "Organize science exhibition participants",
+    description: "Register students and assign project categories for exhibition",
+    assignedTo: "Ravi Gupta",
+    dueDate: "2026-11-20",
+    priority: "Medium",
+    status: "To Do",
+    linkedEvent: "Science Exhibition - 2026-12-01"
+  },
+  {
+    id: "t10",
+    title: "Update alumni contact records",
+    description: "Contact 2025 batch alumni and update LinkedIn profiles",
+    assignedTo: "Amit Kumar",
+    dueDate: "2026-10-08",
+    priority: "Low",
+    status: "In Progress",
+    linkedEvent: ""
+  },
+  {
+    id: "t11",
+    title: "Review fee concession applications",
+    description: "Evaluate 12 pending scholarship and concession applications",
+    assignedTo: "Rajesh Verma",
+    dueDate: "2026-09-25",
+    priority: "High",
+    status: "Done",
+    linkedEvent: ""
+  },
+  {
+    id: "t12",
+    title: "Conduct fire drill coordination",
+    description: "Plan and execute monthly fire safety drill for all students",
+    assignedTo: "Sunita Patel",
+    dueDate: "2026-10-30",
+    priority: "Medium",
+    status: "To Do",
+    linkedEvent: ""
+  }
+];
+const TEACHER_NAME = "Amit Kumar";
+function isOverdue(dueDate, status) {
+  if (status === "Done") return false;
+  return new Date(dueDate) < REFERENCE_DATE;
+}
+function PriorityBadge({ priority }) {
+  if (priority === "High")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-100 text-red-700 border-red-200 text-xs", children: "High" });
+  if (priority === "Medium")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-yellow-100 text-yellow-700 border-yellow-200 text-xs", children: "Medium" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-blue-100 text-blue-700 border-blue-200 text-xs", children: "Low" });
+}
+function StatusBadge$1({ status }) {
+  if (status === "To Do")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-blue-100 text-blue-700 border-blue-200 text-xs", children: "To Do" });
+  if (status === "In Progress")
+    return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-yellow-100 text-yellow-700 border-yellow-200 text-xs", children: "In Progress" });
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-green-100 text-green-700 border-green-200 text-xs", children: "Done" });
+}
+function AvatarInitial({ name }) {
+  const initials = name.split(" ").map((n2) => n2[0]).join("").slice(0, 2).toUpperCase();
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "inline-flex items-center justify-center w-6 h-6 rounded-full bg-primary/20 text-primary text-xs font-semibold flex-shrink-0", children: initials });
+}
+const STATUS_SEQUENCE = ["To Do", "In Progress", "Done"];
+const EMPTY_FORM = {
+  title: "",
+  description: "",
+  assignedTo: "",
+  dueDate: "",
+  priority: "Medium",
+  linkedEvent: ""
+};
+function TaskDialog({
+  open,
+  onClose,
+  onSave,
+  initial,
+  mode
+}) {
+  const [form, setForm] = reactExports.useState(initial);
+  const handleOpenChange = (o2) => {
+    if (!o2) onClose();
+  };
+  reactExports.useEffect(() => {
+    setForm(initial);
+  }, [initial]);
+  function set(field, val) {
+    setForm((p2) => ({ ...p2, [field]: val }));
+  }
+  function handleSave() {
+    if (!form.title.trim()) {
+      ue.error("Title is required");
+      return;
+    }
+    if (!form.assignedTo) {
+      ue.error("Please assign this task to a staff member");
+      return;
+    }
+    onSave(form);
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open, onOpenChange: handleOpenChange, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-md", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: mode === "add" ? "Add New Task" : "Edit Task" }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 py-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { children: [
+          "Title ",
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive", children: "*" })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            "data-ocid": "task-title-input",
+            placeholder: "Task title...",
+            value: form.title,
+            onChange: (e3) => set("title", e3.target.value)
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Description" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Textarea,
+          {
+            "data-ocid": "task-description-input",
+            placeholder: "Brief description...",
+            value: form.description,
+            onChange: (e3) => set("description", e3.target.value),
+            rows: 3
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(Label$1, { children: [
+            "Assign To ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-destructive", children: "*" })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Select,
+            {
+              value: form.assignedTo,
+              onValueChange: (v2) => set("assignedTo", v2),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "task-assignee-select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select staff..." }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: mockStaff.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2.name, children: s2.name }, s2.id)) })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Due Date" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              "data-ocid": "task-duedate-input",
+              type: "date",
+              value: form.dueDate,
+              onChange: (e3) => set("dueDate", e3.target.value)
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Priority" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Select,
+            {
+              value: form.priority,
+              onValueChange: (v2) => set("priority", v2),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "task-priority-select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "High", children: "High" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Medium", children: "Medium" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Low", children: "Low" })
+                ] })
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Link to Event" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Select,
+            {
+              value: form.linkedEvent || "__none__",
+              onValueChange: (v2) => set("linkedEvent", v2 === "__none__" ? "" : v2),
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "task-event-select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "None" }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "__none__", children: "None" }),
+                  UPCOMING_EVENTS.map((e3) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: e3, children: e3 }, e3))
+                ] })
+              ]
+            }
+          )
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "outline", onClick: onClose, children: "Cancel" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { "data-ocid": "task-save-btn", onClick: handleSave, children: mode === "add" ? "Add Task" : "Update Task" })
+    ] })
+  ] }) });
+}
+function TaskCard({
+  task,
+  onEdit,
+  onDelete,
+  onMove,
+  isAdmin
+}) {
+  const idx = STATUS_SEQUENCE.indexOf(task.status);
+  const canMoveLeft = idx > 0;
+  const canMoveRight = idx < STATUS_SEQUENCE.length - 1;
+  const overdue = isOverdue(task.dueDate, task.status);
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+    "div",
+    {
+      "data-ocid": `task-card-${task.id}`,
+      className: "bg-card border border-border rounded-lg p-3 space-y-2 shadow-sm hover:shadow-md transition-shadow",
+      children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-start justify-between gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "font-semibold text-sm text-foreground leading-tight line-clamp-2", children: task.title }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(PriorityBadge, { priority: task.priority })
+        ] }),
+        task.description && /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground line-clamp-1", children: task.description }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 text-xs text-muted-foreground", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(AvatarInitial, { name: task.assignedTo }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: task.assignedTo })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5 flex-wrap", children: [
+          task.dueDate && /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-1 text-xs text-muted-foreground", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Clock, { size: 11 }),
+            task.dueDate
+          ] }),
+          overdue && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-100 text-red-700 border-red-200 text-[10px] px-1.5 py-0", children: "Overdue" })
+        ] }),
+        task.linkedEvent && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-[11px] text-primary bg-primary/8 px-2 py-0.5 rounded-full inline-block max-w-full truncate", children: [
+          "📅 ",
+          task.linkedEvent
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between pt-1 border-t border-border/50", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                "data-ocid": `task-move-left-${task.id}`,
+                disabled: !canMoveLeft,
+                onClick: () => onMove(task.id, "left"),
+                className: "p-1 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed text-muted-foreground hover:text-foreground transition-colors",
+                title: "Move left",
+                "aria-label": "Move task left",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowLeft, { size: 13 })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                "data-ocid": `task-move-right-${task.id}`,
+                disabled: !canMoveRight,
+                onClick: () => onMove(task.id, "right"),
+                className: "p-1 rounded hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed text-muted-foreground hover:text-foreground transition-colors",
+                title: "Move right",
+                "aria-label": "Move task right",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(ArrowRight, { size: 13 })
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-1", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                "data-ocid": `task-edit-${task.id}`,
+                onClick: () => onEdit(task),
+                className: "p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors",
+                title: "Edit task",
+                "aria-label": "Edit task",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 13 })
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "button",
+              {
+                type: "button",
+                "data-ocid": `task-delete-${task.id}`,
+                onClick: () => onDelete(task.id),
+                className: "p-1 rounded hover:bg-red-50 text-muted-foreground hover:text-red-600 transition-colors",
+                title: "Delete task",
+                "aria-label": "Delete task",
+                children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 })
+              }
+            )
+          ] })
+        ] })
+      ]
+    }
+  );
+}
+const COLUMN_CONFIG = [
+  {
+    status: "To Do",
+    label: "To Do",
+    headerClass: "bg-blue-600",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(Circle, { size: 14 })
+  },
+  {
+    status: "In Progress",
+    label: "In Progress",
+    headerClass: "bg-yellow-500",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { size: 14 })
+  },
+  {
+    status: "Done",
+    label: "Done",
+    headerClass: "bg-green-600",
+    icon: /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 14 })
+  }
+];
+function TasksPage() {
+  const isAdmin = !window.location.hash.startsWith("#/teacher/");
+  const basePath = isAdmin ? "/admin" : "/teacher";
+  const [tasks, setTasks] = reactExports.useState(INITIAL_TASKS);
+  const [view, setView] = reactExports.useState("kanban");
+  const [filterAssignee, setFilterAssignee] = reactExports.useState("__all__");
+  const [filterPriority, setFilterPriority] = reactExports.useState("__all__");
+  const [filterStatus, setFilterStatus] = reactExports.useState("__all__");
+  const [filterDueFrom, setFilterDueFrom] = reactExports.useState("");
+  const [filterDueTo, setFilterDueTo] = reactExports.useState("");
+  const [myTasksOnly, setMyTasksOnly] = reactExports.useState(!isAdmin);
+  const [dialogOpen, setDialogOpen] = reactExports.useState(false);
+  const [dialogMode, setDialogMode] = reactExports.useState("add");
+  const [dialogInitial, setDialogInitial] = reactExports.useState(EMPTY_FORM);
+  const [editingId, setEditingId] = reactExports.useState(null);
+  const [deleteId, setDeleteId] = reactExports.useState(null);
+  const allAssignees = Array.from(
+    new Set(tasks.map((t2) => t2.assignedTo))
+  ).sort();
+  const filtered = tasks.filter((t2) => {
+    if (myTasksOnly && t2.assignedTo !== TEACHER_NAME) return false;
+    if (filterAssignee !== "__all__" && t2.assignedTo !== filterAssignee)
+      return false;
+    if (filterPriority !== "__all__" && t2.priority !== filterPriority)
+      return false;
+    if (filterStatus !== "__all__" && t2.status !== filterStatus) return false;
+    if (filterDueFrom && t2.dueDate < filterDueFrom) return false;
+    if (filterDueTo && t2.dueDate > filterDueTo) return false;
+    return true;
+  });
+  const counts = {
+    todo: tasks.filter((t2) => t2.status === "To Do").length,
+    inProgress: tasks.filter((t2) => t2.status === "In Progress").length,
+    done: tasks.filter((t2) => t2.status === "Done").length,
+    overdue: tasks.filter((t2) => isOverdue(t2.dueDate, t2.status)).length
+  };
+  function openAdd() {
+    setDialogMode("add");
+    setDialogInitial(EMPTY_FORM);
+    setEditingId(null);
+    setDialogOpen(true);
+  }
+  function openEdit(task) {
+    setDialogMode("edit");
+    setDialogInitial({
+      title: task.title,
+      description: task.description,
+      assignedTo: task.assignedTo,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      linkedEvent: task.linkedEvent
+    });
+    setEditingId(task.id);
+    setDialogOpen(true);
+  }
+  function handleSave(form) {
+    if (dialogMode === "add") {
+      const newTask = {
+        id: `t${Date.now()}`,
+        ...form,
+        status: "To Do"
+      };
+      setTasks((prev) => [...prev, newTask]);
+      ue.success("Task added successfully");
+    } else if (editingId) {
+      setTasks(
+        (prev) => prev.map((t2) => t2.id === editingId ? { ...t2, ...form } : t2)
+      );
+      ue.success("Task updated successfully");
+    }
+    setDialogOpen(false);
+  }
+  function handleDelete(id) {
+    setDeleteId(id);
+  }
+  function confirmDelete() {
+    if (deleteId) {
+      setTasks((prev) => prev.filter((t2) => t2.id !== deleteId));
+      ue.success("Task deleted");
+      setDeleteId(null);
+    }
+  }
+  function handleMove(id, dir) {
+    setTasks(
+      (prev) => prev.map((t2) => {
+        if (t2.id !== id) return t2;
+        const idx = STATUS_SEQUENCE.indexOf(t2.status);
+        const newIdx = dir === "left" ? idx - 1 : idx + 1;
+        if (newIdx < 0 || newIdx >= STATUS_SEQUENCE.length) return t2;
+        return { ...t2, status: STATUS_SEQUENCE[newIdx] };
+      })
+    );
+  }
+  function moveStatus(id, status) {
+    setTasks((prev) => prev.map((t2) => t2.id === id ? { ...t2, status } : t2));
+    ue.success(`Task moved to ${status}`);
+  }
+  const breadcrumbBase = isAdmin ? "Dashboard" : "Dashboard";
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("nav", { className: "flex items-center gap-1.5 text-sm text-muted-foreground", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "a",
+        {
+          href: `#${basePath}/dashboard`,
+          className: "hover:text-foreground transition-colors",
+          "data-ocid": "breadcrumb-dashboard",
+          children: breadcrumbBase
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "/" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground font-medium", children: "Tasks" })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Task List" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-0.5", children: isAdmin ? "Manage and track all staff tasks" : "Your assigned tasks and reminders" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Button, { "data-ocid": "add-task-btn", onClick: openAdd, className: "gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { size: 16 }),
+        "Add Task"
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Badge,
+        {
+          "data-ocid": "badge-todo",
+          className: "bg-blue-100 text-blue-700 border-blue-200 px-3 py-1 text-sm",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Circle, { size: 12, className: "mr-1.5" }),
+            counts.todo,
+            " To Do"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Badge,
+        {
+          "data-ocid": "badge-inprogress",
+          className: "bg-yellow-100 text-yellow-700 border-yellow-200 px-3 py-1 text-sm",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(LoaderCircle, { size: 12, className: "mr-1.5" }),
+            counts.inProgress,
+            " In Progress"
+          ]
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Badge,
+        {
+          "data-ocid": "badge-done",
+          className: "bg-green-100 text-green-700 border-green-200 px-3 py-1 text-sm",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 12, className: "mr-1.5" }),
+            counts.done,
+            " Done"
+          ]
+        }
+      ),
+      counts.overdue > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Badge,
+        {
+          "data-ocid": "badge-overdue",
+          className: "bg-red-100 text-red-700 border-red-200 px-3 py-1 text-sm",
+          children: [
+            counts.overdue,
+            " Overdue"
+          ]
+        }
+      )
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap items-center gap-2 bg-card border border-border rounded-xl p-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex rounded-lg border border-border overflow-hidden", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "view-kanban-btn",
+            onClick: () => setView("kanban"),
+            className: `flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors ${view === "kanban" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"}`,
+            "aria-pressed": view === "kanban",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(SquareKanban, { size: 14 }),
+              "Kanban"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": "view-list-btn",
+            onClick: () => setView("list"),
+            className: `flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium transition-colors border-l border-border ${view === "list" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:text-foreground"}`,
+            "aria-pressed": view === "list",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(List$1, { size: 14 }),
+              "List"
+            ]
+          }
+        )
+      ] }),
+      isAdmin && /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: filterAssignee, onValueChange: setFilterAssignee, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SelectTrigger,
+          {
+            "data-ocid": "filter-assignee",
+            className: "w-[160px] h-8 text-sm",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "By Assignee" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "__all__", children: "All Assignees" }),
+          allAssignees.map((a2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: a2, children: a2 }, a2))
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: filterPriority, onValueChange: setFilterPriority, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SelectTrigger,
+          {
+            "data-ocid": "filter-priority",
+            className: "w-[130px] h-8 text-sm",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "By Priority" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "__all__", children: "All Priorities" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "High", children: "High" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Medium", children: "Medium" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Low", children: "Low" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: filterStatus, onValueChange: setFilterStatus, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          SelectTrigger,
+          {
+            "data-ocid": "filter-status",
+            className: "w-[130px] h-8 text-sm",
+            children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "By Status" })
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "__all__", children: "All Statuses" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "To Do", children: "To Do" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "In Progress", children: "In Progress" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Done", children: "Done" })
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs text-muted-foreground whitespace-nowrap", children: "From" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            "data-ocid": "filter-due-from",
+            type: "date",
+            value: filterDueFrom,
+            onChange: (e3) => setFilterDueFrom(e3.target.value),
+            className: "h-8 w-[130px] text-sm"
+          }
+        )
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { className: "text-xs text-muted-foreground whitespace-nowrap", children: "To" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Input,
+          {
+            "data-ocid": "filter-due-to",
+            type: "date",
+            value: filterDueTo,
+            onChange: (e3) => setFilterDueTo(e3.target.value),
+            className: "h-8 w-[130px] text-sm"
+          }
+        )
+      ] }),
+      !isAdmin && /* @__PURE__ */ jsxRuntimeExports.jsxs("label", { className: "flex items-center gap-2 cursor-pointer ml-auto", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(
+          "input",
+          {
+            "data-ocid": "my-tasks-toggle",
+            type: "checkbox",
+            checked: myTasksOnly,
+            onChange: (e3) => setMyTasksOnly(e3.target.checked),
+            className: "w-4 h-4 accent-primary"
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-medium text-foreground", children: "My Tasks Only" })
+      ] })
+    ] }),
+    view === "kanban" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-1 md:grid-cols-3 gap-4", children: COLUMN_CONFIG.map(({ status, label, headerClass, icon }) => {
+      const colTasks = filtered.filter((t2) => t2.status === status);
+      return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "bg-muted/30 border border-border rounded-xl overflow-hidden",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: `${headerClass} text-white px-4 py-2.5 flex items-center justify-between`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 font-semibold text-sm", children: [
+                    icon,
+                    label
+                  ] }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs bg-white/20 px-2 py-0.5 rounded-full font-bold", children: colTasks.length })
+                ]
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              "div",
+              {
+                className: "p-3 space-y-3 min-h-[200px]",
+                "data-ocid": `kanban-col-${status.toLowerCase().replace(" ", "-")}`,
+                children: colTasks.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground text-center py-6", children: "No tasks" }) : colTasks.map((task) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  TaskCard,
+                  {
+                    task,
+                    onEdit: openEdit,
+                    onDelete: handleDelete,
+                    onMove: handleMove,
+                    isAdmin
+                  },
+                  task.id
+                ))
+              }
+            )
+          ]
+        },
+        status
+      );
+    }) }),
+    view === "list" && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-card border border-border rounded-xl overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-border bg-muted/40", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Title" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Assigned To" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Due Date" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Priority" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Status" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 font-semibold text-foreground", children: "Linked Event" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-3 font-semibold text-foreground", children: "Actions" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: filtered.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "td",
+        {
+          colSpan: 7,
+          className: "text-center py-10 text-muted-foreground",
+          children: "No tasks match the current filters"
+        }
+      ) }) : filtered.map((task) => {
+        const overdue = isOverdue(task.dueDate, task.status);
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            "data-ocid": `task-row-${task.id}`,
+            className: "border-b border-border/50 hover:bg-muted/20 transition-colors",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "div",
+                  {
+                    className: "font-medium text-foreground leading-tight max-w-[200px] truncate",
+                    title: task.title,
+                    children: task.title
+                  }
+                ),
+                task.description && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground mt-0.5 max-w-[200px] truncate", children: task.description })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(AvatarInitial, { name: task.assignedTo }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground", children: task.assignedTo })
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "span",
+                  {
+                    className: overdue ? "text-red-600 font-medium" : "text-foreground",
+                    children: task.dueDate || "—"
+                  }
+                ),
+                overdue && /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "bg-red-100 text-red-700 border-red-200 text-[10px] px-1.5 py-0", children: "Overdue" })
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(PriorityBadge, { priority: task.priority }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx(StatusBadge$1, { status: task.status }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground truncate max-w-[140px] block", children: task.linkedEvent || "—" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-end gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                  Select,
+                  {
+                    value: task.status,
+                    onValueChange: (v2) => moveStatus(task.id, v2),
+                    children: [
+                      /* @__PURE__ */ jsxRuntimeExports.jsx(
+                        SelectTrigger,
+                        {
+                          "data-ocid": `list-move-${task.id}`,
+                          className: "h-7 w-[110px] text-xs",
+                          children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {})
+                        }
+                      ),
+                      /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "To Do", children: "To Do" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "In Progress", children: "In Progress" }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "Done", children: "Done" })
+                      ] })
+                    ]
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    "data-ocid": `list-edit-${task.id}`,
+                    onClick: () => openEdit(task),
+                    className: "p-1.5 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors",
+                    "aria-label": "Edit",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Pen, { size: 13 })
+                  }
+                ),
+                /* @__PURE__ */ jsxRuntimeExports.jsx(
+                  "button",
+                  {
+                    type: "button",
+                    "data-ocid": `list-delete-${task.id}`,
+                    onClick: () => handleDelete(task.id),
+                    className: "p-1.5 rounded hover:bg-red-50 text-muted-foreground hover:text-red-600 transition-colors",
+                    "aria-label": "Delete",
+                    children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 })
+                  }
+                )
+              ] }) })
+            ]
+          },
+          task.id
+        );
+      }) })
+    ] }) }) }),
+    dialogOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      TaskDialog,
+      {
+        open: dialogOpen,
+        onClose: () => setDialogOpen(false),
+        onSave: handleSave,
+        initial: dialogInitial,
+        mode: dialogMode
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      AlertDialog,
+      {
+        open: !!deleteId,
+        onOpenChange: (o2) => {
+          if (!o2) setDeleteId(null);
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogHeader, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogTitle, { children: "Delete Task" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogDescription, { children: "Are you sure you want to delete this task? This action cannot be undone." })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(AlertDialogFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(AlertDialogCancel, { "data-ocid": "delete-cancel-btn", children: "Cancel" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              AlertDialogAction,
+              {
+                "data-ocid": "delete-confirm-btn",
+                onClick: confirmDelete,
+                className: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+                children: "Delete"
+              }
+            )
+          ] })
+        ] })
+      }
+    )
+  ] });
+}
 const SUBJECTS$2 = [
   "Mathematics",
   "Science",
@@ -97870,7 +102781,25 @@ const AVAILABLE_TEACHERS = [
   "Mr. Rajan",
   "Ms. Joshi"
 ];
-function getSectionsForClass(cls) {
+const SUBJECT_COLORS = [
+  { bg: "#EFF6FF", border: "#BFDBFE", text: "#1D4ED8" },
+  // blue
+  { bg: "#F0FDF4", border: "#BBF7D0", text: "#15803D" },
+  // green
+  { bg: "#FEFCE8", border: "#FEF08A", text: "#A16207" },
+  // yellow
+  { bg: "#FFF1F2", border: "#FECDD3", text: "#BE123C" },
+  // red
+  { bg: "#FAF5FF", border: "#E9D5FF", text: "#7E22CE" },
+  // purple
+  { bg: "#FDF2F8", border: "#FBCFE8", text: "#9D174D" },
+  // pink
+  { bg: "#FFF7ED", border: "#FED7AA", text: "#C2410C" },
+  // orange
+  { bg: "#F0FDFA", border: "#99F6E4", text: "#0F766E" }
+  // teal
+];
+function getSectionsForClass$1(cls) {
   const base = ["A", "B", "C", "D", "E", "F", "G", "H"];
   if (cls === "XI" || cls === "XII") {
     return [...base, "Science", "Commerce", "Arts"];
@@ -98033,13 +102962,84 @@ function TimetablePage() {
   const [activePeriods, setActivePeriods] = reactExports.useState(PERIODS);
   const [subDate, setSubDate] = reactExports.useState((/* @__PURE__ */ new Date()).toISOString().slice(0, 10));
   const [absentTeachers, setAbsentTeachers] = reactExports.useState(initialAbsent);
+  const [selectedCells, setSelectedCells] = reactExports.useState(/* @__PURE__ */ new Set());
+  const [isDragging, setIsDragging] = reactExports.useState(false);
+  const [firstSelected, setFirstSelected] = reactExports.useState(null);
+  const [cursorPos, setCursorPos] = reactExports.useState({ x: 0, y: 0 });
+  const [bulkAssignOpen, setBulkAssignOpen] = reactExports.useState(false);
+  const [bulkDraft, setBulkDraft] = reactExports.useState({
+    subject: "",
+    teacher: ""
+  });
+  const [undoVisible, setUndoVisible] = reactExports.useState(false);
+  const [undoCountdown, setUndoCountdown] = reactExports.useState(5);
+  const [lastAssignment, setLastAssignment] = reactExports.useState(
+    null
+  );
+  const undoTimerRef = reactExports.useRef(null);
+  const [draggedSubject, setDraggedSubject] = reactExports.useState(null);
+  const [_draggedTeacher, setDraggedTeacher] = reactExports.useState(null);
+  const [_draggedClass, setDraggedClass] = reactExports.useState(null);
+  const [dragOverCell, setDragOverCell] = reactExports.useState(null);
+  const [assignModalOpen, setAssignModalOpen] = reactExports.useState(false);
+  const [assignModalCell, setAssignModalCell] = reactExports.useState(null);
+  const [assignModalDraft, setAssignModalDraft] = reactExports.useState({});
+  const [isTouchDevice, setIsTouchDevice] = reactExports.useState(false);
+  reactExports.useEffect(() => {
+    setIsTouchDevice("ontouchstart" in window);
+  }, []);
+  reactExports.useEffect(() => {
+    const handleMouseUp = () => {
+      if (isDragging) {
+        setIsDragging(false);
+        setSelectedCells((prev) => {
+          if (prev.size > 0) {
+            setTimeout(() => setBulkAssignOpen(true), 0);
+          }
+          return prev;
+        });
+      }
+    };
+    document.addEventListener("mouseup", handleMouseUp);
+    return () => document.removeEventListener("mouseup", handleMouseUp);
+  }, [isDragging]);
+  reactExports.useEffect(() => {
+    const handleKeyDown = (e3) => {
+      if (e3.key === "Escape") {
+        setSelectedCells(/* @__PURE__ */ new Set());
+        setFirstSelected(null);
+        if (bulkAssignOpen) setBulkAssignOpen(false);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [bulkAssignOpen]);
+  reactExports.useEffect(() => {
+    if (undoVisible) {
+      setUndoCountdown(5);
+      if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+      undoTimerRef.current = setInterval(() => {
+        setUndoCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(undoTimerRef.current);
+            setUndoVisible(false);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1e3);
+    }
+    return () => {
+      if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+    };
+  }, [undoVisible]);
   const currentKey = `${selectedClass}-${selectedSection}`;
   const currentGrid = reactExports.useMemo(
     () => timetables[currentKey] ?? initEmptyGrid(),
     [timetables, currentKey]
   );
   const sectionsForSelected = reactExports.useMemo(
-    () => getSectionsForClass(selectedClass),
+    () => getSectionsForClass$1(selectedClass),
     [selectedClass]
   );
   const teacherSchedule = reactExports.useMemo(
@@ -98070,6 +103070,155 @@ function TimetablePage() {
       subjects: [...subjects]
     };
   }, [teacherSchedule]);
+  function showUndoSnackbar(snapshot) {
+    setLastAssignment(snapshot);
+    setUndoVisible(true);
+  }
+  function handleUndo() {
+    if (lastAssignment) {
+      setTimetables(lastAssignment.prev);
+      ue.success("Assignment undone");
+    }
+    setUndoVisible(false);
+    if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+  }
+  function handlePrintTimetable() {
+    const isTeacherView = viewMode === "teacher";
+    const title = isTeacherView ? `${selectedTeacher}'s Weekly Schedule` : `Class ${selectedClass}-${selectedSection} Weekly Timetable`;
+    const subtitle = isTeacherView ? selectedTeacher : `${selectedClass} – Section ${selectedSection}`;
+    let tableHtml = "";
+    if (isTeacherView) {
+      const headerCells = activePeriods.map(
+        (p2, pi2) => `<th>Period ${pi2 + 1}<br/><span style="font-weight:normal;font-size:9pt">${p2}</span></th>`
+      ).join("");
+      tableHtml = `<table><thead><tr><th>Day</th>${headerCells}</tr></thead><tbody>`;
+      for (let di = 0; di < activeDays.length; di++) {
+        const dayCells = activePeriods.map((_2, pi2) => {
+          var _a3;
+          const slot = ((_a3 = teacherSchedule[di]) == null ? void 0 : _a3[pi2]) ?? null;
+          return slot ? `<td><strong>${slot.subject}</strong><br/>${slot.classSection}</td>` : `<td style="color:#aaa">—</td>`;
+        }).join("");
+        tableHtml += `<tr><th>${activeDays[di]}</th>${dayCells}</tr>`;
+      }
+      tableHtml += "</tbody></table>";
+    } else {
+      const grid = timetables[currentKey] ?? initEmptyGrid();
+      const headerCells = activeDays.map((d2) => `<th>${d2}</th>`).join("");
+      tableHtml = `<table><thead><tr><th>Period</th>${headerCells}</tr></thead><tbody>`;
+      for (let pi2 = 0; pi2 < activePeriods.length; pi2++) {
+        const cells = activeDays.map((_2, di) => {
+          var _a3;
+          const cell = ((_a3 = grid[pi2]) == null ? void 0 : _a3[di]) ?? { subject: "-", teacher: "-" };
+          return `<td><strong>${cell.subject}</strong><br/>${cell.teacher}</td>`;
+        }).join("");
+        tableHtml += `<tr><th>${activePeriods[pi2]}</th>${cells}</tr>`;
+      }
+      tableHtml += "</tbody></table>";
+    }
+    const today = (/* @__PURE__ */ new Date()).toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric"
+    });
+    const popup = window.open("", "_blank", "width=1100,height=700");
+    if (!popup) {
+      ue.error("Pop-up blocked. Please allow pop-ups for this site.");
+      return;
+    }
+    popup.document.write(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>${title}</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; margin: 0; padding: 20px; color: #000; }
+  .header { text-align: center; margin-bottom: 18px; }
+  .header h1 { margin: 0; font-size: 18pt; }
+  .header h2 { margin: 4px 0 2px; font-size: 13pt; font-weight: normal; }
+  .header .meta { font-size: 10pt; color: #555; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #333; padding: 6px 8px; text-align: center; vertical-align: middle; font-size: 10pt; }
+  th { background: #f0f0f0; font-weight: bold; }
+  .footer { margin-top: 20px; display: flex; justify-content: space-between; font-size: 9pt; color: #666; }
+  @media print {
+    @page { size: A4 landscape; margin: 1cm; }
+    body { margin: 0; padding: 0; }
+    .footer { position: fixed; bottom: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Smart Skale School</h1>
+  <h2>TIMETABLE — ${subtitle}</h2>
+  <div class="meta">Academic Year: 2026-27</div>
+</div>
+${tableHtml}
+<div class="footer">
+  <span>Generated on: ${today}</span>
+  <span>Confidential – School Use Only</span>
+</div>
+<script>setTimeout(function(){ window.print(); }, 500);<\/script>
+</body>
+</html>`);
+    popup.document.close();
+  }
+  function handleExportPDF() {
+    ue.success("Timetable PDF export queued. Ready in a moment.");
+  }
+  const heatmapData2 = reactExports.useMemo(() => {
+    const workload = {};
+    for (const t2 of ALL_TEACHERS) {
+      workload[t2] = {
+        teacher: t2,
+        dayCounts: Object.fromEntries(DAYS$1.map((d2) => [d2, 0])),
+        total: 0,
+        assignments: []
+      };
+    }
+    for (const [classSection, grid] of Object.entries(timetables)) {
+      for (let pi2 = 0; pi2 < grid.length; pi2++) {
+        const row = grid[pi2];
+        for (let di = 0; di < row.length; di++) {
+          const cell = row[di];
+          if ((cell == null ? void 0 : cell.teacher) && workload[cell.teacher]) {
+            const day = DAYS$1[di] ?? `Day${di}`;
+            workload[cell.teacher].dayCounts[day] = (workload[cell.teacher].dayCounts[day] ?? 0) + 1;
+            workload[cell.teacher].total += 1;
+            workload[cell.teacher].assignments.push({
+              classSection,
+              day,
+              period: activePeriods[pi2] ?? `P${pi2 + 1}`,
+              subject: cell.subject
+            });
+          }
+        }
+      }
+    }
+    return Object.values(workload).sort((a2, b2) => b2.total - a2.total);
+  }, [timetables, activePeriods]);
+  const heatmapSummary = reactExports.useMemo(() => {
+    const mostLoaded = heatmapData2[0] ?? null;
+    const totalPeriods = heatmapData2.reduce((s2, t2) => s2 + t2.total, 0);
+    const avg = heatmapData2.length > 0 ? (totalPeriods / heatmapData2.length).toFixed(1) : "0";
+    const atCapacity = heatmapData2.filter((t2) => t2.total >= 20).length;
+    return { mostLoaded, avg, atCapacity };
+  }, [heatmapData2]);
+  const [drilldownTeacher, setDrilldownTeacher] = reactExports.useState(null);
+  function getDayCellStyle(count2) {
+    if (count2 === 0) return { background: "#f9fafb", color: "#9ca3af" };
+    if (count2 === 1) return { background: "#dcfce7", color: "#15803d" };
+    if (count2 === 2) return { background: "#fef9c3", color: "#a16207" };
+    if (count2 === 3) return { background: "#ffedd5", color: "#c2410c" };
+    return { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" };
+  }
+  function getTotalCellStyle(count2) {
+    if (count2 === 0) return { background: "#f9fafb", color: "#9ca3af" };
+    if (count2 <= 5) return { background: "#dcfce7", color: "#15803d" };
+    if (count2 <= 10) return { background: "#fef9c3", color: "#a16207" };
+    if (count2 <= 15) return { background: "#ffedd5", color: "#c2410c" };
+    return { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" };
+  }
   const startEdit = (pi2, di) => {
     setEditing({ pi: pi2, di });
     setDraft({ ...currentGrid[pi2][di] });
@@ -98106,6 +103255,37 @@ function TimetablePage() {
     setConflict(null);
     setPendingSave(null);
   };
+  function handleBulkAssign() {
+    if (!bulkDraft.subject || !bulkDraft.teacher) {
+      ue.error("Please select both subject and teacher");
+      return;
+    }
+    const cells = Array.from(selectedCells).map((k2) => {
+      const [pi2, di] = k2.split("-").map(Number);
+      return { pi: pi2, di };
+    });
+    const prevSnapshot = timetables;
+    setTimetables((prev) => {
+      var _a3;
+      const grid = (prev[currentKey] ?? initEmptyGrid()).map(
+        (row) => row.map((c2) => ({ ...c2 }))
+      );
+      for (const { pi: pi2, di } of cells) {
+        if (((_a3 = grid[pi2]) == null ? void 0 : _a3[di]) !== void 0) {
+          grid[pi2][di] = { ...bulkDraft };
+        }
+      }
+      return { ...prev, [currentKey]: grid };
+    });
+    showUndoSnackbar({ key: currentKey, cells, prev: prevSnapshot });
+    ue.success(
+      `Assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`
+    );
+    setSelectedCells(/* @__PURE__ */ new Set());
+    setFirstSelected(null);
+    setBulkAssignOpen(false);
+    setBulkDraft({ subject: "", teacher: "" });
+  }
   function handleAutoGenerate() {
     const targetClass = autoForm.class || selectedClass;
     const targetSection = autoForm.section || selectedSection;
@@ -98119,17 +103299,51 @@ function TimetablePage() {
     const periodLabels = Array.from({ length: periodsCount }, (_2, i) => {
       const startMinutes = 8 * 60 + i * Number.parseInt(autoForm.periodDuration);
       const endMinutes = startMinutes + Number.parseInt(autoForm.periodDuration);
-      const fmt = (m2) => `${Math.floor(m2 / 60)}:${String(m2 % 60).padStart(2, "0")}`;
-      return `${fmt(startMinutes)}-${fmt(endMinutes)}`;
+      const fmt2 = (m2) => `${Math.floor(m2 / 60)}:${String(m2 % 60).padStart(2, "0")}`;
+      return `${fmt2(startMinutes)}-${fmt2(endMinutes)}`;
     });
     const key = `${targetClass}-${targetSection}`;
-    setTimetables((prev) => ({ ...prev, [key]: generated }));
-    setActiveDays(days2);
-    setActivePeriods(periodLabels);
+    if (selectedCells.size > 0) {
+      const cells = Array.from(selectedCells).map((k2) => {
+        const [pi2, di] = k2.split("-").map(Number);
+        return { pi: pi2, di };
+      });
+      const prevSnapshot = timetables;
+      setTimetables((prev) => {
+        var _a3, _b3;
+        const existingGrid = (prev[key] ?? initEmptyGrid()).map(
+          (row) => row.map((c2) => ({ ...c2 }))
+        );
+        for (const { pi: pi2, di } of cells) {
+          if (((_a3 = generated[pi2]) == null ? void 0 : _a3[di]) !== void 0 && ((_b3 = existingGrid[pi2]) == null ? void 0 : _b3[di]) !== void 0) {
+            existingGrid[pi2][di] = generated[pi2][di];
+          }
+        }
+        return { ...prev, [key]: existingGrid };
+      });
+      showUndoSnackbar({ key, cells, prev: prevSnapshot });
+      setSelectedCells(/* @__PURE__ */ new Set());
+      setFirstSelected(null);
+      ue.success(
+        `Auto-assigned ${cells.length} selected slot${cells.length !== 1 ? "s" : ""} for Class ${targetClass}-${targetSection}`
+      );
+    } else {
+      const prevSnapshot = timetables;
+      const allCells = [];
+      for (let pi2 = 0; pi2 < periodsCount; pi2++) {
+        for (let di = 0; di < days2.length; di++) {
+          allCells.push({ pi: pi2, di });
+        }
+      }
+      setTimetables((prev) => ({ ...prev, [key]: generated }));
+      showUndoSnackbar({ key, cells: allCells, prev: prevSnapshot });
+      setActiveDays(days2);
+      setActivePeriods(periodLabels);
+      ue.success(
+        `Timetable generated for Class ${targetClass}-${targetSection}`
+      );
+    }
     setAutoOpen(false);
-    ue.success(
-      `Timetable generated for Class ${targetClass}-${targetSection}`
-    );
   }
   function setSubstitute(teacherIdx, periodId, value) {
     setAbsentTeachers(
@@ -98155,10 +103369,224 @@ function TimetablePage() {
       )
     );
   }
+  function getCellKey(pi2, di) {
+    return `${pi2}-${di}`;
+  }
+  function isCellSelected(pi2, di) {
+    return selectedCells.has(getCellKey(pi2, di));
+  }
+  function handleCellMouseDown(e3, pi2, di) {
+    if (viewMode === "teacher") return;
+    if (e3.button !== 0) return;
+    if (editing !== null) return;
+    if (e3.shiftKey && firstSelected) {
+      const minPi = Math.min(firstSelected.pi, pi2);
+      const maxPi = Math.max(firstSelected.pi, pi2);
+      const minDi = Math.min(firstSelected.di, di);
+      const maxDi = Math.max(firstSelected.di, di);
+      const newSelected = new Set(selectedCells);
+      for (let r2 = minPi; r2 <= maxPi; r2++) {
+        for (let c2 = minDi; c2 <= maxDi; c2++) {
+          newSelected.add(getCellKey(r2, c2));
+        }
+      }
+      setSelectedCells(newSelected);
+    } else {
+      setSelectedCells(/* @__PURE__ */ new Set([getCellKey(pi2, di)]));
+      setFirstSelected({ pi: pi2, di });
+      setIsDragging(true);
+    }
+    e3.preventDefault();
+  }
+  function handleCellMouseEnter(pi2, di) {
+    if (!isDragging) return;
+    if (viewMode === "teacher") return;
+    setSelectedCells((prev) => {
+      const next = new Set(prev);
+      next.add(getCellKey(pi2, di));
+      return next;
+    });
+  }
+  function handleCellClick(e3, pi2, di) {
+    if (viewMode === "teacher") return;
+    if (isTouchDevice) {
+      setSelectedCells((prev) => {
+        const next = new Set(prev);
+        const key = getCellKey(pi2, di);
+        if (next.has(key)) {
+          next.delete(key);
+        } else {
+          next.add(key);
+        }
+        return next;
+      });
+      return;
+    }
+    if (editMode && selectedCells.size === 0 && !e3.shiftKey) {
+      startEdit(pi2, di);
+    }
+  }
+  function handlePanelDragStart(e3, type, value) {
+    e3.dataTransfer.setData("type", type);
+    e3.dataTransfer.setData("value", value);
+    if (type === "subject") setDraggedSubject(value);
+    if (type === "teacher") setDraggedTeacher(value);
+    if (type === "class") setDraggedClass(value);
+  }
+  function applyAssignment(pi2, di, subject, teacher, className) {
+    const key = getTimetableKey();
+    const prevSnapshot = timetables;
+    setTimetables((prev) => {
+      var _a3;
+      const grid = (prev[key] ?? initEmptyGrid()).map(
+        (row) => row.map((c_) => ({ ...c_ }))
+      );
+      if (((_a3 = grid[pi2]) == null ? void 0 : _a3[di]) !== void 0) {
+        grid[pi2][di] = {
+          subject,
+          teacher,
+          ...className !== void 0 ? { className } : {}
+        };
+      }
+      return { ...prev, [key]: grid };
+    });
+    showUndoSnackbar({ key, cells: [{ pi: pi2, di }], prev: prevSnapshot });
+  }
+  function getTimetableKey() {
+    if (viewMode === "teacher") return currentKey;
+    return currentKey;
+  }
+  function handleCellDragOver(e3, pi2, di) {
+    e3.preventDefault();
+    setDragOverCell(getCellKey(pi2, di));
+  }
+  function handleCellDrop(e3, pi2, di) {
+    var _a3;
+    e3.preventDefault();
+    const type = e3.dataTransfer.getData("type") || "subject";
+    const value = e3.dataTransfer.getData("value") || draggedSubject || "";
+    if (!value) {
+      setDraggedSubject(null);
+      setDraggedTeacher(null);
+      setDraggedClass(null);
+      setDragOverCell(null);
+      return;
+    }
+    const key = currentKey;
+    const grid = timetables[key] ?? initEmptyGrid();
+    const cell = ((_a3 = grid[pi2]) == null ? void 0 : _a3[di]) ?? { subject: "", teacher: "" };
+    if (selectedCells.size > 0) {
+      const cells = Array.from(selectedCells).map((k2) => {
+        const [r2, c2] = k2.split("-").map(Number);
+        return { pi: r2, di: c2 };
+      });
+      const prevSnapshot = timetables;
+      setTimetables((prev) => {
+        var _a4;
+        const newGrid = (prev[key] ?? initEmptyGrid()).map(
+          (row) => row.map((c_) => ({ ...c_ }))
+        );
+        for (const { pi: r2, di: c2 } of cells) {
+          if (((_a4 = newGrid[r2]) == null ? void 0 : _a4[c2]) !== void 0) {
+            const existing = newGrid[r2][c2];
+            if (type === "subject")
+              newGrid[r2][c2] = { ...existing, subject: value };
+            else if (type === "teacher")
+              newGrid[r2][c2] = { ...existing, teacher: value };
+            else if (type === "class")
+              newGrid[r2][c2] = { ...existing, className: value };
+          }
+        }
+        return { ...prev, [key]: newGrid };
+      });
+      showUndoSnackbar({ key, cells, prev: prevSnapshot });
+      ue.success(
+        `${value} assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`
+      );
+      setSelectedCells(/* @__PURE__ */ new Set());
+      setFirstSelected(null);
+    } else {
+      if (type === "teacher") {
+        if (!cell.subject) {
+          ue.error("Please assign a subject first");
+        } else {
+          applyAssignment(pi2, di, cell.subject, value, cell.className);
+          ue.success(`Teacher ${value} assigned`);
+        }
+      } else if (type === "class") {
+        applyAssignment(pi2, di, cell.subject || "", cell.teacher || "", value);
+        ue.success(`Class ${value} assigned`);
+      } else {
+        applyAssignment(pi2, di, value, cell.teacher || ALL_TEACHERS[0]);
+        ue.success(`${value} assigned`);
+      }
+    }
+    setDraggedSubject(null);
+    setDraggedTeacher(null);
+    setDraggedClass(null);
+    setDragOverCell(null);
+  }
+  function handleGridDragLeave() {
+    setDragOverCell(null);
+  }
+  function openAssignModal(periodIndex, dayIndex) {
+    var _a3;
+    const key = currentKey;
+    const grid = timetables[key] ?? initEmptyGrid();
+    const cell = (_a3 = grid[periodIndex]) == null ? void 0 : _a3[dayIndex];
+    setAssignModalCell({ periodIndex, dayIndex });
+    setAssignModalDraft({
+      subject: (cell == null ? void 0 : cell.subject) || "",
+      teacher: (cell == null ? void 0 : cell.teacher) || "",
+      className: (cell == null ? void 0 : cell.className) || ""
+    });
+    setAssignModalOpen(true);
+  }
+  function handleAssignModalSave() {
+    if (!assignModalCell) return;
+    const { periodIndex, dayIndex } = assignModalCell;
+    applyAssignment(
+      periodIndex,
+      dayIndex,
+      assignModalDraft.subject || "",
+      assignModalDraft.teacher || "",
+      viewMode === "teacher" ? assignModalDraft.className || "" : void 0
+    );
+    setAssignModalOpen(false);
+    setAssignModalCell(null);
+    setAssignModalDraft({});
+    ue.success("Slot assigned successfully");
+  }
+  function getCellClassName(pi2, di, readonly) {
+    if (readonly) return "px-4 py-2 min-w-[130px]";
+    const key = getCellKey(pi2, di);
+    const isSelected = selectedCells.has(key);
+    const isDragOver = dragOverCell === key;
+    let base = "px-4 py-2 min-w-[130px] transition-colors duration-100 select-none relative group/cell";
+    if (isDragOver) {
+      base += " bg-[#E6F1FB] ring-2 ring-[#378ADD]";
+    } else if (isSelected) {
+      base += " bg-[#E6F1FB]";
+    } else if (isDragging) {
+      base += " hover:bg-[#E6F1FB]/60";
+    }
+    return base;
+  }
+  function getCellStyle(pi2, di, readonly) {
+    if (readonly) return {};
+    const key = getCellKey(pi2, di);
+    const isSelected = selectedCells.has(key);
+    if (isSelected) {
+      return { outline: "1.5px solid #378ADD", outlineOffset: "-1.5px" };
+    }
+    return {};
+  }
   function renderGridCell(pi2, di) {
     var _a3;
     const isEditing = editMode && (editing == null ? void 0 : editing.pi) === pi2 && (editing == null ? void 0 : editing.di) === di;
     const cell = ((_a3 = currentGrid[pi2]) == null ? void 0 : _a3[di]) ?? { subject: "-", teacher: "-" };
+    const hasContent = !!(cell.subject && cell.teacher && cell.subject !== "-");
+    const isSelected = isCellSelected(pi2, di);
     if (isEditing) {
       return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
@@ -98207,51 +103635,187 @@ function TimetablePage() {
         ] })
       ] });
     }
-    return /* @__PURE__ */ jsxRuntimeExports.jsxs(
-      "button",
-      {
-        type: "button",
-        className: `text-left w-full group ${editMode ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1" : ""}`,
-        onClick: () => editMode && startEdit(pi2, di),
-        "data-ocid": editMode ? "timetable.edit_button" : void 0,
-        children: [
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-foreground block", children: cell.subject }),
-          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block", children: cell.teacher })
-        ]
-      }
-    );
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative w-full", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "button",
+        {
+          type: "button",
+          tabIndex: editMode ? 0 : -1,
+          className: `text-left w-full ${isDragging && hasContent ? "cursor-not-allowed" : isDragging ? "cursor-crosshair" : editMode && selectedCells.size === 0 ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1" : isSelected ? "cursor-pointer" : "cursor-default"}`,
+          onClick: (e3) => {
+            if (editMode && selectedCells.size === 0 && !e3.shiftKey && !isDragging) {
+              startEdit(pi2, di);
+            }
+          },
+          "data-ocid": editMode ? "timetable.edit_button" : void 0,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-foreground block", children: cell.subject }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block", children: cell.teacher }),
+            cell.className && /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-blue-500 block", children: cell.className })
+          ]
+        }
+      ),
+      !isDragging && !isEditing && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "button",
+        {
+          type: "button",
+          title: "Quick assign subject & teacher",
+          onClick: (e3) => {
+            e3.stopPropagation();
+            openAssignModal(pi2, di);
+          },
+          className: "absolute -top-1 -right-1 opacity-0 group-hover/cell:opacity-100 transition-opacity bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center shadow-sm hover:bg-primary/80 z-10",
+          "data-ocid": `timetable.quick_assign.${pi2}.${di}`,
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-3 w-3" })
+        }
+      )
+    ] });
   }
   function renderTimetableGrid(readonly = false) {
-    return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-card border border-border rounded-2xl overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-secondary/50 border-b border-border", children: [
-        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Period" }),
-        activeDays.map((d2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
-          "th",
-          {
-            className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground",
-            children: d2
-          },
-          d2
-        ))
-      ] }) }),
-      /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: activePeriods.map((p2, pi2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
-        "tr",
+    const isSelectable = !readonly && viewMode !== "teacher";
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-4 items-start", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
         {
-          className: "border-b border-border hover:bg-secondary/20",
+          className: "flex-1 bg-card border border-border rounded-2xl overflow-hidden",
+          onMouseMove: (e3) => {
+            if (isDragging) {
+              setCursorPos({ x: e3.clientX, y: e3.clientY });
+            }
+          },
+          children: /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "bg-secondary/50 border-b border-border", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Period" }),
+              activeDays.map((d2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "th",
+                {
+                  className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground",
+                  children: d2
+                },
+                d2
+              ))
+            ] }) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: activePeriods.map((p2, pi2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "tr",
+              {
+                className: "border-b border-border hover:bg-secondary/20",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs text-muted-foreground font-medium whitespace-nowrap", children: p2 }),
+                  activeDays.map((d2, di) => {
+                    var _a3, _b3, _c2, _d2;
+                    return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "td",
+                      {
+                        className: getCellClassName(pi2, di, readonly),
+                        style: getCellStyle(pi2, di, readonly),
+                        onMouseDown: isSelectable ? (e3) => handleCellMouseDown(e3, pi2, di) : void 0,
+                        onMouseEnter: isSelectable ? () => handleCellMouseEnter(pi2, di) : void 0,
+                        onClick: isSelectable ? (e3) => handleCellClick(e3, pi2, di) : void 0,
+                        onKeyDown: isSelectable ? (e3) => {
+                          if (e3.key === "Enter" || e3.key === " ") {
+                            handleCellClick(
+                              e3,
+                              pi2,
+                              di
+                            );
+                          }
+                        } : void 0,
+                        onDragOver: !readonly ? (e3) => handleCellDragOver(e3, pi2, di) : void 0,
+                        onDrop: !readonly ? (e3) => handleCellDrop(e3, pi2, di) : void 0,
+                        onDragLeave: !readonly ? handleGridDragLeave : void 0,
+                        "data-ocid": `timetable.cell.${pi2}.${di}`,
+                        children: readonly ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-foreground block", children: ((_b3 = (_a3 = currentGrid[pi2]) == null ? void 0 : _a3[di]) == null ? void 0 : _b3.subject) ?? "-" }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block", children: ((_d2 = (_c2 = currentGrid[pi2]) == null ? void 0 : _c2[di]) == null ? void 0 : _d2.teacher) ?? "" })
+                        ] }) : renderGridCell(pi2, di)
+                      },
+                      d2
+                    );
+                  })
+                ]
+              },
+              p2
+            )) })
+          ] }) })
+        }
+      ),
+      isSelectable && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: "w-44 shrink-0 bg-card border border-border rounded-2xl p-3 space-y-2",
+          "data-ocid": "timetable.subjects_panel",
           children: [
-            /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-xs text-muted-foreground font-medium whitespace-nowrap", children: p2 }),
-            activeDays.map((d2, di) => {
-              var _a3, _b3, _c2, _d2;
-              return /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-2 min-w-[130px]", children: readonly ? /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm text-foreground block", children: ((_b3 = (_a3 = currentGrid[pi2]) == null ? void 0 : _a3[di]) == null ? void 0 : _b3.subject) ?? "-" }),
-                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block", children: ((_d2 = (_c2 = currentGrid[pi2]) == null ? void 0 : _c2[di]) == null ? void 0 : _d2.teacher) ?? "" })
-              ] }) : renderGridCell(pi2, di) }, d2);
-            })
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide pb-1 border-b border-border", children: "Drag Subjects" }),
+            SUBJECTS$2.map((subject, idx) => {
+              const color2 = SUBJECT_COLORS[idx % SUBJECT_COLORS.length];
+              return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  draggable: true,
+                  onDragStart: (e3) => handlePanelDragStart(e3, "subject", subject),
+                  onDragEnd: () => {
+                    setDraggedSubject(null);
+                    setDragOverCell(null);
+                  },
+                  style: {
+                    backgroundColor: color2.bg,
+                    borderColor: color2.border,
+                    color: color2.text
+                  },
+                  className: "px-2.5 py-2 rounded-lg border text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80",
+                  "data-ocid": `timetable.subject_card.${idx + 1}`,
+                  children: subject
+                },
+                subject
+              );
+            }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide pt-2 pb-1 border-b border-border", children: "Drag Teachers" }),
+            ALL_TEACHERS.map((teacher, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                draggable: true,
+                onDragStart: (e3) => handlePanelDragStart(e3, "teacher", teacher),
+                onDragEnd: () => {
+                  setDraggedTeacher(null);
+                  setDragOverCell(null);
+                },
+                className: "px-2.5 py-2 rounded-lg border border-border bg-secondary/40 text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80 flex items-center gap-1.5",
+                "data-ocid": `timetable.teacher_card.${idx + 1}`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { className: "h-3 w-3 shrink-0 text-muted-foreground" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: teacher })
+                ]
+              },
+              teacher
+            )),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide pt-2 pb-1 border-b border-border", children: "Drag Classes" }),
+            CLASSES.map((cls, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                draggable: true,
+                onDragStart: (e3) => handlePanelDragStart(e3, "class", cls),
+                onDragEnd: () => {
+                  setDraggedClass(null);
+                  setDragOverCell(null);
+                },
+                className: "px-2.5 py-2 rounded-lg border border-border bg-accent/30 text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80 flex items-center gap-1.5",
+                "data-ocid": `timetable.class_card.${idx + 1}`,
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Building2, { className: "h-3 w-3 shrink-0 text-muted-foreground" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "truncate", children: cls })
+                ]
+              },
+              cls
+            )),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground/70 pt-1 leading-tight", children: [
+              "Drag or click ",
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Plus, { className: "h-3 w-3 inline" }),
+              " on any cell to assign"
+            ] })
           ]
-        },
-        p2
-      )) })
-    ] }) }) });
+        }
+      )
+    ] });
   }
   function renderTeacherView() {
     return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
@@ -98328,8 +103892,82 @@ function TimetablePage() {
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", "data-ocid": "timetable.page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between flex-wrap gap-3", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Timetable" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Timetable" }),
+        selectedCells.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Badge,
+          {
+            className: "bg-[#E6F1FB] text-[#378ADD] border-[#378ADD]/40 font-medium",
+            "data-ocid": "timetable.selection_badge",
+            children: [
+              selectedCells.size,
+              " slot",
+              selectedCells.size !== 1 ? "s" : "",
+              " ",
+              "selected"
+            ]
+          }
+        )
+      ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+        selectedCells.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              size: "sm",
+              onClick: () => setBulkAssignOpen(true),
+              className: "bg-[#378ADD] hover:bg-[#2d6bb5] text-white",
+              "data-ocid": "timetable.assign_selected_button",
+              children: [
+                "Assign ",
+                selectedCells.size,
+                " Selected"
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              variant: "outline",
+              size: "sm",
+              onClick: () => {
+                setSelectedCells(/* @__PURE__ */ new Set());
+                setFirstSelected(null);
+              },
+              "data-ocid": "timetable.clear_selection_button",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "h-3.5 w-3.5 mr-1" }),
+                " Clear"
+              ]
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: handlePrintTimetable,
+            "data-ocid": "timetable.print_button",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 14, className: "mr-2" }),
+              "Print"
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: handleExportPDF,
+            "data-ocid": "timetable.export_pdf_button",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(FileDown, { size: 14, className: "mr-2" }),
+              "Export PDF"
+            ]
+          }
+        ),
         /* @__PURE__ */ jsxRuntimeExports.jsxs(
           Button,
           {
@@ -98339,7 +103977,7 @@ function TimetablePage() {
             "data-ocid": "timetable.auto_generate.button",
             children: [
               /* @__PURE__ */ jsxRuntimeExports.jsx(Shuffle, { size: 14, className: "mr-2" }),
-              " Auto Generate"
+              selectedCells.size > 0 ? `Auto Assign ${selectedCells.size} Slots` : "Auto Generate"
             ]
           }
         ),
@@ -98351,6 +103989,8 @@ function TimetablePage() {
             onClick: () => {
               setEditMode((v2) => !v2);
               cancelEdit();
+              setSelectedCells(/* @__PURE__ */ new Set());
+              setFirstSelected(null);
             },
             "data-ocid": "timetable.toggle",
             children: editMode ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
@@ -98364,10 +104004,26 @@ function TimetablePage() {
         )
       ] })
     ] }),
+    viewMode !== "teacher" && selectedCells.size === 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2 text-xs text-muted-foreground bg-secondary/30 border border-border rounded-lg px-3 py-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("span", { children: "💡" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: "Click & drag" }),
+        " to select multiple cells ·",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "ml-1", children: "Shift+click" }),
+        " for range select · Drag subjects/teachers/classes from the right panel · Click the",
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { className: "mx-0.5", children: "+" }),
+        " on any cell for quick assign"
+      ] })
+    ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsxs(Tabs, { defaultValue: "timetable", children: [
       /* @__PURE__ */ jsxRuntimeExports.jsxs(TabsList, { children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(TabsTrigger, { value: "timetable", children: "Timetable" }),
-        /* @__PURE__ */ jsxRuntimeExports.jsx(TabsTrigger, { value: "substitutes", children: "Substitutes" })
+        /* @__PURE__ */ jsxRuntimeExports.jsx(TabsTrigger, { value: "substitutes", children: "Substitutes" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(TabsTrigger, { value: "heatmap", "data-ocid": "timetable.heatmap.tab", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(ChartNoAxesColumn, { size: 14, className: "mr-1.5" }),
+          "Heatmap"
+        ] })
       ] }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs(TabsContent, { value: "timetable", className: "mt-5 space-y-4", children: [
         /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -98398,6 +104054,8 @@ function TimetablePage() {
                 onClick: () => {
                   setViewMode(key);
                   cancelEdit();
+                  setSelectedCells(/* @__PURE__ */ new Set());
+                  setFirstSelected(null);
                 },
                 "data-ocid": `timetable.mode.${key}`,
                 className: `flex items-center gap-1.5 px-4 py-1.5 rounded-lg text-sm font-medium transition-colors duration-150 ${viewMode === key ? "bg-card shadow text-foreground border border-border" : "text-muted-foreground hover:text-foreground"}`,
@@ -98419,9 +104077,11 @@ function TimetablePage() {
                 value: selectedClass,
                 onValueChange: (v2) => {
                   setSelectedClass(v2);
-                  const secs = getSectionsForClass(v2);
+                  const secs = getSectionsForClass$1(v2);
                   setSelectedSection(secs[0]);
                   cancelEdit();
+                  setSelectedCells(/* @__PURE__ */ new Set());
+                  setFirstSelected(null);
                 },
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -98446,6 +104106,8 @@ function TimetablePage() {
                 onValueChange: (v2) => {
                   setSelectedSection(v2);
                   cancelEdit();
+                  setSelectedCells(/* @__PURE__ */ new Set());
+                  setFirstSelected(null);
                 },
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(
@@ -98674,11 +104336,255 @@ function TimetablePage() {
             )) })
           ] }) })
         ] })
-      ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        TabsContent,
+        {
+          value: "heatmap",
+          className: "mt-5 space-y-5",
+          "data-ocid": "timetable.heatmap.panel",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 sm:grid-cols-3 gap-4", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-1", children: "Most Overloaded Teacher" }),
+                heatmapSummary.mostLoaded ? /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-base font-bold text-foreground truncate", children: heatmapSummary.mostLoaded.teacher }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-2xl font-bold text-destructive", children: [
+                    heatmapSummary.mostLoaded.total,
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-normal text-muted-foreground ml-1", children: "periods/week" })
+                  ] })
+                ] }) : /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-muted-foreground text-sm", children: "No data" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-1", children: "Average Periods / Teacher" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-2xl font-bold text-foreground", children: [
+                  heatmapSummary.avg,
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-sm font-normal text-muted-foreground ml-1", children: "periods/week" })
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground mt-1", children: [
+                  ALL_TEACHERS.length,
+                  " teachers total"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mb-1", children: "Teachers at Capacity" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-2xl font-bold text-orange-600", children: heatmapSummary.atCapacity }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-xs text-muted-foreground mt-1", children: "≥ 20 periods/week" })
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-2xl overflow-hidden", children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "px-5 py-3 border-b border-border flex items-center justify-between", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "font-semibold text-foreground text-sm", children: "Teacher Workload Heatmap" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: "Click a row to see detailed breakdown" })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "bg-secondary/40", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-3 text-xs font-semibold text-muted-foreground", children: "Teacher" }),
+                  DAYS$1.map((d2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "th",
+                    {
+                      className: "px-3 py-3 text-xs font-semibold text-muted-foreground text-center",
+                      children: d2.slice(0, 3)
+                    },
+                    d2
+                  )),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "px-4 py-3 text-xs font-semibold text-muted-foreground text-center", children: "Total" })
+                ] }) }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: heatmapData2.map((row) => {
+                  const isDrillOpen = drilldownTeacher === row.teacher;
+                  return /* @__PURE__ */ jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                      "tr",
+                      {
+                        className: "border-t border-border hover:bg-secondary/20 cursor-pointer transition-colors",
+                        onClick: () => setDrilldownTeacher(
+                          isDrillOpen ? null : row.teacher
+                        ),
+                        onKeyDown: (e3) => {
+                          if (e3.key === "Enter" || e3.key === " ")
+                            setDrilldownTeacher(
+                              isDrillOpen ? null : row.teacher
+                            );
+                        },
+                        tabIndex: 0,
+                        "data-ocid": "timetable.heatmap.teacher_row",
+                        children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs("td", { className: "px-4 py-3 font-medium text-foreground flex items-center gap-2 min-w-[160px]", children: [
+                            isDrillOpen ? /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronUp, { className: "h-3.5 w-3.5 text-muted-foreground shrink-0" }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { className: "h-3.5 w-3.5 text-muted-foreground shrink-0" }),
+                            row.teacher,
+                            row.total >= 20 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                              "span",
+                              {
+                                className: "ml-1 text-destructive",
+                                title: "Overloaded",
+                                children: "⚠"
+                              }
+                            )
+                          ] }),
+                          DAYS$1.map((day) => {
+                            const count2 = row.dayCounts[day] ?? 0;
+                            return /* @__PURE__ */ jsxRuntimeExports.jsx(
+                              "td",
+                              {
+                                className: "px-3 py-3 text-center font-semibold",
+                                style: getDayCellStyle(count2),
+                                children: count2 === 0 ? "—" : /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center justify-center gap-0.5", children: [
+                                  count2,
+                                  count2 >= 4 && /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { className: "h-3 w-3 inline-block ml-0.5" })
+                                ] })
+                              },
+                              day
+                            );
+                          }),
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(
+                            "td",
+                            {
+                              className: "px-4 py-3 text-center font-bold",
+                              style: getTotalCellStyle(row.total),
+                              children: row.total
+                            }
+                          )
+                        ]
+                      },
+                      row.teacher
+                    ),
+                    isDrillOpen && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "tr",
+                      {
+                        className: "bg-secondary/10",
+                        children: /* @__PURE__ */ jsxRuntimeExports.jsx("td", { colSpan: DAYS$1.length + 2, className: "px-6 py-4", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-2", children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between mb-2", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm font-semibold text-foreground", children: [
+                              row.teacher,
+                              " — Detailed Schedule (",
+                              row.total,
+                              " periods)"
+                            ] }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                              Button,
+                              {
+                                variant: "ghost",
+                                size: "sm",
+                                onClick: (e3) => {
+                                  e3.stopPropagation();
+                                  setDrilldownTeacher(null);
+                                },
+                                "data-ocid": "timetable.heatmap.drilldown.close_button",
+                                children: [
+                                  /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "h-3.5 w-3.5 mr-1" }),
+                                  " Close"
+                                ]
+                              }
+                            )
+                          ] }),
+                          row.assignments.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground", children: "No assignments found." }) : /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "overflow-x-auto rounded-lg border border-border", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-xs", children: [
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { className: "bg-secondary/50", children: /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: [
+                              "Class-Section",
+                              "Day",
+                              "Period",
+                              "Subject"
+                            ].map((h2) => /* @__PURE__ */ jsxRuntimeExports.jsx(
+                              "th",
+                              {
+                                className: "text-left px-3 py-2 font-semibold text-muted-foreground",
+                                children: h2
+                              },
+                              h2
+                            )) }) }),
+                            /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: row.assignments.map((a2, ai) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                              "tr",
+                              {
+                                className: "border-t border-border",
+                                children: [
+                                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                                    Badge,
+                                    {
+                                      variant: "outline",
+                                      className: "text-xs",
+                                      children: a2.classSection
+                                    }
+                                  ) }),
+                                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2 text-muted-foreground", children: a2.day }),
+                                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2 text-muted-foreground", children: a2.period }),
+                                  /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-3 py-2 font-medium text-foreground", children: a2.subject })
+                                ]
+                              },
+                              `${a2.classSection}-${a2.day}-${a2.period}-${ai}`
+                            )) })
+                          ] }) })
+                        ] }) })
+                      },
+                      `${row.teacher}-drill`
+                    )
+                  ] });
+                }) })
+              ] }) })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex flex-wrap items-center gap-4 px-1",
+                "data-ocid": "timetable.heatmap.legend",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs font-semibold text-muted-foreground uppercase tracking-wide", children: "Legend:" }),
+                  [
+                    {
+                      label: "Free",
+                      style: { background: "#f9fafb", color: "#9ca3af" }
+                    },
+                    {
+                      label: "1 period",
+                      style: { background: "#dcfce7", color: "#15803d" }
+                    },
+                    {
+                      label: "2 periods",
+                      style: { background: "#fef9c3", color: "#a16207" }
+                    },
+                    {
+                      label: "3 periods",
+                      style: { background: "#ffedd5", color: "#c2410c" }
+                    },
+                    {
+                      label: "4+ (Overloaded)",
+                      style: {
+                        background: "#fee2e2",
+                        color: "#b91c1c",
+                        fontWeight: "bold"
+                      }
+                    }
+                  ].map(({ label, style: style2 }) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-1.5", children: [
+                    /* @__PURE__ */ jsxRuntimeExports.jsx(
+                      "span",
+                      {
+                        className: "inline-block w-6 h-6 rounded text-center text-xs font-semibold leading-6",
+                        style: style2,
+                        children: label === "Free" ? "—" : label.split(" ")[0]
+                      }
+                    ),
+                    /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground", children: label })
+                  ] }, label)),
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "ml-auto text-xs text-muted-foreground italic", children: "Threshold: 4+ periods/day or 16+ periods/week = Overloaded" })
+                ]
+              }
+            )
+          ]
+        }
+      )
     ] }),
     /* @__PURE__ */ jsxRuntimeExports.jsx(Dialog, { open: autoOpen, onOpenChange: setAutoOpen, children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-md", children: [
-      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Auto Generate Timetable" }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: selectedCells.size > 0 ? `Auto Assign ${selectedCells.size} Selected Slot${selectedCells.size !== 1 ? "s" : ""}` : "Auto Generate Timetable" }) }),
       /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-2", children: [
+        selectedCells.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-[#E6F1FB] border border-[#378ADD]/30 rounded-lg px-3 py-2 text-sm text-[#378ADD]", children: [
+          "Will auto-fill only the",
+          " ",
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+            selectedCells.size,
+            " selected slot",
+            selectedCells.size !== 1 ? "s" : ""
+          ] }),
+          " ",
+          "using round-robin assignment."
+        ] }),
         /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-2 gap-3", children: [
           /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
             /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Class *" }),
@@ -98705,7 +104611,7 @@ function TimetablePage() {
                 onValueChange: (v2) => setAutoForm((p2) => ({ ...p2, section: v2 })),
                 children: [
                   /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.auto.section", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select" }) }),
-                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "max-h-60 overflow-y-auto", children: getSectionsForClass(autoForm.class || selectedClass).map(
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "max-h-60 overflow-y-auto", children: getSectionsForClass$1(autoForm.class || selectedClass).map(
                     (s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2, children: s2 }, s2)
                   ) })
                 ]
@@ -98791,7 +104697,289 @@ function TimetablePage() {
           )
         ] })
       ] })
-    ] }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: assignModalOpen,
+        onOpenChange: (open) => {
+          if (!open) {
+            setAssignModalOpen(false);
+            setAssignModalCell(null);
+            setAssignModalDraft({});
+          }
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          DialogContent,
+          {
+            className: "max-w-sm",
+            "data-ocid": "timetable.assign_modal.dialog",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Assign Slot" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-2", children: [
+                assignModalCell && /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-xs text-muted-foreground", children: [
+                  "Period ",
+                  assignModalCell.periodIndex + 1,
+                  " ·",
+                  " ",
+                  activeDays[assignModalCell.dayIndex]
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Subject" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: assignModalDraft.subject || "",
+                      onValueChange: (v2) => setAssignModalDraft((p2) => ({ ...p2, subject: v2 })),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.assign_modal.subject_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select subject" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: SUBJECTS$2.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2, children: s2 }, s2)) })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Teacher" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: assignModalDraft.teacher || "",
+                      onValueChange: (v2) => setAssignModalDraft((p2) => ({ ...p2, teacher: v2 })),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.assign_modal.teacher_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select teacher" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: ALL_TEACHERS.map((t2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: t2, children: t2 }, t2)) })
+                      ]
+                    }
+                  )
+                ] }),
+                viewMode === "teacher" && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Class" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: assignModalDraft.className || "",
+                      onValueChange: (v2) => setAssignModalDraft((p2) => ({ ...p2, className: v2 })),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.assign_modal.class_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select class" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { className: "max-h-60 overflow-y-auto", children: CLASSES.map((c2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: c2, children: c2 }, c2)) })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      variant: "outline",
+                      className: "flex-1",
+                      onClick: () => {
+                        setAssignModalOpen(false);
+                        setAssignModalCell(null);
+                        setAssignModalDraft({});
+                      },
+                      "data-ocid": "timetable.assign_modal.cancel_button",
+                      children: "Cancel"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      className: "flex-1",
+                      onClick: handleAssignModalSave,
+                      "data-ocid": "timetable.assign_modal.assign_button",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "h-4 w-4 mr-1.5" }),
+                        " Assign"
+                      ]
+                    }
+                  )
+                ] })
+              ] })
+            ]
+          }
+        )
+      }
+    ),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: bulkAssignOpen,
+        onOpenChange: (open) => {
+          if (!open) {
+            setBulkAssignOpen(false);
+            setSelectedCells(/* @__PURE__ */ new Set());
+            setFirstSelected(null);
+            setBulkDraft({ subject: "", teacher: "" });
+          }
+        },
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          DialogContent,
+          {
+            className: "max-w-sm",
+            "data-ocid": "timetable.bulk_assign.dialog",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogTitle, { children: [
+                "Assign to all ",
+                selectedCells.size,
+                " selected slot",
+                selectedCells.size !== 1 ? "s" : "",
+                "?"
+              ] }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4 pt-2", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-[#E6F1FB] border border-[#378ADD]/30 rounded-lg px-3 py-2 text-sm text-[#378ADD]", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs("strong", { children: [
+                    selectedCells.size,
+                    " slot",
+                    selectedCells.size !== 1 ? "s" : ""
+                  ] }),
+                  " ",
+                  "will be assigned the same subject and teacher."
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Subject" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: bulkDraft.subject,
+                      onValueChange: (v2) => setBulkDraft((p2) => ({ ...p2, subject: v2 })),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.bulk.subject_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select subject" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: SUBJECTS$2.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: s2, children: s2 }, s2)) })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-1.5", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(Label$1, { children: "Teacher" }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: bulkDraft.teacher,
+                      onValueChange: (v2) => setBulkDraft((p2) => ({ ...p2, teacher: v2 })),
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { "data-ocid": "timetable.bulk.teacher_select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select teacher" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectContent, { children: ALL_TEACHERS.map((t2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: t2, children: t2 }, t2)) })
+                      ]
+                    }
+                  )
+                ] }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2 pt-1", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    Button,
+                    {
+                      variant: "outline",
+                      className: "flex-1",
+                      onClick: () => {
+                        setBulkAssignOpen(false);
+                        setSelectedCells(/* @__PURE__ */ new Set());
+                        setFirstSelected(null);
+                        setBulkDraft({ subject: "", teacher: "" });
+                      },
+                      "data-ocid": "timetable.bulk.cancel_button",
+                      children: "Cancel"
+                    }
+                  ),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Button,
+                    {
+                      className: "flex-1",
+                      onClick: handleBulkAssign,
+                      "data-ocid": "timetable.bulk.assign_button",
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(Check, { className: "h-4 w-4 mr-1.5" }),
+                        " Assign All"
+                      ]
+                    }
+                  )
+                ] })
+              ] })
+            ]
+          }
+        )
+      }
+    ),
+    isDragging && selectedCells.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "fixed z-50 pointer-events-none px-2 py-1 rounded-md text-xs font-medium text-white shadow-lg",
+        style: {
+          left: cursorPos.x + 12,
+          top: cursorPos.y - 10,
+          background: "#378ADD"
+        },
+        "data-ocid": "timetable.drag_tooltip",
+        children: [
+          selectedCells.size,
+          " slot",
+          selectedCells.size !== 1 ? "s" : "",
+          " ",
+          "selected"
+        ]
+      }
+    ),
+    isTouchDevice && selectedCells.size > 0 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+      "div",
+      {
+        className: "fixed bottom-6 right-6 z-50",
+        "data-ocid": "timetable.mobile_assign_button",
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          Button,
+          {
+            onClick: () => setBulkAssignOpen(true),
+            className: "shadow-xl px-5 py-2.5 rounded-full text-sm font-semibold",
+            style: { background: "#378ADD" },
+            children: [
+              "Assign Selected (",
+              selectedCells.size,
+              ")"
+            ]
+          }
+        )
+      }
+    ),
+    undoVisible && lastAssignment && /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: "fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-3 px-5 py-3 rounded-xl shadow-xl border border-white/10",
+        style: { background: "#1E293B", color: "#F1F5F9", minWidth: 320 },
+        "data-ocid": "timetable.undo_snackbar",
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "text-sm flex-1", children: [
+            "Assigned ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("strong", { children: lastAssignment.cells.length }),
+            " slot",
+            lastAssignment.cells.length !== 1 ? "s" : "",
+            " · ",
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "opacity-60", children: [
+              "auto-dismiss in ",
+              undoCountdown,
+              "s"
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              onClick: handleUndo,
+              className: "text-sm font-semibold px-3 py-1 rounded-lg transition-colors hover:bg-white/10",
+              style: { color: "#60A5FA" },
+              "data-ocid": "timetable.undo_button",
+              children: "Undo"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            "button",
+            {
+              type: "button",
+              onClick: () => setUndoVisible(false),
+              className: "opacity-50 hover:opacity-100 transition-opacity ml-1",
+              "data-ocid": "timetable.undo_dismiss_button",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { className: "h-4 w-4" })
+            }
+          )
+        ]
+      }
+    )
   ] });
 }
 const initialRoutes$1 = [
@@ -98826,6 +105014,7 @@ function TransportPage() {
   const [dialogOpen, setDialogOpen] = reactExports.useState(false);
   const [editId, setEditId] = reactExports.useState(null);
   const [form, setForm] = reactExports.useState(emptyForm);
+  const [deleteTarget, setDeleteTarget] = reactExports.useState(null);
   const update = (key, value) => setForm((prev) => ({ ...prev, [key]: value }));
   function openAdd() {
     setEditId(null);
@@ -98875,11 +105064,15 @@ function TransportPage() {
     }
     setDialogOpen(false);
   }
-  function handleDelete(id, name) {
-    if (window.confirm(`Delete route "${name}"?`)) {
-      setRoutes((prev) => prev.filter((r2) => r2.id !== id));
-      ue.success("Route deleted.");
-    }
+  function handleDelete(id) {
+    const route = routes.find((r2) => r2.id === id);
+    if (route) setDeleteTarget(route);
+  }
+  function confirmDelete() {
+    if (!deleteTarget) return;
+    setRoutes((prev) => prev.filter((r2) => r2.id !== deleteTarget.id));
+    ue.success("Route deleted.");
+    setDeleteTarget(null);
   }
   return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", "data-ocid": "transport.page", children: [
     /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between", children: [
@@ -98921,7 +105114,7 @@ function TransportPage() {
                   size: "icon",
                   variant: "ghost",
                   className: "h-7 w-7 text-destructive hover:text-destructive",
-                  onClick: () => handleDelete(r2.id, r2.name),
+                  onClick: () => handleDelete(r2.id),
                   "data-ocid": `transport.delete_button.${i + 1}`,
                   children: /* @__PURE__ */ jsxRuntimeExports.jsx(Trash2, { size: 13 })
                 }
@@ -99015,7 +105208,43 @@ function TransportPage() {
         ),
         /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { onClick: handleSubmit, "data-ocid": "transport.submit_button", children: editId !== null ? "Save Changes" : "Add Route" })
       ] })
-    ] }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx(
+      Dialog,
+      {
+        open: !!deleteTarget,
+        onOpenChange: (open) => !open && setDeleteTarget(null),
+        children: /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogContent, { className: "max-w-sm", "data-ocid": "transport.delete.dialog", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(DialogHeader, { children: /* @__PURE__ */ jsxRuntimeExports.jsx(DialogTitle, { children: "Delete Route" }) }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("p", { className: "text-sm text-muted-foreground", children: [
+            "Are you sure you want to delete",
+            " ",
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-semibold text-foreground", children: deleteTarget == null ? void 0 : deleteTarget.name }),
+            "? This action cannot be undone."
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(DialogFooter, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "outline",
+                onClick: () => setDeleteTarget(null),
+                "data-ocid": "transport.delete.cancel_button",
+                children: "Cancel"
+              }
+            ),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                variant: "destructive",
+                onClick: confirmDelete,
+                "data-ocid": "transport.delete.confirm_button",
+                children: "Delete"
+              }
+            )
+          ] })
+        ] })
+      }
+    )
   ] });
 }
 const PERMISSION_GROUPS = [
@@ -107262,6 +113491,782 @@ function BulkReportCardPage() {
     ] })
   ] });
 }
+function getAcademicLevel(studentId) {
+  const seed2 = studentId.split("").reduce((a2, c2) => a2 + c2.charCodeAt(0), 0);
+  const bucket = seed2 % 10;
+  if (bucket < 3) return "A";
+  if (bucket < 7) return "B";
+  return "C";
+}
+function getSectionsForClass(cls) {
+  if (cls === "XI" || cls === "XII")
+    return ["Science", "Commerce", "Arts", "A", "B", "C", "D"];
+  return ["A", "B", "C", "D"];
+}
+const ALL_SUBJECTS = [
+  "Mathematics",
+  "Science",
+  "English",
+  "Hindi",
+  "Social Science",
+  "Physical Education",
+  "Computer Science",
+  "Art & Craft"
+];
+const STAFF_NAMES = mockStaff.filter((s2) => s2.status === "Active").map((s2) => s2.name);
+function buildInitialState() {
+  const viiA = mockStudents.filter((s2) => s2.className === "VII" && s2.section === "A").slice(0, 8);
+  const viB = mockStudents.filter((s2) => s2.className === "VI" && s2.section === "B").slice(0, 6);
+  const ixC = mockStudents.filter((s2) => s2.className === "IX" && s2.section === "C").slice(0, 5);
+  return {
+    "VII-A": {
+      students: viiA,
+      teacher: "Amit Verma",
+      subjectTeachers: { Mathematics: "Sunita Devi" }
+    },
+    "VI-B": {
+      students: viB,
+      teacher: "Poonam Rani",
+      subjectTeachers: { Hindi: "Poonam Rani" }
+    },
+    "IX-C": {
+      students: ixC,
+      teacher: "Ramesh Tiwari",
+      subjectTeachers: { Science: "Ramesh Tiwari" }
+    }
+  };
+}
+function StepIndicator({ step }) {
+  const steps = ["Select Class", "Build Class List", "Review & Confirm"];
+  return /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center gap-0", children: steps.map((label, i) => {
+    const idx = i + 1;
+    const active = idx === step;
+    const done = idx < step;
+    return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        "div",
+        {
+          className: `flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${active ? "bg-primary text-primary-foreground" : done ? "bg-green-500 text-white" : "bg-muted text-muted-foreground"}`,
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold border border-current", children: done ? "✓" : idx }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "hidden sm:inline", children: label })
+          ]
+        }
+      ),
+      i < steps.length - 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "div",
+        {
+          className: `w-8 h-0.5 mx-1 ${done ? "bg-green-500" : "bg-border"}`
+        }
+      )
+    ] }, label);
+  }) });
+}
+function Step1({ classBuilds, onSelect }) {
+  const total = CLASSES.reduce(
+    (n2, cls) => n2 + getSectionsForClass(cls).length,
+    0
+  );
+  const built = Object.keys(classBuilds).length;
+  const allocated = Object.values(classBuilds).reduce(
+    (n2, b2) => n2 + b2.students.length,
+    0
+  );
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-primary/10 border border-primary/20 rounded-lg px-4 py-2 text-sm font-medium text-primary", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: built }),
+        "/",
+        total,
+        " class-sections built"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-green-500/10 border border-green-500/20 rounded-lg px-4 py-2 text-sm font-medium text-green-700 dark:text-green-400", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "font-bold", children: allocated }),
+        " students allocated"
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-muted border border-border rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground", children: [
+        "Academic Year:",
+        " ",
+        /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-foreground font-semibold", children: "2026-27" })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-6", children: CLASSES.map((cls) => /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "text-sm font-semibold text-muted-foreground uppercase tracking-wide mb-2 flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Layers, { size: 14 }),
+        " Class ",
+        cls
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3", children: getSectionsForClass(cls).map((sec) => {
+        const key = `${cls}-${sec}`;
+        const build = classBuilds[key];
+        const count2 = (build == null ? void 0 : build.students.length) ?? 0;
+        const teacher = (build == null ? void 0 : build.teacher) ?? "";
+        const hasStudents = count2 > 0;
+        const hasTeacher = !!teacher;
+        let cardClass = "border-primary/20 bg-primary/5 hover:bg-primary/10";
+        let badgeEl = null;
+        if (hasStudents && hasTeacher) {
+          cardClass = "border-green-500/30 bg-green-500/5 hover:bg-green-500/10";
+          badgeEl = /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "text-xs bg-green-500/20 text-green-700 dark:text-green-400 border-0", children: "Built" });
+        } else if (hasStudents) {
+          cardClass = "border-yellow-400/40 bg-yellow-400/5 hover:bg-yellow-400/10";
+          badgeEl = /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "text-xs bg-yellow-400/20 text-yellow-700 dark:text-yellow-400 border-0", children: "No Teacher" });
+        }
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "button",
+          {
+            type: "button",
+            "data-ocid": `class-card-${key.toLowerCase().replace(/\s/g, "-")}`,
+            onClick: () => onSelect(key),
+            className: `rounded-xl border p-3 text-left transition-all cursor-pointer ${cardClass}`,
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "font-semibold text-sm text-foreground", children: key }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground mt-0.5", children: [
+                count2,
+                " students"
+              ] }),
+              badgeEl && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "mt-1.5", children: badgeEl }),
+              teacher && /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground mt-1 truncate", children: teacher })
+            ]
+          },
+          key
+        );
+      }) })
+    ] }, cls)) })
+  ] });
+}
+function Step2({ selectedKey, classBuilds, onChange, onBack }) {
+  const build = classBuilds[selectedKey] ?? {
+    students: [],
+    teacher: "",
+    subjectTeachers: {}
+  };
+  const [poolSearch, setPoolSearch] = reactExports.useState("");
+  const [poolClassFilter, setPoolClassFilter] = reactExports.useState("all");
+  const [selectedPool, setSelectedPool] = reactExports.useState(/* @__PURE__ */ new Set());
+  const [showBalance, setShowBalance] = reactExports.useState(false);
+  const [subjectTeachers, setSubjectTeachers] = reactExports.useState(
+    ALL_SUBJECTS.map((s2) => ({
+      subject: s2,
+      teacher: build.subjectTeachers[s2] ?? ""
+    }))
+  );
+  const [customSubjects, setCustomSubjects] = reactExports.useState([]);
+  const [classTeacher, setClassTeacher] = reactExports.useState(build.teacher);
+  const assignedIds = reactExports.useMemo(() => {
+    const ids = /* @__PURE__ */ new Set();
+    for (const [k2, b2] of Object.entries(classBuilds)) {
+      if (k2 !== selectedKey) {
+        for (const s2 of b2.students) ids.add(s2.id);
+      }
+    }
+    return ids;
+  }, [classBuilds, selectedKey]);
+  const roster = build.students;
+  const rosterIds = reactExports.useMemo(() => new Set(roster.map((s2) => s2.id)), [roster]);
+  const pool = reactExports.useMemo(() => {
+    return mockStudents.filter((s2) => {
+      if (rosterIds.has(s2.id)) return false;
+      if (assignedIds.has(s2.id)) return false;
+      const q2 = poolSearch.toLowerCase();
+      const matchSearch = !q2 || s2.name.toLowerCase().includes(q2) || s2.admissionNo.toLowerCase().includes(q2);
+      const matchClass = poolClassFilter === "all" || s2.className === poolClassFilter;
+      return matchSearch && matchClass;
+    });
+  }, [poolSearch, poolClassFilter, rosterIds, assignedIds]);
+  const maleCount = roster.filter((s2) => s2.gender === "Male").length;
+  const femaleCount = roster.filter((s2) => s2.gender === "Female").length;
+  const total = roster.length;
+  const malePct = total > 0 ? Math.round(maleCount / total * 100) : 0;
+  const genderWarning = total > 0 && (malePct > 60 || malePct < 40);
+  const levelCounts = { A: 0, B: 0, C: 0 };
+  for (const s2 of roster) levelCounts[getAcademicLevel(s2.id)]++;
+  const aLevelPct = total > 0 ? Math.round(levelCounts.A / total * 100) : 0;
+  const levelWarning = total > 0 && aLevelPct > 50;
+  function addSelected() {
+    if (selectedPool.size === 0) {
+      ue.error("Select at least one student from the pool");
+      return;
+    }
+    const toAdd = pool.filter((s2) => selectedPool.has(s2.id));
+    const newBuild = { ...build, students: [...roster, ...toAdd] };
+    onChange(selectedKey, newBuild);
+    setSelectedPool(/* @__PURE__ */ new Set());
+  }
+  function addAllFromClass() {
+    if (poolClassFilter === "all") {
+      ue.error("Select a class filter first");
+      return;
+    }
+    const toAdd = pool.filter((s2) => s2.className === poolClassFilter);
+    if (toAdd.length === 0) {
+      ue.info("No students to add from this class");
+      return;
+    }
+    onChange(selectedKey, { ...build, students: [...roster, ...toAdd] });
+  }
+  function removeStudent(id) {
+    onChange(selectedKey, {
+      ...build,
+      students: roster.filter((s2) => s2.id !== id)
+    });
+  }
+  function saveTeachers() {
+    const allSubjects = [...subjectTeachers, ...customSubjects];
+    const subMap = {};
+    for (const { subject, teacher } of allSubjects) {
+      if (subject && teacher) subMap[subject] = teacher;
+    }
+    onChange(selectedKey, {
+      ...build,
+      teacher: classTeacher,
+      subjectTeachers: subMap
+    });
+    ue.success(`Class ${selectedKey} teacher allocation saved`);
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-4", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(Button, { variant: "ghost", size: "sm", onClick: onBack, className: "gap-1.5", children: "← Back to Class Selection" }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center gap-2", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h2", { className: "text-lg font-bold text-foreground", children: "Building:" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { className: "text-base px-3 py-1 bg-primary text-primary-foreground", children: selectedKey })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-2 gap-5", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4 space-y-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-semibold text-foreground flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Users, { size: 16, className: "text-muted-foreground" }),
+          " Unassigned Students",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", children: pool.length })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "relative", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Search,
+            {
+              size: 14,
+              className: "absolute left-2.5 top-2.5 text-muted-foreground"
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Input,
+            {
+              "data-ocid": "pool-search",
+              value: poolSearch,
+              onChange: (e3) => setPoolSearch(e3.target.value),
+              placeholder: "Search students...",
+              className: "pl-8 h-8 text-sm"
+            }
+          )
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: poolClassFilter, onValueChange: setPoolClassFilter, children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            SelectTrigger,
+            {
+              className: "h-8 text-sm",
+              "data-ocid": "pool-class-filter",
+              children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Filter by class" })
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "all", children: "All Classes" }),
+            CLASSES.map((cls) => /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectItem, { value: cls, children: [
+              "Class ",
+              cls
+            ] }, cls))
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-h-64 overflow-y-auto space-y-1 border border-border rounded-lg p-1", children: pool.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-6 text-sm text-muted-foreground", children: "No unassigned students match filter" }) : pool.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "label",
+          {
+            className: "flex items-center gap-2 p-2 rounded-lg hover:bg-muted cursor-pointer",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "input",
+                {
+                  type: "checkbox",
+                  checked: selectedPool.has(s2.id),
+                  onChange: (e3) => {
+                    const next = new Set(selectedPool);
+                    e3.target.checked ? next.add(s2.id) : next.delete(s2.id);
+                    setSelectedPool(next);
+                  },
+                  className: "rounded",
+                  "data-ocid": `pool-check-${s2.id}`
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0", children: s2.name.charAt(0) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-foreground truncate", children: s2.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-muted-foreground", children: [
+                  s2.className,
+                  "-",
+                  s2.section,
+                  " · ",
+                  s2.admissionNo
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Badge,
+                {
+                  variant: "outline",
+                  className: `text-xs flex-shrink-0 ${s2.gender === "Male" ? "border-blue-400 text-blue-600" : "border-pink-400 text-pink-600"}`,
+                  children: s2.gender === "Male" ? "M" : "F"
+                }
+              )
+            ]
+          },
+          s2.id
+        )) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            Button,
+            {
+              size: "sm",
+              onClick: addSelected,
+              disabled: selectedPool.size === 0,
+              "data-ocid": "add-selected-btn",
+              className: "flex-1",
+              children: [
+                "Add Selected (",
+                selectedPool.size,
+                ") → ",
+                selectedKey
+              ]
+            }
+          ),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              size: "sm",
+              variant: "outline",
+              onClick: addAllFromClass,
+              "data-ocid": "add-all-class-btn",
+              disabled: poolClassFilter === "all",
+              children: "Add All"
+            }
+          )
+        ] })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4 space-y-3", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "flex items-center justify-between", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("h3", { className: "font-semibold text-foreground flex items-center gap-2", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Layers, { size: 16, className: "text-muted-foreground" }),
+          " ",
+          selectedKey,
+          " Roster",
+          /* @__PURE__ */ jsxRuntimeExports.jsx(Badge, { variant: "secondary", children: roster.length })
+        ] }) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "max-h-44 overflow-y-auto space-y-1 border border-border rounded-lg p-1", children: roster.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-center py-6 text-sm text-muted-foreground", children: "No students added yet. Use the pool on the left." }) : roster.map((s2) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "div",
+          {
+            className: "flex items-center gap-2 p-2 rounded-lg hover:bg-muted",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "w-7 h-7 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold flex-shrink-0", children: s2.name.charAt(0) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "min-w-0 flex-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-sm font-medium text-foreground truncate", children: s2.name }),
+                /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs text-muted-foreground", children: s2.admissionNo })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Badge,
+                {
+                  variant: "outline",
+                  className: `text-xs flex-shrink-0 ${s2.gender === "Male" ? "border-blue-400 text-blue-600" : "border-pink-400 text-pink-600"}`,
+                  children: s2.gender === "Male" ? "M" : "F"
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                Badge,
+                {
+                  variant: "outline",
+                  className: `text-xs flex-shrink-0 ${getAcademicLevel(s2.id) === "A" ? "border-green-400 text-green-600" : getAcademicLevel(s2.id) === "B" ? "border-yellow-500 text-yellow-600" : "border-red-400 text-red-600"}`,
+                  children: getAcademicLevel(s2.id)
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => removeStudent(s2.id),
+                  "data-ocid": `remove-student-${s2.id}`,
+                  "aria-label": "Remove student",
+                  className: "text-destructive hover:text-destructive/80 p-0.5 rounded",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 14 })
+                }
+              )
+            ]
+          },
+          s2.id
+        )) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-border rounded-lg overflow-hidden", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsxs(
+            "button",
+            {
+              type: "button",
+              onClick: () => setShowBalance(!showBalance),
+              "data-ocid": "balance-rules-toggle",
+              className: "w-full flex items-center justify-between p-2.5 text-sm font-medium hover:bg-muted transition-colors",
+              children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { className: "flex items-center gap-2", children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 14, className: "text-yellow-500" }),
+                  " Balance Rules"
+                ] }),
+                showBalance ? /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronUp, { size: 14 }) : /* @__PURE__ */ jsxRuntimeExports.jsx(ChevronDown, { size: 14 })
+              ]
+            }
+          ),
+          showBalance && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "p-3 space-y-3 bg-muted/30", children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs mb-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Gender Balance" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                  maleCount,
+                  "M / ",
+                  femaleCount,
+                  "F"
+                ] })
+              ] }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "h-2 rounded-full bg-muted overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+                "div",
+                {
+                  className: "h-full bg-blue-400 rounded-full transition-all",
+                  style: { width: `${malePct}%` }
+                }
+              ) }),
+              genderWarning && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-yellow-600 dark:text-yellow-400 mt-1 flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 12 }),
+                " ",
+                malePct,
+                "% Male — consider balancing"
+              ] })
+            ] }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex items-center justify-between text-xs mb-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-muted-foreground", children: "Academic Level" }),
+                /* @__PURE__ */ jsxRuntimeExports.jsxs("span", { children: [
+                  "A:",
+                  levelCounts.A,
+                  " B:",
+                  levelCounts.B,
+                  " C:",
+                  levelCounts.C
+                ] })
+              ] }),
+              levelWarning && /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "text-xs text-yellow-600 dark:text-yellow-400 flex items-center gap-1", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 12 }),
+                " ",
+                aLevelPct,
+                "% A-grade — consider spreading across sections"
+              ] })
+            ] })
+          ] })
+        ] }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "border border-border rounded-lg p-3 space-y-3", children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("h4", { className: "text-sm font-semibold text-foreground", children: "Teacher Allocation" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block mb-1", children: "Class Teacher" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: classTeacher, onValueChange: setClassTeacher, children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx(
+                SelectTrigger,
+                {
+                  className: "h-8 text-sm",
+                  "data-ocid": "class-teacher-select",
+                  children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Select class teacher" })
+                }
+              ),
+              /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "", children: "— Not Assigned —" }),
+                STAFF_NAMES.map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: n2, children: n2 }, n2))
+              ] })
+            ] })
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground block mb-1", children: "Subject Teachers" }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "space-y-1.5", children: [...subjectTeachers, ...customSubjects].map((row, idx) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+              "div",
+              {
+                className: "flex items-center gap-2",
+                children: [
+                  /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-xs text-muted-foreground w-28 flex-shrink-0 truncate", children: row.subject }),
+                  /* @__PURE__ */ jsxRuntimeExports.jsxs(
+                    Select,
+                    {
+                      value: row.teacher,
+                      onValueChange: (val) => {
+                        if (idx < subjectTeachers.length) {
+                          const next = [...subjectTeachers];
+                          next[idx] = { ...next[idx], teacher: val };
+                          setSubjectTeachers(next);
+                        } else {
+                          const ci = idx - subjectTeachers.length;
+                          const next = [...customSubjects];
+                          next[ci] = { ...next[ci], teacher: val };
+                          setCustomSubjects(next);
+                        }
+                      },
+                      children: [
+                        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "h-7 text-xs flex-1", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, { placeholder: "Assign teacher" }) }),
+                        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+                          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "", children: "— None —" }),
+                          STAFF_NAMES.map((n2) => /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: n2, children: n2 }, n2))
+                        ] })
+                      ]
+                    }
+                  ),
+                  idx >= subjectTeachers.length && /* @__PURE__ */ jsxRuntimeExports.jsx(
+                    "button",
+                    {
+                      type: "button",
+                      "aria-label": "Remove subject row",
+                      onClick: () => setCustomSubjects(
+                        (prev) => prev.filter(
+                          (_2, i) => i !== idx - subjectTeachers.length
+                        )
+                      ),
+                      className: "text-destructive p-0.5",
+                      children: /* @__PURE__ */ jsxRuntimeExports.jsx(X$1, { size: 12 })
+                    }
+                  )
+                ]
+              },
+              `${row.subject}-${idx}`
+            )) }),
+            /* @__PURE__ */ jsxRuntimeExports.jsx(
+              Button,
+              {
+                size: "sm",
+                variant: "ghost",
+                className: "mt-1.5 text-xs h-7",
+                onClick: () => setCustomSubjects((prev) => [
+                  ...prev,
+                  { subject: "New Subject", teacher: "" }
+                ]),
+                "data-ocid": "add-subject-row-btn",
+                children: "+ Add Subject"
+              }
+            )
+          ] }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(
+            Button,
+            {
+              size: "sm",
+              onClick: saveTeachers,
+              "data-ocid": "save-teachers-btn",
+              className: "w-full",
+              children: "Save Teacher Allocation"
+            }
+          )
+        ] })
+      ] })
+    ] })
+  ] });
+}
+function Step3({ classBuilds, academicYear }) {
+  const [finalised, setFinalised] = reactExports.useState(false);
+  const entries = Object.entries(classBuilds);
+  const totalClasses = entries.length;
+  const totalStudents = entries.reduce((n2, [, b2]) => n2 + b2.students.length, 0);
+  const totalTeachers = entries.filter(([, b2]) => !!b2.teacher).length;
+  const anyEmpty = entries.some(([, b2]) => b2.students.length === 0);
+  function handleFinalise() {
+    if (anyEmpty) {
+      ue.error("Some classes have no students assigned");
+      return;
+    }
+    setFinalised(true);
+    ue.success(
+      `🎉 Class lists for ${academicYear} finalised! ${totalClasses} classes, ${totalStudents} students, ${totalTeachers} teachers assigned.`
+    );
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "grid grid-cols-3 gap-4", children: [
+      {
+        label: "Classes Built",
+        value: totalClasses,
+        color: "bg-primary/10 text-primary"
+      },
+      {
+        label: "Students Allocated",
+        value: totalStudents,
+        color: "bg-green-500/10 text-green-700 dark:text-green-400"
+      },
+      {
+        label: "Teachers Assigned",
+        value: totalTeachers,
+        color: "bg-blue-500/10 text-blue-700 dark:text-blue-400"
+      }
+    ].map(({ label, value, color: color2 }) => /* @__PURE__ */ jsxRuntimeExports.jsxs(
+      "div",
+      {
+        className: `rounded-xl p-4 text-center ${color2} border border-current/20`,
+        children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-2xl font-bold", children: value }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "text-xs mt-0.5 opacity-80", children: label })
+        ]
+      },
+      label
+    )) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsx("div", { className: "bg-card border border-border rounded-xl overflow-hidden", children: /* @__PURE__ */ jsxRuntimeExports.jsxs("table", { className: "w-full text-sm", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx("thead", { children: /* @__PURE__ */ jsxRuntimeExports.jsxs("tr", { className: "border-b border-border bg-muted/50", children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-2.5 font-semibold text-muted-foreground", children: "Class-Section" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-2.5 font-semibold text-muted-foreground", children: "Students" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-left px-4 py-2.5 font-semibold text-muted-foreground hidden sm:table-cell", children: "Class Teacher" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-right px-4 py-2.5 font-semibold text-muted-foreground hidden md:table-cell", children: "Subjects" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("th", { className: "text-center px-4 py-2.5 font-semibold text-muted-foreground", children: "Status" })
+      ] }) }),
+      /* @__PURE__ */ jsxRuntimeExports.jsx("tbody", { children: entries.length === 0 ? /* @__PURE__ */ jsxRuntimeExports.jsx("tr", { children: /* @__PURE__ */ jsxRuntimeExports.jsx(
+        "td",
+        {
+          colSpan: 5,
+          className: "text-center py-8 text-muted-foreground",
+          children: "No classes built yet. Go back to Step 1 and build some classes."
+        }
+      ) }) : entries.sort(([a2], [b2]) => a2.localeCompare(b2)).map(([key, build]) => {
+        const isComplete = build.students.length > 0 && !!build.teacher;
+        const subCount = Object.values(build.subjectTeachers).filter(
+          Boolean
+        ).length;
+        return /* @__PURE__ */ jsxRuntimeExports.jsxs(
+          "tr",
+          {
+            className: "border-b border-border/50 hover:bg-muted/30 transition-colors",
+            children: [
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 font-medium text-foreground", children: key }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right font-mono text-foreground", children: build.students.length }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-muted-foreground hidden sm:table-cell", children: build.teacher || /* @__PURE__ */ jsxRuntimeExports.jsx("span", { className: "text-yellow-500", children: "Not Assigned" }) }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-right text-muted-foreground hidden md:table-cell", children: subCount }),
+              /* @__PURE__ */ jsxRuntimeExports.jsx("td", { className: "px-4 py-3 text-center", children: isComplete ? /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-green-500/15 text-green-700 dark:text-green-400 border-0", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(CircleCheck, { size: 12, className: "mr-1" }),
+                " Complete"
+              ] }) : /* @__PURE__ */ jsxRuntimeExports.jsxs(Badge, { className: "bg-orange-400/15 text-orange-700 dark:text-orange-400 border-0", children: [
+                /* @__PURE__ */ jsxRuntimeExports.jsx(TriangleAlert, { size: 12, className: "mr-1" }),
+                " ",
+                "Incomplete"
+              ] }) })
+            ]
+          },
+          key
+        );
+      }) })
+    ] }) }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-wrap gap-3 pt-2", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          size: "lg",
+          onClick: handleFinalise,
+          disabled: totalClasses === 0 || finalised,
+          "data-ocid": "finalise-btn",
+          className: "bg-green-600 hover:bg-green-700 text-white",
+          children: finalised ? "✓ Class Lists Finalised" : `Finalise Class Lists for ${academicYear}`
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Button,
+        {
+          variant: "outline",
+          size: "lg",
+          onClick: () => ue.info("Exporting class lists to CSV..."),
+          "data-ocid": "export-csv-btn",
+          children: "Export as CSV"
+        }
+      ),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(
+        Button,
+        {
+          variant: "outline",
+          size: "lg",
+          onClick: () => window.print(),
+          "data-ocid": "print-summary-btn",
+          className: "gap-2",
+          children: [
+            /* @__PURE__ */ jsxRuntimeExports.jsx(Printer, { size: 16 }),
+            " Print Summary"
+          ]
+        }
+      )
+    ] })
+  ] });
+}
+function ClassBuilderPage() {
+  const [academicYear, setAcademicYear] = reactExports.useState("2026-27");
+  const [step, setStep] = reactExports.useState(1);
+  const [selectedKey, setSelectedKey] = reactExports.useState(null);
+  const [classBuilds, setClassBuilds] = reactExports.useState(buildInitialState);
+  function handleSelectClass(key) {
+    setSelectedKey(key);
+    setStep(2);
+  }
+  function handleBuildChange(key, build) {
+    setClassBuilds((prev) => ({ ...prev, [key]: build }));
+  }
+  function handleNext() {
+    if (step === 1 && !selectedKey) {
+      ue.error("Select a class-section to build");
+      return;
+    }
+    setStep((s2) => Math.min(s2 + 1, 3));
+  }
+  function handleBack() {
+    if (step === 2) {
+      setSelectedKey(null);
+    }
+    setStep((s2) => Math.max(s2 - 1, 1));
+  }
+  return /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "max-w-6xl mx-auto p-4 md:p-6 space-y-5", children: [
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex flex-col sm:flex-row sm:items-center justify-between gap-4", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx("h1", { className: "text-2xl font-bold text-foreground", children: "Class Builder" }),
+        /* @__PURE__ */ jsxRuntimeExports.jsx("p", { className: "text-sm text-muted-foreground mt-0.5", children: "Build and finalise class lists for the new academic year" })
+      ] }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs(Select, { value: academicYear, onValueChange: setAcademicYear, children: [
+        /* @__PURE__ */ jsxRuntimeExports.jsx(SelectTrigger, { className: "w-36 h-9", "data-ocid": "academic-year-select", children: /* @__PURE__ */ jsxRuntimeExports.jsx(SelectValue, {}) }),
+        /* @__PURE__ */ jsxRuntimeExports.jsxs(SelectContent, { children: [
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "2026-27", children: "2026-27" }),
+          /* @__PURE__ */ jsxRuntimeExports.jsx(SelectItem, { value: "2027-28", children: "2027-28" })
+        ] })
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3", children: [
+      /* @__PURE__ */ jsxRuntimeExports.jsx(StepIndicator, { step }),
+      /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "flex gap-2", children: [
+        step > 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            variant: "outline",
+            size: "sm",
+            onClick: handleBack,
+            "data-ocid": "back-btn",
+            children: "← Back"
+          }
+        ),
+        step < 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(
+          Button,
+          {
+            size: "sm",
+            onClick: step === 1 ? () => setStep(3) : handleNext,
+            "data-ocid": "next-btn",
+            children: step === 1 ? "Review Summary →" : "Next →"
+          }
+        )
+      ] })
+    ] }),
+    /* @__PURE__ */ jsxRuntimeExports.jsxs("div", { className: "bg-card border border-border rounded-xl p-5", children: [
+      step === 1 && /* @__PURE__ */ jsxRuntimeExports.jsx(Step1, { classBuilds, onSelect: handleSelectClass }),
+      step === 2 && selectedKey && /* @__PURE__ */ jsxRuntimeExports.jsx(
+        Step2,
+        {
+          selectedKey,
+          classBuilds,
+          onChange: handleBuildChange,
+          onBack: () => {
+            setSelectedKey(null);
+            setStep(1);
+          }
+        }
+      ),
+      step === 3 && /* @__PURE__ */ jsxRuntimeExports.jsx(Step3, { classBuilds, academicYear })
+    ] })
+  ] });
+}
 function ClassConfigPage() {
   const [config2, setConfig] = reactExports.useState(() => loadClassConfig());
   const toggleSection = (cls, section) => {
@@ -111654,6 +118659,22 @@ const BREADCRUMBS = {
   "/admin/documents": [{ label: "Admin" }, { label: "Documents" }],
   "/admin/fee-reminders": [{ label: "Admin" }, { label: "Fee Reminders" }],
   "/admin/live-chat": [{ label: "Admin" }, { label: "Live Chat" }],
+  "/admin/forms": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Forms" }
+  ],
+  "/admin/forms/builder": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Forms", path: "/admin/forms" },
+    { label: "Form Builder" }
+  ],
+  "/admin/absence-workflow": [
+    { label: "Admin" },
+    { label: "Communication" },
+    { label: "Absence Alerts" }
+  ],
   "/admin/online-classes": [{ label: "Admin" }, { label: "Online Classes" }],
   "/admin/student-performance": [
     { label: "Admin" },
@@ -111666,9 +118687,36 @@ const BREADCRUMBS = {
     { label: "Online Classes" }
   ],
   "/admin/online-users": [{ label: "Admin" }, { label: "Online Users" }],
+  "/admin/class-builder": [
+    { label: "Admin" },
+    { label: "Students", path: "/admin/students" },
+    { label: "Class Builder" }
+  ],
   "/admin/python-reference": [
     { label: "Admin" },
     { label: "Python Reference" }
+  ],
+  "/admin/tasks": [{ label: "Admin" }, { label: "Tasks" }],
+  "/teacher/tasks": [{ label: "Teacher" }, { label: "Tasks" }],
+  "/admin/split-billing": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Split Billing" }
+  ],
+  "/admin/payment-plans": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Payment Plans" }
+  ],
+  "/admin/reconciliation": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Reconciliation" }
+  ],
+  "/admin/cash-desk": [
+    { label: "Admin" },
+    { label: "Fee Management" },
+    { label: "Cash Desk" }
   ]
 };
 const ROUTE_PERMISSIONS = [
@@ -111824,6 +118872,10 @@ function AppInner() {
   if (path === "/admin/documents") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(DocumentsPage, {}));
   if (path === "/admin/fee-reminders") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(FeeRemindersPage, {}));
   if (path === "/admin/live-chat") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(LiveChatPage, {}));
+  if (path === "/admin/forms") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(FormsPage, {}));
+  if (path === "/admin/forms/builder") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(FormBuilderPage, {}));
+  if (path === "/admin/absence-workflow")
+    return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(AbsenceWorkflowPage, {}));
   if (path === "/admin/online-classes") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(OnlineClassPage, {}));
   if (path === "/admin/student-performance")
     return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(StudentPerformancePage, {}));
@@ -111831,6 +118883,13 @@ function AppInner() {
   if (path === "/admin/online-users") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(OnlineUsersPage, {}));
   if (path === "/admin/python-reference")
     return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(PythonBackendReferencePage, {}));
+  if (path === "/admin/tasks") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(TasksPage, {}));
+  if (path === "/admin/split-billing") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(SplitBillingPage, {}));
+  if (path === "/admin/payment-plans") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(PaymentPlansPage, {}));
+  if (path === "/admin/reconciliation")
+    return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(ReconciliationPage, {}));
+  if (path === "/admin/cash-desk") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(CashDeskPage, {}));
+  if (path === "/admin/class-builder") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(ClassBuilderPage, {}));
   if (path === "/teacher/dashboard")
     return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(TeacherDashboard, { navigate }));
   if (path === "/teacher/classes") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(TeacherClassesPage, {}));
@@ -111845,6 +118904,7 @@ function AppInner() {
   if (path === "/teacher/leave") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(TeacherLeavePage, {}));
   if (path === "/teacher/lesson-plan") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(LessonPlanPage, {}));
   if (path === "/teacher/appraisal") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(SelfAppraisalPage, {}));
+  if (path === "/teacher/tasks") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(TasksPage, {}));
   if (path === "/student/dashboard")
     return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(StudentDashboard, { navigate }));
   if (path === "/student/profile") return withLayout(/* @__PURE__ */ jsxRuntimeExports.jsx(StudentProfilePage, {}));

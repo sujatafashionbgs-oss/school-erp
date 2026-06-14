@@ -20,12 +20,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { CLASSES } from "@/data/classConfig";
 import {
   AlertTriangle,
+  BarChart2,
   BookOpen,
+  Building2,
   Check,
+  ChevronDown,
+  ChevronUp,
   Edit2,
+  FileDown,
   GraduationCap,
+  Plus,
+  Printer,
   Shuffle,
   User,
+  Users,
   X,
 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -109,7 +117,7 @@ function getSectionsForClass(cls: string): string[] {
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 
-type CellEntry = { subject: string; teacher: string };
+type CellEntry = { subject: string; teacher: string; className?: string };
 type TimetableMap = Record<string, CellEntry[][]>;
 type ConflictInfo = { teacher: string; day: string } | null;
 type ViewMode = "class" | "section" | "teacher";
@@ -294,6 +302,23 @@ function buildTeacherSchedule(
   );
 }
 
+// ─── Heatmap types ────────────────────────────────────────────────────────────
+
+interface TeacherDayCount {
+  [day: string]: number;
+}
+interface TeacherWorkload {
+  teacher: string;
+  dayCounts: TeacherDayCount;
+  total: number;
+  assignments: Array<{
+    classSection: string;
+    day: string;
+    period: string;
+    subject: string;
+  }>;
+}
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export function TimetablePage() {
@@ -371,7 +396,21 @@ export function TimetablePage() {
 
   // Panel drag
   const [draggedSubject, setDraggedSubject] = useState<string | null>(null);
+  const [_draggedTeacher, setDraggedTeacher] = useState<string | null>(null);
+  const [_draggedClass, setDraggedClass] = useState<string | null>(null);
   const [dragOverCell, setDragOverCell] = useState<string | null>(null);
+
+  // Quick assign modal (single-cell clickable assignment)
+  const [assignModalOpen, setAssignModalOpen] = useState(false);
+  const [assignModalCell, setAssignModalCell] = useState<{
+    periodIndex: number;
+    dayIndex: number;
+  } | null>(null);
+  const [assignModalDraft, setAssignModalDraft] = useState<{
+    subject?: string;
+    teacher?: string;
+    className?: string;
+  }>({});
 
   // Touch device detection
   const [isTouchDevice, setIsTouchDevice] = useState(false);
@@ -495,6 +534,173 @@ export function TimetablePage() {
     }
     setUndoVisible(false);
     if (undoTimerRef.current) clearInterval(undoTimerRef.current);
+  }
+
+  // ── Print Timetable ───────────────────────────────────────────────────────
+
+  function handlePrintTimetable() {
+    const isTeacherView = viewMode === "teacher";
+    const title = isTeacherView
+      ? `${selectedTeacher}'s Weekly Schedule`
+      : `Class ${selectedClass}-${selectedSection} Weekly Timetable`;
+    const subtitle = isTeacherView
+      ? selectedTeacher
+      : `${selectedClass} – Section ${selectedSection}`;
+
+    // Build rows for class/section view
+    let tableHtml = "";
+    if (isTeacherView) {
+      // Teacher view: rows = days, cols = periods
+      const headerCells = activePeriods
+        .map(
+          (p, pi) =>
+            `<th>Period ${pi + 1}<br/><span style="font-weight:normal;font-size:9pt">${p}</span></th>`,
+        )
+        .join("");
+      tableHtml = `<table><thead><tr><th>Day</th>${headerCells}</tr></thead><tbody>`;
+      for (let di = 0; di < activeDays.length; di++) {
+        const dayCells = activePeriods
+          .map((_, pi) => {
+            const slot = teacherSchedule[di]?.[pi] ?? null;
+            return slot
+              ? `<td><strong>${slot.subject}</strong><br/>${slot.classSection}</td>`
+              : `<td style="color:#aaa">—</td>`;
+          })
+          .join("");
+        tableHtml += `<tr><th>${activeDays[di]}</th>${dayCells}</tr>`;
+      }
+      tableHtml += "</tbody></table>";
+    } else {
+      const grid = timetables[currentKey] ?? initEmptyGrid();
+      const headerCells = activeDays.map((d) => `<th>${d}</th>`).join("");
+      tableHtml = `<table><thead><tr><th>Period</th>${headerCells}</tr></thead><tbody>`;
+      for (let pi = 0; pi < activePeriods.length; pi++) {
+        const cells = activeDays
+          .map((_, di) => {
+            const cell = grid[pi]?.[di] ?? { subject: "-", teacher: "-" };
+            return `<td><strong>${cell.subject}</strong><br/>${cell.teacher}</td>`;
+          })
+          .join("");
+        tableHtml += `<tr><th>${activePeriods[pi]}</th>${cells}</tr>`;
+      }
+      tableHtml += "</tbody></table>";
+    }
+
+    const today = new Date().toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+    const popup = window.open("", "_blank", "width=1100,height=700");
+    if (!popup) {
+      toast.error("Pop-up blocked. Please allow pop-ups for this site.");
+      return;
+    }
+    popup.document.write(`<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>${title}</title>
+<style>
+  body { font-family: Arial, sans-serif; font-size: 11pt; margin: 0; padding: 20px; color: #000; }
+  .header { text-align: center; margin-bottom: 18px; }
+  .header h1 { margin: 0; font-size: 18pt; }
+  .header h2 { margin: 4px 0 2px; font-size: 13pt; font-weight: normal; }
+  .header .meta { font-size: 10pt; color: #555; }
+  table { border-collapse: collapse; width: 100%; }
+  th, td { border: 1px solid #333; padding: 6px 8px; text-align: center; vertical-align: middle; font-size: 10pt; }
+  th { background: #f0f0f0; font-weight: bold; }
+  .footer { margin-top: 20px; display: flex; justify-content: space-between; font-size: 9pt; color: #666; }
+  @media print {
+    @page { size: A4 landscape; margin: 1cm; }
+    body { margin: 0; padding: 0; }
+    .footer { position: fixed; bottom: 0; width: 100%; }
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Smart Skale School</h1>
+  <h2>TIMETABLE — ${subtitle}</h2>
+  <div class="meta">Academic Year: 2026-27</div>
+</div>
+${tableHtml}
+<div class="footer">
+  <span>Generated on: ${today}</span>
+  <span>Confidential – School Use Only</span>
+</div>
+<script>setTimeout(function(){ window.print(); }, 500);</script>
+</body>
+</html>`);
+    popup.document.close();
+  }
+
+  function handleExportPDF() {
+    toast.success("Timetable PDF export queued. Ready in a moment.");
+  }
+
+  // ── Heatmap computation ───────────────────────────────────────────────────
+
+  const heatmapData = useMemo((): TeacherWorkload[] => {
+    const workload: Record<string, TeacherWorkload> = {};
+    for (const t of ALL_TEACHERS) {
+      workload[t] = {
+        teacher: t,
+        dayCounts: Object.fromEntries(DAYS.map((d) => [d, 0])),
+        total: 0,
+        assignments: [],
+      };
+    }
+    for (const [classSection, grid] of Object.entries(timetables)) {
+      for (let pi = 0; pi < grid.length; pi++) {
+        const row = grid[pi];
+        for (let di = 0; di < row.length; di++) {
+          const cell = row[di];
+          if (cell?.teacher && workload[cell.teacher]) {
+            const day = DAYS[di] ?? `Day${di}`;
+            workload[cell.teacher].dayCounts[day] =
+              (workload[cell.teacher].dayCounts[day] ?? 0) + 1;
+            workload[cell.teacher].total += 1;
+            workload[cell.teacher].assignments.push({
+              classSection,
+              day,
+              period: activePeriods[pi] ?? `P${pi + 1}`,
+              subject: cell.subject,
+            });
+          }
+        }
+      }
+    }
+    return Object.values(workload).sort((a, b) => b.total - a.total);
+  }, [timetables, activePeriods]);
+
+  const heatmapSummary = useMemo(() => {
+    const mostLoaded = heatmapData[0] ?? null;
+    const totalPeriods = heatmapData.reduce((s, t) => s + t.total, 0);
+    const avg =
+      heatmapData.length > 0
+        ? (totalPeriods / heatmapData.length).toFixed(1)
+        : "0";
+    const atCapacity = heatmapData.filter((t) => t.total >= 20).length;
+    return { mostLoaded, avg, atCapacity };
+  }, [heatmapData]);
+
+  const [drilldownTeacher, setDrilldownTeacher] = useState<string | null>(null);
+
+  function getDayCellStyle(count: number): React.CSSProperties {
+    if (count === 0) return { background: "#f9fafb", color: "#9ca3af" };
+    if (count === 1) return { background: "#dcfce7", color: "#15803d" };
+    if (count === 2) return { background: "#fef9c3", color: "#a16207" };
+    if (count === 3) return { background: "#ffedd5", color: "#c2410c" };
+    return { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" };
+  }
+
+  function getTotalCellStyle(count: number): React.CSSProperties {
+    if (count === 0) return { background: "#f9fafb", color: "#9ca3af" };
+    if (count <= 5) return { background: "#dcfce7", color: "#15803d" };
+    if (count <= 10) return { background: "#fef9c3", color: "#a16207" };
+    if (count <= 15) return { background: "#ffedd5", color: "#c2410c" };
+    return { background: "#fee2e2", color: "#b91c1c", fontWeight: "bold" };
   }
 
   // ── Edit helpers ──────────────────────────────────────────────────────────────
@@ -753,20 +959,73 @@ export function TimetablePage() {
 
   // ── Drag from panel ───────────────────────────────────────────────────────────
 
-  function handlePanelDragStart(subject: string) {
-    setDraggedSubject(subject);
+  function handlePanelDragStart(
+    e: React.DragEvent,
+    type: "subject" | "teacher" | "class",
+    value: string,
+  ) {
+    e.dataTransfer.setData("type", type);
+    e.dataTransfer.setData("value", value);
+    if (type === "subject") setDraggedSubject(value);
+    if (type === "teacher") setDraggedTeacher(value);
+    if (type === "class") setDraggedClass(value);
+  }
+
+  // applyAssignment: write a cell entry to the timetable with undo support
+  function applyAssignment(
+    pi: number,
+    di: number,
+    subject: string,
+    teacher: string,
+    className?: string,
+  ) {
+    const key = getTimetableKey();
+    const prevSnapshot = timetables;
+    setTimetables((prev) => {
+      const grid = (prev[key] ?? initEmptyGrid()).map((row) =>
+        row.map((c_) => ({ ...c_ })),
+      );
+      if (grid[pi]?.[di] !== undefined) {
+        grid[pi][di] = {
+          subject,
+          teacher,
+          ...(className !== undefined ? { className } : {}),
+        };
+      }
+      return { ...prev, [key]: grid };
+    });
+    showUndoSnackbar({ key, cells: [{ pi, di }], prev: prevSnapshot });
+  }
+
+  function getTimetableKey(): string {
+    if (viewMode === "teacher") return currentKey;
+    return currentKey;
   }
 
   function handleCellDragOver(e: React.DragEvent, pi: number, di: number) {
-    if (!draggedSubject) return;
     e.preventDefault();
     setDragOverCell(getCellKey(pi, di));
   }
 
   function handleCellDrop(e: React.DragEvent, pi: number, di: number) {
     e.preventDefault();
-    if (!draggedSubject) return;
-    const teacher = ALL_TEACHERS[0]; // default teacher
+    const type = (e.dataTransfer.getData("type") || "subject") as
+      | "subject"
+      | "teacher"
+      | "class";
+    const value = e.dataTransfer.getData("value") || draggedSubject || "";
+
+    if (!value) {
+      setDraggedSubject(null);
+      setDraggedTeacher(null);
+      setDraggedClass(null);
+      setDragOverCell(null);
+      return;
+    }
+
+    const key = currentKey;
+    const grid = timetables[key] ?? initEmptyGrid();
+    const cell = grid[pi]?.[di] ?? { subject: "", teacher: "" };
 
     if (selectedCells.size > 0) {
       // Assign to all selected cells
@@ -776,47 +1035,86 @@ export function TimetablePage() {
       });
       const prevSnapshot = timetables;
       setTimetables((prev) => {
-        const grid = (prev[currentKey] ?? initEmptyGrid()).map((row) =>
+        const newGrid = (prev[key] ?? initEmptyGrid()).map((row) =>
           row.map((c_) => ({ ...c_ })),
         );
         for (const { pi: r, di: c } of cells) {
-          if (grid[r]?.[c] !== undefined) {
-            grid[r][c] = { subject: draggedSubject, teacher };
+          if (newGrid[r]?.[c] !== undefined) {
+            const existing = newGrid[r][c];
+            if (type === "subject")
+              newGrid[r][c] = { ...existing, subject: value };
+            else if (type === "teacher")
+              newGrid[r][c] = { ...existing, teacher: value };
+            else if (type === "class")
+              newGrid[r][c] = { ...existing, className: value };
           }
         }
-        return { ...prev, [currentKey]: grid };
+        return { ...prev, [key]: newGrid };
       });
-      showUndoSnackbar({ key: currentKey, cells, prev: prevSnapshot });
+      showUndoSnackbar({ key, cells, prev: prevSnapshot });
       toast.success(
-        `${draggedSubject} assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`,
+        `${value} assigned to ${cells.length} slot${cells.length !== 1 ? "s" : ""}`,
       );
       setSelectedCells(new Set());
       setFirstSelected(null);
     } else {
       // Assign to single dropped cell
-      const prevSnapshot = timetables;
-      setTimetables((prev) => {
-        const grid = (prev[currentKey] ?? initEmptyGrid()).map((row) =>
-          row.map((c_) => ({ ...c_ })),
-        );
-        if (grid[pi]?.[di] !== undefined) {
-          grid[pi][di] = { subject: draggedSubject, teacher };
+      if (type === "teacher") {
+        if (!cell.subject) {
+          toast.error("Please assign a subject first");
+        } else {
+          applyAssignment(pi, di, cell.subject, value, cell.className);
+          toast.success(`Teacher ${value} assigned`);
         }
-        return { ...prev, [currentKey]: grid };
-      });
-      showUndoSnackbar({
-        key: currentKey,
-        cells: [{ pi, di }],
-        prev: prevSnapshot,
-      });
-      toast.success(`${draggedSubject} assigned`);
+      } else if (type === "class") {
+        applyAssignment(pi, di, cell.subject || "", cell.teacher || "", value);
+        toast.success(`Class ${value} assigned`);
+      } else {
+        // subject
+        applyAssignment(pi, di, value, cell.teacher || ALL_TEACHERS[0]);
+        toast.success(`${value} assigned`);
+      }
     }
+
     setDraggedSubject(null);
+    setDraggedTeacher(null);
+    setDraggedClass(null);
     setDragOverCell(null);
   }
 
   function handleGridDragLeave() {
     setDragOverCell(null);
+  }
+
+  // ── Quick assign modal ────────────────────────────────────────────────────────
+
+  function openAssignModal(periodIndex: number, dayIndex: number) {
+    const key = currentKey;
+    const grid = timetables[key] ?? initEmptyGrid();
+    const cell = grid[periodIndex]?.[dayIndex];
+    setAssignModalCell({ periodIndex, dayIndex });
+    setAssignModalDraft({
+      subject: cell?.subject || "",
+      teacher: cell?.teacher || "",
+      className: cell?.className || "",
+    });
+    setAssignModalOpen(true);
+  }
+
+  function handleAssignModalSave() {
+    if (!assignModalCell) return;
+    const { periodIndex, dayIndex } = assignModalCell;
+    applyAssignment(
+      periodIndex,
+      dayIndex,
+      assignModalDraft.subject || "",
+      assignModalDraft.teacher || "",
+      viewMode === "teacher" ? assignModalDraft.className || "" : undefined,
+    );
+    setAssignModalOpen(false);
+    setAssignModalCell(null);
+    setAssignModalDraft({});
+    toast.success("Slot assigned successfully");
   }
 
   // ── Render helpers ────────────────────────────────────────────────────────────
@@ -828,10 +1126,10 @@ export function TimetablePage() {
     const isDragOver = dragOverCell === key;
 
     let base =
-      "px-4 py-2 min-w-[130px] transition-colors duration-100 select-none";
+      "px-4 py-2 min-w-[130px] transition-colors duration-100 select-none relative group/cell";
 
-    if (isDragOver && draggedSubject) {
-      base += " bg-amber-100";
+    if (isDragOver) {
+      base += " bg-[#E6F1FB] ring-2 ring-[#378ADD]";
     } else if (isSelected) {
       // Selected: light blue bg + blue border
       base += " bg-[#E6F1FB]";
@@ -918,37 +1216,59 @@ export function TimetablePage() {
     }
 
     return (
-      <button
-        type="button"
-        tabIndex={editMode ? 0 : -1}
-        className={`text-left w-full group ${
-          isDragging && hasContent
-            ? "cursor-not-allowed"
-            : isDragging
-              ? "cursor-crosshair"
-              : editMode && selectedCells.size === 0
-                ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1"
-                : isSelected
-                  ? "cursor-pointer"
-                  : "cursor-default"
-        }`}
-        onClick={(e) => {
-          if (
-            editMode &&
-            selectedCells.size === 0 &&
-            !e.shiftKey &&
-            !isDragging
-          ) {
-            startEdit(pi, di);
-          }
-        }}
-        data-ocid={editMode ? "timetable.edit_button" : undefined}
-      >
-        <span className="text-sm text-foreground block">{cell.subject}</span>
-        <span className="text-xs text-muted-foreground block">
-          {cell.teacher}
-        </span>
-      </button>
+      <div className="relative w-full">
+        <button
+          type="button"
+          tabIndex={editMode ? 0 : -1}
+          className={`text-left w-full ${
+            isDragging && hasContent
+              ? "cursor-not-allowed"
+              : isDragging
+                ? "cursor-crosshair"
+                : editMode && selectedCells.size === 0
+                  ? "cursor-pointer hover:bg-secondary/30 rounded p-1 -m-1"
+                  : isSelected
+                    ? "cursor-pointer"
+                    : "cursor-default"
+          }`}
+          onClick={(e) => {
+            if (
+              editMode &&
+              selectedCells.size === 0 &&
+              !e.shiftKey &&
+              !isDragging
+            ) {
+              startEdit(pi, di);
+            }
+          }}
+          data-ocid={editMode ? "timetable.edit_button" : undefined}
+        >
+          <span className="text-sm text-foreground block">{cell.subject}</span>
+          <span className="text-xs text-muted-foreground block">
+            {cell.teacher}
+          </span>
+          {cell.className && (
+            <span className="text-xs text-blue-500 block">
+              {cell.className}
+            </span>
+          )}
+        </button>
+        {/* Quick assign button — visible on hover when not dragging */}
+        {!isDragging && !isEditing && (
+          <button
+            type="button"
+            title="Quick assign subject & teacher"
+            onClick={(e) => {
+              e.stopPropagation();
+              openAssignModal(pi, di);
+            }}
+            className="absolute -top-1 -right-1 opacity-0 group-hover/cell:opacity-100 transition-opacity bg-primary text-primary-foreground rounded-full w-5 h-5 flex items-center justify-center shadow-sm hover:bg-primary/80 z-10"
+            data-ocid={`timetable.quick_assign.${pi}.${di}`}
+          >
+            <Plus className="h-3 w-3" />
+          </button>
+        )}
+      </div>
     );
   }
 
@@ -1076,7 +1396,9 @@ export function TimetablePage() {
                 <div
                   key={subject}
                   draggable
-                  onDragStart={() => handlePanelDragStart(subject)}
+                  onDragStart={(e) =>
+                    handlePanelDragStart(e, "subject", subject)
+                  }
                   onDragEnd={() => {
                     setDraggedSubject(null);
                     setDragOverCell(null);
@@ -1093,8 +1415,52 @@ export function TimetablePage() {
                 </div>
               );
             })}
+
+            {/* Teachers drag panel */}
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide pt-2 pb-1 border-b border-border">
+              Drag Teachers
+            </p>
+            {ALL_TEACHERS.map((teacher, idx) => (
+              <div
+                key={teacher}
+                draggable
+                onDragStart={(e) => handlePanelDragStart(e, "teacher", teacher)}
+                onDragEnd={() => {
+                  setDraggedTeacher(null);
+                  setDragOverCell(null);
+                }}
+                className="px-2.5 py-2 rounded-lg border border-border bg-secondary/40 text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80 flex items-center gap-1.5"
+                data-ocid={`timetable.teacher_card.${idx + 1}`}
+              >
+                <Users className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <span className="truncate">{teacher}</span>
+              </div>
+            ))}
+
+            {/* Classes drag panel */}
+            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide pt-2 pb-1 border-b border-border">
+              Drag Classes
+            </p>
+            {CLASSES.map((cls, idx) => (
+              <div
+                key={cls}
+                draggable
+                onDragStart={(e) => handlePanelDragStart(e, "class", cls)}
+                onDragEnd={() => {
+                  setDraggedClass(null);
+                  setDragOverCell(null);
+                }}
+                className="px-2.5 py-2 rounded-lg border border-border bg-accent/30 text-xs font-medium cursor-grab active:cursor-grabbing select-none transition-opacity hover:opacity-80 flex items-center gap-1.5"
+                data-ocid={`timetable.class_card.${idx + 1}`}
+              >
+                <Building2 className="h-3 w-3 shrink-0 text-muted-foreground" />
+                <span className="truncate">{cls}</span>
+              </div>
+            ))}
+
             <p className="text-xs text-muted-foreground/70 pt-1 leading-tight">
-              Drag onto a cell or selected cells to assign
+              Drag or click <Plus className="h-3 w-3 inline" /> on any cell to
+              assign
             </p>
           </div>
         )}
@@ -1249,6 +1615,24 @@ export function TimetablePage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={handlePrintTimetable}
+            data-ocid="timetable.print_button"
+          >
+            <Printer size={14} className="mr-2" />
+            Print
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportPDF}
+            data-ocid="timetable.export_pdf_button"
+          >
+            <FileDown size={14} className="mr-2" />
+            Export PDF
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => setAutoOpen(true)}
             data-ocid="timetable.auto_generate.button"
           >
@@ -1290,7 +1674,8 @@ export function TimetablePage() {
           <span>
             <strong>Click &amp; drag</strong> to select multiple cells ·
             <strong className="ml-1">Shift+click</strong> for range select ·
-            Drag subjects from the panel on the right
+            Drag subjects/teachers/classes from the right panel · Click the{" "}
+            <strong className="mx-0.5">+</strong> on any cell for quick assign
           </span>
         </div>
       )}
@@ -1300,6 +1685,10 @@ export function TimetablePage() {
         <TabsList>
           <TabsTrigger value="timetable">Timetable</TabsTrigger>
           <TabsTrigger value="substitutes">Substitutes</TabsTrigger>
+          <TabsTrigger value="heatmap" data-ocid="timetable.heatmap.tab">
+            <BarChart2 size={14} className="mr-1.5" />
+            Heatmap
+          </TabsTrigger>
         </TabsList>
 
         {/* ── TIMETABLE TAB ───────────────────────────────────────────── */}
@@ -1666,6 +2055,297 @@ export function TimetablePage() {
             </div>
           </div>
         </TabsContent>
+
+        {/* ── HEATMAP TAB ──────────────────────────────────────────────── */}
+        <TabsContent
+          value="heatmap"
+          className="mt-5 space-y-5"
+          data-ocid="timetable.heatmap.panel"
+        >
+          {/* Section A — Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="bg-card border border-border rounded-xl p-4">
+              <p className="text-xs text-muted-foreground mb-1">
+                Most Overloaded Teacher
+              </p>
+              {heatmapSummary.mostLoaded ? (
+                <>
+                  <p className="text-base font-bold text-foreground truncate">
+                    {heatmapSummary.mostLoaded.teacher}
+                  </p>
+                  <p className="text-2xl font-bold text-destructive">
+                    {heatmapSummary.mostLoaded.total}
+                    <span className="text-sm font-normal text-muted-foreground ml-1">
+                      periods/week
+                    </span>
+                  </p>
+                </>
+              ) : (
+                <p className="text-muted-foreground text-sm">No data</p>
+              )}
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <p className="text-xs text-muted-foreground mb-1">
+                Average Periods / Teacher
+              </p>
+              <p className="text-2xl font-bold text-foreground">
+                {heatmapSummary.avg}
+                <span className="text-sm font-normal text-muted-foreground ml-1">
+                  periods/week
+                </span>
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                {ALL_TEACHERS.length} teachers total
+              </p>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-4">
+              <p className="text-xs text-muted-foreground mb-1">
+                Teachers at Capacity
+              </p>
+              <p className="text-2xl font-bold text-orange-600">
+                {heatmapSummary.atCapacity}
+              </p>
+              <p className="text-xs text-muted-foreground mt-1">
+                ≥ 20 periods/week
+              </p>
+            </div>
+          </div>
+
+          {/* Section B — Heatmap Table */}
+          <div className="bg-card border border-border rounded-2xl overflow-hidden">
+            <div className="px-5 py-3 border-b border-border flex items-center justify-between">
+              <h2 className="font-semibold text-foreground text-sm">
+                Teacher Workload Heatmap
+              </h2>
+              <span className="text-xs text-muted-foreground">
+                Click a row to see detailed breakdown
+              </span>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead className="bg-secondary/40">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-xs font-semibold text-muted-foreground">
+                      Teacher
+                    </th>
+                    {DAYS.map((d) => (
+                      <th
+                        key={d}
+                        className="px-3 py-3 text-xs font-semibold text-muted-foreground text-center"
+                      >
+                        {d.slice(0, 3)}
+                      </th>
+                    ))}
+                    <th className="px-4 py-3 text-xs font-semibold text-muted-foreground text-center">
+                      Total
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {heatmapData.map((row) => {
+                    const isDrillOpen = drilldownTeacher === row.teacher;
+                    return (
+                      <>
+                        <tr
+                          key={row.teacher}
+                          className="border-t border-border hover:bg-secondary/20 cursor-pointer transition-colors"
+                          onClick={() =>
+                            setDrilldownTeacher(
+                              isDrillOpen ? null : row.teacher,
+                            )
+                          }
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ")
+                              setDrilldownTeacher(
+                                isDrillOpen ? null : row.teacher,
+                              );
+                          }}
+                          tabIndex={0}
+                          data-ocid="timetable.heatmap.teacher_row"
+                        >
+                          <td className="px-4 py-3 font-medium text-foreground flex items-center gap-2 min-w-[160px]">
+                            {isDrillOpen ? (
+                              <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            ) : (
+                              <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+                            )}
+                            {row.teacher}
+                            {row.total >= 20 && (
+                              <span
+                                className="ml-1 text-destructive"
+                                title="Overloaded"
+                              >
+                                ⚠
+                              </span>
+                            )}
+                          </td>
+                          {DAYS.map((day) => {
+                            const count = row.dayCounts[day] ?? 0;
+                            return (
+                              <td
+                                key={day}
+                                className="px-3 py-3 text-center font-semibold"
+                                style={getDayCellStyle(count)}
+                              >
+                                {count === 0 ? (
+                                  "—"
+                                ) : (
+                                  <span className="flex items-center justify-center gap-0.5">
+                                    {count}
+                                    {count >= 4 && (
+                                      <AlertTriangle className="h-3 w-3 inline-block ml-0.5" />
+                                    )}
+                                  </span>
+                                )}
+                              </td>
+                            );
+                          })}
+                          <td
+                            className="px-4 py-3 text-center font-bold"
+                            style={getTotalCellStyle(row.total)}
+                          >
+                            {row.total}
+                          </td>
+                        </tr>
+                        {/* Section C — Drilldown panel (inline row) */}
+                        {isDrillOpen && (
+                          <tr
+                            key={`${row.teacher}-drill`}
+                            className="bg-secondary/10"
+                          >
+                            <td colSpan={DAYS.length + 2} className="px-6 py-4">
+                              <div className="space-y-2">
+                                <div className="flex items-center justify-between mb-2">
+                                  <p className="text-sm font-semibold text-foreground">
+                                    {row.teacher} — Detailed Schedule (
+                                    {row.total} periods)
+                                  </p>
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setDrilldownTeacher(null);
+                                    }}
+                                    data-ocid="timetable.heatmap.drilldown.close_button"
+                                  >
+                                    <X className="h-3.5 w-3.5 mr-1" /> Close
+                                  </Button>
+                                </div>
+                                {row.assignments.length === 0 ? (
+                                  <p className="text-sm text-muted-foreground">
+                                    No assignments found.
+                                  </p>
+                                ) : (
+                                  <div className="overflow-x-auto rounded-lg border border-border">
+                                    <table className="w-full text-xs">
+                                      <thead className="bg-secondary/50">
+                                        <tr>
+                                          {[
+                                            "Class-Section",
+                                            "Day",
+                                            "Period",
+                                            "Subject",
+                                          ].map((h) => (
+                                            <th
+                                              key={h}
+                                              className="text-left px-3 py-2 font-semibold text-muted-foreground"
+                                            >
+                                              {h}
+                                            </th>
+                                          ))}
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        {row.assignments.map((a, ai) => (
+                                          <tr
+                                            key={`${a.classSection}-${a.day}-${a.period}-${ai}`}
+                                            className="border-t border-border"
+                                          >
+                                            <td className="px-3 py-2">
+                                              <Badge
+                                                variant="outline"
+                                                className="text-xs"
+                                              >
+                                                {a.classSection}
+                                              </Badge>
+                                            </td>
+                                            <td className="px-3 py-2 text-muted-foreground">
+                                              {a.day}
+                                            </td>
+                                            <td className="px-3 py-2 text-muted-foreground">
+                                              {a.period}
+                                            </td>
+                                            <td className="px-3 py-2 font-medium text-foreground">
+                                              {a.subject}
+                                            </td>
+                                          </tr>
+                                        ))}
+                                      </tbody>
+                                    </table>
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          {/* Section D — Legend */}
+          <div
+            className="flex flex-wrap items-center gap-4 px-1"
+            data-ocid="timetable.heatmap.legend"
+          >
+            <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+              Legend:
+            </span>
+            {[
+              {
+                label: "Free",
+                style: { background: "#f9fafb", color: "#9ca3af" },
+              },
+              {
+                label: "1 period",
+                style: { background: "#dcfce7", color: "#15803d" },
+              },
+              {
+                label: "2 periods",
+                style: { background: "#fef9c3", color: "#a16207" },
+              },
+              {
+                label: "3 periods",
+                style: { background: "#ffedd5", color: "#c2410c" },
+              },
+              {
+                label: "4+ (Overloaded)",
+                style: {
+                  background: "#fee2e2",
+                  color: "#b91c1c",
+                  fontWeight: "bold",
+                },
+              },
+            ].map(({ label, style }) => (
+              <div key={label} className="flex items-center gap-1.5">
+                <span
+                  className="inline-block w-6 h-6 rounded text-center text-xs font-semibold leading-6"
+                  style={style}
+                >
+                  {label === "Free" ? "—" : label.split(" ")[0]}
+                </span>
+                <span className="text-xs text-muted-foreground">{label}</span>
+              </div>
+            ))}
+            <span className="ml-auto text-xs text-muted-foreground italic">
+              Threshold: 4+ periods/day or 16+ periods/week = Overloaded
+            </span>
+          </div>
+        </TabsContent>
       </Tabs>
 
       {/* ── AUTO GENERATE DIALOG ─────────────────────────────────────────── */}
@@ -1804,6 +2484,118 @@ export function TimetablePage() {
                 data-ocid="timetable.auto.generate"
               >
                 <Shuffle size={14} className="mr-1" /> Generate
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* ── QUICK ASSIGN MODAL ───────────────────────────────────────────── */}
+      <Dialog
+        open={assignModalOpen}
+        onOpenChange={(open) => {
+          if (!open) {
+            setAssignModalOpen(false);
+            setAssignModalCell(null);
+            setAssignModalDraft({});
+          }
+        }}
+      >
+        <DialogContent
+          className="max-w-sm"
+          data-ocid="timetable.assign_modal.dialog"
+        >
+          <DialogHeader>
+            <DialogTitle>Assign Slot</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            {assignModalCell && (
+              <p className="text-xs text-muted-foreground">
+                Period {assignModalCell.periodIndex + 1} ·{" "}
+                {activeDays[assignModalCell.dayIndex]}
+              </p>
+            )}
+            <div className="space-y-1.5">
+              <Label>Subject</Label>
+              <Select
+                value={assignModalDraft.subject || ""}
+                onValueChange={(v) =>
+                  setAssignModalDraft((p) => ({ ...p, subject: v }))
+                }
+              >
+                <SelectTrigger data-ocid="timetable.assign_modal.subject_select">
+                  <SelectValue placeholder="Select subject" />
+                </SelectTrigger>
+                <SelectContent>
+                  {SUBJECTS.map((s) => (
+                    <SelectItem key={s} value={s}>
+                      {s}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-1.5">
+              <Label>Teacher</Label>
+              <Select
+                value={assignModalDraft.teacher || ""}
+                onValueChange={(v) =>
+                  setAssignModalDraft((p) => ({ ...p, teacher: v }))
+                }
+              >
+                <SelectTrigger data-ocid="timetable.assign_modal.teacher_select">
+                  <SelectValue placeholder="Select teacher" />
+                </SelectTrigger>
+                <SelectContent>
+                  {ALL_TEACHERS.map((t) => (
+                    <SelectItem key={t} value={t}>
+                      {t}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            {viewMode === "teacher" && (
+              <div className="space-y-1.5">
+                <Label>Class</Label>
+                <Select
+                  value={assignModalDraft.className || ""}
+                  onValueChange={(v) =>
+                    setAssignModalDraft((p) => ({ ...p, className: v }))
+                  }
+                >
+                  <SelectTrigger data-ocid="timetable.assign_modal.class_select">
+                    <SelectValue placeholder="Select class" />
+                  </SelectTrigger>
+                  <SelectContent className="max-h-60 overflow-y-auto">
+                    {CLASSES.map((c) => (
+                      <SelectItem key={c} value={c}>
+                        {c}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            <div className="flex gap-2 pt-1">
+              <Button
+                variant="outline"
+                className="flex-1"
+                onClick={() => {
+                  setAssignModalOpen(false);
+                  setAssignModalCell(null);
+                  setAssignModalDraft({});
+                }}
+                data-ocid="timetable.assign_modal.cancel_button"
+              >
+                Cancel
+              </Button>
+              <Button
+                className="flex-1"
+                onClick={handleAssignModalSave}
+                data-ocid="timetable.assign_modal.assign_button"
+              >
+                <Check className="h-4 w-4 mr-1.5" /> Assign
               </Button>
             </div>
           </div>

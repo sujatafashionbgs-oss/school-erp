@@ -1,6 +1,6 @@
 // ⚠️ DEMO ONLY — remove before production
 export const DEMO_PASSWORDS: Record<string, string> = {
-  "admin@school.com": "admin123",
+  "admin@school.com": "SmartSkale@26",
   "super@school.com": "super123",
   "teacher@school.com": "teacher123",
   "accountant@school.com": "acc123",

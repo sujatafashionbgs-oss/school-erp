@@ -1,5 +1,5 @@
 const DEMO_PASSWORDS = {
-  "admin@school.com": "admin123",
+  "admin@school.com": "SmartSkale@26",
   "super@school.com": "super123",
   "teacher@school.com": "teacher123",
   "accountant@school.com": "acc123",
